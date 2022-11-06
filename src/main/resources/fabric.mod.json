@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "filtpick",
+  "version": "${version}",
+  "name": "FiltPick",
+  "description": "",
+  "authors": [
+    "A_Peng215"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/FiltPick/filt_pick.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "com.apeng.filtpick.FiltPickClient"
+    ],
+    "main": [
+      "com.apeng.filtpick.FiltPick"
+    ]
+  },
+  "mixins": [
+    "FiltPick.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.14.10",
+    "fabric": "*",
+    "minecraft": "1.19.2"
+  }
+}
