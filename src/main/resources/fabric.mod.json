@@ -1,15 +1,17 @@
 {
   "schemaVersion": 1,
   "id": "filtpick",
-  "version": "${version}",
+  "version": "v0.0.3",
   "name": "FiltPick",
-  "description": "",
+  "description": "A minecraft fabric mod which enables you to pick up items selectively.",
   "authors": [
     "A_Peng215"
   ],
-  "contact": {},
+  "contact": {
+    "sources": "https://github.com/APeng215/FiltPick"
+  },
   "license": "MIT",
-  "icon": "assets/FiltPick/filt_pick.png",
+  "icon": "assets/filtpick/icon.png",
   "environment": "*",
   "entrypoints": {
     "client": [
