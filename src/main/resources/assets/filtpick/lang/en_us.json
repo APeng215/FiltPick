@@ -1,4 +1,4 @@
 {
-  "whitelist_mode_explanation": "Whitelist-mode(You will only pick up the items below)",
-  "blacklist_mode_explanation": "Blacklist-mode(You won't pick up the items below)"
+  "whitelist_mode_explanation": "Whitelist-mode(Only the items below will be picked up)",
+  "blacklist_mode_explanation": "Blacklist-mode(The items below won't be picked up)"
 }
