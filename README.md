@@ -7,9 +7,9 @@ pick up items selectively. It's a lightweight mod and has a easy-to-use gui.
 3. Make sure you have installed fabric api and fabric of proper versions.
 ## How to use
 ### Entry Button
-![](README resources/inventory screen guide.png)
+![inventory screen guide](README resources/inventory screen guide.png)
 ### FiltPick Screen
-![](README resources/mod screen guide.png)
+![mod screen guide](README resources/mod screen guide.png)
 - Whitelist-mode: Only the items below will be picked up
 - Blacklist-mode: The items below won't be picked up
 ## Contact me
