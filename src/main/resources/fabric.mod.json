@@ -10,7 +10,7 @@
   "contact": {
     "sources": "https://github.com/APeng215/FiltPick"
   },
-  "license": "MIT",
+  "license": "LGPL-2.1",
   "icon": "assets/filtpick/icon.png",
   "environment": "*",
   "entrypoints": {
