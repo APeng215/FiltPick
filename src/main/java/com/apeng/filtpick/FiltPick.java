@@ -4,6 +4,7 @@ import com.apeng.filtpick.guis.custom.FiltPickScreenHandler;
 import com.apeng.filtpick.mixinduck.ServerPlayerEntityDuck;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -16,19 +17,18 @@ import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.NotNull;
 
 public class FiltPick implements ModInitializer {
-    public static ScreenHandlerType<FiltPickScreenHandler> FilePick_SCREEN_HANDLER= new ScreenHandlerType<>(FiltPickScreenHandler::new);
+    public static ScreenHandlerType<FiltPickScreenHandler> FilePick_SCREEN_HANDLER= ScreenHandlerRegistry.registerSimple(new Identifier("filtpick_screen"), FiltPickScreenHandler::new);
 
 
 
     public void onInitialize() {
 
-        Registry.register(Registry.SCREEN_HANDLER,new Identifier("filtpick","filtpick_screen"),FilePick_SCREEN_HANDLER);
         ServerPlayNetworking.registerGlobalReceiver(new Identifier("open_filtpick_screen"),((server, player, handler, buf, responseSender) -> server.execute(()->{
             NamedScreenHandlerFactory modScreenFactory = new NamedScreenHandlerFactory() {
-                @Override
+
                 public boolean shouldCloseCurrentScreen() {
                     return false;
-                }
+                }//Function missing
 
                 @Override
                 public Text getDisplayName() {
