@@ -44,7 +44,7 @@ public abstract class InventoryScreenMixin extends AbstractInventoryScreen<Playe
         });
         this.addDrawableChild(filtPickButton);
         this.addDrawableChild(recipeBookButton);
-        this.addSelectableChild(recipeBook);
+        this.addChild(recipeBook);
         this.setInitialFocus(recipeBook);
         ci.cancel();
 

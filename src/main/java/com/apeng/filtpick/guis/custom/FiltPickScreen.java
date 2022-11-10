@@ -89,7 +89,7 @@ public class FiltPickScreen extends HandledScreen<FiltPickScreenHandler> {
         return new TexturedButtonWidget(this.x + 154, this.y + 4, 12, 11, 0, 0, 12, FILTPICK_RETURN_BUTTON_TEXTURE, button
                 -> {
             if (client != null && client.player != null) {
-                client.setScreen(new InventoryScreen(client.player));
+                client.openScreen(new InventoryScreen(client.player));
             }
         });
     }
