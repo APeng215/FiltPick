@@ -31,6 +31,9 @@ public class FiltPickScreen extends HandledScreen<FiltPickScreenHandler> {
 
     @Override
     protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
+        if (this.client != null) {
+            this.client.getTextureManager().bindTexture(FILTPICK_SCREEN_TEXTURE);
+        }
         int x = (width - backgroundWidth) / 2;
         int y = (height - backgroundHeight) / 2;
         drawTexture(matrices, x, y, 0, 0, backgroundWidth, backgroundHeight);
