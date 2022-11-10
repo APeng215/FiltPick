@@ -1,6 +1,7 @@
 package com.apeng.filtpick.guis.widget;
 
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 
 public enum FiltPickMode {
     WHITE_LIST("white_list"),
@@ -14,7 +15,7 @@ public enum FiltPickMode {
     }
 
     public Text getTranslatableName() {
-        return Text.translatable(this.name);
+        return (new TranslatableText(this.name));
     }
 
 }
