@@ -40,7 +40,12 @@ public class FiltPickScreenHandler extends ScreenHandler {
         //FiltPick inventory
         for (m = 0; m < 3; ++m) {
             for (l = 0; l < 9; ++l) {
-                this.addSlot(new Slot(inventory, l + m * 9, 8 + l * 18, 17 + m * 18));
+                this.addSlot(new Slot(inventory, l + m * 9, 8 + l * 18, 17 + m * 18){
+                    @Override
+                    public int getMaxItemCount() {
+                        return 1;
+                    }
+                });
             }
         }
         //The player inventory
