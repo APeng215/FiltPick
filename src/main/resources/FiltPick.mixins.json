@@ -4,13 +4,14 @@
   "package": "com.apeng.filtpick.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "InventoryScreenMixin",
     "ItemEntityMixin",
     "PlayerManagerMixin",
-    "ServerPlayerEntityMixin",
-    "accessor.InventoryScreenAccessor"
+    "ServerPlayerEntityMixin"
+
   ],
   "client": [
+    "InventoryScreenMixin",
+    "accessor.InventoryScreenAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
