@@ -2,6 +2,8 @@ package com.apeng.filtpick.mixin;
 
 
 import com.apeng.filtpick.mixin.accessor.InventoryScreenAccessor;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen;
@@ -38,11 +40,13 @@ public abstract class InventoryScreenMixin extends AbstractInventoryScreen<Playe
                 -> ClientPlayNetworking.send(new Identifier("open_filtpick_screen"), PacketByteBufs.empty()));
         recipeBookButton = new TexturedButtonWidget(this.x + 104, this.height / 2 - 22, 20, 18, 0, 0, 19, RECIPE_BUTTON_TEXTURE, button
                 -> {
+            recipeBook.reset(this.narrow);
             recipeBook.toggleOpen();
-            this.x = recipeBook.findLeftEdge(this.narrow,this.width, this.backgroundWidth);
+            this.x = recipeBook.findLeftEdge(this.narrow, this.width, this.backgroundWidth);
             ((TexturedButtonWidget)button).setPos(this.x + 104, this.height / 2 - 22);
+            ((InventoryScreenAccessor) this).setMouseDown(true);
+
             filtPickButton.setPos(this.x + 104 + deviationOfFiltPickButton, this.height / 2 - 22);
-            ((InventoryScreenAccessor)this).setMouseDown(true);
         });
         this.addButton(filtPickButton);
         this.addButton(recipeBookButton);
