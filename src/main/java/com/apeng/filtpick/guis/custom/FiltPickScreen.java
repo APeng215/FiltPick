@@ -12,9 +12,12 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.text.Style;
+import javax.swing.text.html.StyleSheet;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -105,8 +108,8 @@ public class FiltPickScreen extends HandledScreen<FiltPickScreenHandler> {
     }
     private ButtonWidget createGuideButton(){
         List<Text> guideTexts = new ArrayList<>();
-        guideTexts.add(new TranslatableText("blacklist_mode_explanation"));
-        guideTexts.add(new TranslatableText("whitelist_mode_explanation"));
+        guideTexts.add(new TranslatableText("blacklist_mode_explanation").formatted(Formatting.RED));
+        guideTexts.add(new TranslatableText("whitelist_mode_explanation").formatted(Formatting.GREEN));
         return new TexturedButtonWidget(this.x + 10 + 12 + 2 , this.y + 4, 12, 11, 0, 0, 12, FILTPICK_GUIDE_BUTTON_TEXTURE, 256, 256, button -> {}, (button, matrices, mouseX, mouseY) -> FiltPickScreen.this.renderTooltip(matrices, guideTexts, this.x - 2, this.y - 14),Text.of("filtpick_mode_guide"));
     }
 
