@@ -1,4 +1,5 @@
 {
+  "title": "FiltPick",
   "whitelist_mode_explanation": "√:Whitelist-mode(Only the items below will be picked up)",
   "blacklist_mode_explanation": "X:Blacklist-mode(The items below won't be picked up)"
 }

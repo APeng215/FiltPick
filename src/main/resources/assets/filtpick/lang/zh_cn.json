@@ -1,4 +1,5 @@
 {
+  "title": "拾取筛",
   "whitelist_mode_explanation": "√:白名单模式(你只会捡起以下物品)",
   "blacklist_mode_explanation": "X:黑名单模式(你不会捡起以下物品)"
 }
