@@ -55,12 +55,12 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Im
     public DefaultedList<ItemStack> getFiltPickInventory() {
         return filtPickInventory;
     }
-
+    //Duck Override
     @Override
     public boolean getFiltPickIsWhiteListMode() {
         return filtPickIsWhiteListMode;
     }
-
+    //Duck Override
     @Override
     public void setFiltPickWhiteListMode(Boolean bool) {
         filtPickIsWhiteListMode=bool;

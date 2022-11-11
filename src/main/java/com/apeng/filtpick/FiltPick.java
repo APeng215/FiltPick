@@ -1,6 +1,7 @@
 package com.apeng.filtpick;
 
 import com.apeng.filtpick.guis.custom.FiltPickScreenHandler;
+import com.apeng.filtpick.guis.util.ImplementedInventory;
 import com.apeng.filtpick.mixinduck.ServerPlayerEntityDuck;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -37,7 +38,7 @@ public class FiltPick implements ModInitializer {
 
                 @Override
                 public @NotNull ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-                    return new FiltPickScreenHandler(syncId,inv, (Inventory) player);
+                    return new FiltPickScreenHandler(syncId,inv, (ImplementedInventory)player);
                 }
             };
             player.openHandledScreen(modScreenFactory);

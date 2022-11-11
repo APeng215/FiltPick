@@ -12,6 +12,7 @@ import net.minecraft.util.collection.DefaultedList;
  * Originally by Juuz
  */
 public interface ImplementedInventory extends Inventory {
+    @Override
     default int getMaxCountPerStack() {
         return 1;
     }

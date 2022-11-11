@@ -16,8 +16,6 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.text.Style;
-import javax.swing.text.html.StyleSheet;
 import java.util.ArrayList;
 import java.util.List;
 
