@@ -7,8 +7,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
-import net.minecraft.client.gui.screen.pack.ResourcePackOrganizer;
-import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
 public class FiltPickClient implements ClientModInitializer {

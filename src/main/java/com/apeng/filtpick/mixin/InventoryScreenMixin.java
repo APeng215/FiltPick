@@ -3,8 +3,6 @@ package com.apeng.filtpick.mixin;
 
 import com.apeng.filtpick.mixin.accessor.InventoryScreenAccessor;
 import com.apeng.filtpick.packet.PacketID;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen;

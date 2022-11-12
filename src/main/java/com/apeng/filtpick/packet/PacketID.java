@@ -1,7 +1,6 @@
 package com.apeng.filtpick.packet;
 
 import net.minecraft.util.Identifier;
-import org.lwjgl.system.CallbackI;
 
 public class PacketID {
     public static class S2C{
