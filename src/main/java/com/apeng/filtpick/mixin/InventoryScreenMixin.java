@@ -2,6 +2,7 @@ package com.apeng.filtpick.mixin;
 
 
 import com.apeng.filtpick.mixin.accessor.InventoryScreenAccessor;
+import com.apeng.filtpick.packet.PacketID;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -37,7 +38,7 @@ public abstract class InventoryScreenMixin extends AbstractInventoryScreen<Playe
         TexturedButtonWidget recipeBookButton;
         TexturedButtonWidget filtPickButton;
         filtPickButton = new TexturedButtonWidget(this.x + 104 + deviationOfFiltPickButton, this.height / 2 - 22, 20, 18, 0, 0, 19, FILTPICK_ENTRY_TEXTURE, button
-                -> ClientPlayNetworking.send(new Identifier("open_filtpick_screen"), PacketByteBufs.empty()));
+                -> ClientPlayNetworking.send(PacketID.C2S.OPEN_FILTPICK_SCREEN, PacketByteBufs.empty()));
         recipeBookButton = new TexturedButtonWidget(this.x + 104, this.height / 2 - 22, 20, 18, 0, 0, 19, RECIPE_BUTTON_TEXTURE, button
                 -> {
             recipeBook.reset(this.narrow);

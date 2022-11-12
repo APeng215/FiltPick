@@ -1,6 +1,7 @@
 package com.apeng.filtpick.mixin;
 
 import com.apeng.filtpick.mixinduck.ServerPlayerEntityDuck;
+import com.apeng.filtpick.packet.PacketID;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.PacketByteBuf;
@@ -23,7 +24,7 @@ public abstract class PlayerManagerMixin {
     @Inject(method = "respawnPlayer", at = @At("TAIL"),locals = LocalCapture.CAPTURE_FAILEXCEPTION)
     private void synchronizeListModeWithClient(ServerPlayerEntity player, boolean alive, CallbackInfoReturnable<ServerPlayerEntity> cir, BlockPos blockPos, float f, boolean bl, ServerWorld serverWorld, Optional optional, ServerPlayerInteractionManager serverPlayerInteractionManager, ServerWorld serverWorld2, ServerPlayerEntity serverPlayerEntity){
         PacketByteBuf modeInfo = new PacketByteBuf(PacketByteBufs.create().writeBoolean(((ServerPlayerEntityDuck)player).getFiltPickIsWhiteListMode()));
-        ServerPlayNetworking.send(player,new Identifier("syn_listmode"), modeInfo);
+        ServerPlayNetworking.send(player, PacketID.S2C.SYN_LISTMODE, modeInfo);
     }
 
 }

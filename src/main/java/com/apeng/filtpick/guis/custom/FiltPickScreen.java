@@ -1,6 +1,7 @@
 package com.apeng.filtpick.guis.custom;
 
 
+import com.apeng.filtpick.packet.PacketID;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
@@ -102,7 +103,7 @@ public class FiltPickScreen extends HandledScreen<FiltPickScreenHandler> {
     }
     private static void sendC2SPacketToSetWhiteMode(boolean bool) {
         PacketByteBuf filtUpdataBuf = new PacketByteBuf(PacketByteBufs.create().writeBoolean(bool));
-        ClientPlayNetworking.send(new Identifier("update_filtpick_mode"),filtUpdataBuf);
+        ClientPlayNetworking.send(PacketID.C2S.UPDATE_FILTPICK_MODE,filtUpdataBuf);
     }
     private ButtonWidget createGuideButton(){
         List<Text> guideTexts = new ArrayList<>();

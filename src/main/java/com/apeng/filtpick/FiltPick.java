@@ -3,6 +3,7 @@ package com.apeng.filtpick;
 import com.apeng.filtpick.guis.custom.FiltPickScreenHandler;
 import com.apeng.filtpick.guis.util.ImplementedInventory;
 import com.apeng.filtpick.mixinduck.ServerPlayerEntityDuck;
+import com.apeng.filtpick.packet.PacketID;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
@@ -23,7 +24,7 @@ public class FiltPick implements ModInitializer {
 
     public void onInitialize() {
 
-        ServerPlayNetworking.registerGlobalReceiver(new Identifier("open_filtpick_screen"),((server, player, handler, buf, responseSender) -> server.execute(()->{
+        ServerPlayNetworking.registerGlobalReceiver(PacketID.C2S.OPEN_FILTPICK_SCREEN,((server, player, handler, buf, responseSender) -> server.execute(()->{
             NamedScreenHandlerFactory modScreenFactory = new NamedScreenHandlerFactory() {
 
                 public boolean shouldCloseCurrentScreen() {
@@ -42,7 +43,7 @@ public class FiltPick implements ModInitializer {
             };
             player.openHandledScreen(modScreenFactory);
         })));
-        ServerPlayNetworking.registerGlobalReceiver(new Identifier("update_filtpick_mode"),(server, player, handler, buf, responseSender) -> {
+        ServerPlayNetworking.registerGlobalReceiver(PacketID.C2S.UPDATE_FILTPICK_MODE,(server, player, handler, buf, responseSender) -> {
             boolean updataInfo = buf.readBoolean();
             server.execute(()-> ((ServerPlayerEntityDuck)player).setFiltPickWhiteListMode(updataInfo));
         });
