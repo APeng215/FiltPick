@@ -1,6 +1,7 @@
 package com.apeng.filtpick.mixin;
 
 
+import com.apeng.filtpick.guis.custom.FiltPickScreen;
 import com.apeng.filtpick.mixin.accessor.InventoryScreenAccessor;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -21,7 +22,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(InventoryScreen.class)
 public abstract class InventoryScreenMixin extends AbstractInventoryScreen<PlayerScreenHandler> implements RecipeBookProvider {
     private static final Identifier RECIPE_BUTTON_TEXTURE = new Identifier("textures/gui/recipe_button.png");
-    private static final Identifier FILTPICK_ENTRY_TEXTURE = new Identifier("filtpick","gui/filtpick_entry.png");
+    private static final Identifier FILTPICK_ENTRY_BLACKLIST = new Identifier("filtpick","gui/filtpick_entry_blacklist.png");
+    private static final Identifier FILTPICK_ENTRY_WHITELIST = new Identifier("filtpick","gui/filtpick_entry_whitelist.png");
     public InventoryScreenMixin(PlayerScreenHandler screenHandler, PlayerInventory playerInventory, Text text) {
         super(screenHandler, playerInventory, text);
     }
@@ -32,8 +34,15 @@ public abstract class InventoryScreenMixin extends AbstractInventoryScreen<Playe
         RecipeBookWidget recipeBook = ((InventoryScreenAccessor)this).getRecipeBook();
         TexturedButtonWidget recipeBookButton;
         TexturedButtonWidget filtPickButton;
-        filtPickButton = new TexturedButtonWidget(this.x + 104 + deviationOfFiltPickButton, this.height / 2 - 22, 20, 18, 0, 0, 19, FILTPICK_ENTRY_TEXTURE, button
-                -> ClientPlayNetworking.send(new Identifier("open_filtpick_screen"), PacketByteBufs.empty()));
+        if(FiltPickScreen.filtPickIsWhiteListMode){
+            filtPickButton = new TexturedButtonWidget(this.x + 104 + deviationOfFiltPickButton, this.height / 2 - 22, 20, 18, 0, 0, 19, FILTPICK_ENTRY_WHITELIST, button
+                    -> ClientPlayNetworking.send(new Identifier("open_filtpick_screen"), PacketByteBufs.empty()));
+        }
+        else {
+            filtPickButton = new TexturedButtonWidget(this.x + 104 + deviationOfFiltPickButton, this.height / 2 - 22, 20, 18, 0, 0, 19, FILTPICK_ENTRY_BLACKLIST, button
+                    -> ClientPlayNetworking.send(new Identifier("open_filtpick_screen"), PacketByteBufs.empty()));
+        }
+
         recipeBookButton = new TexturedButtonWidget(this.x + 104, this.height / 2 - 22, 20, 18, 0, 0, 19, RECIPE_BUTTON_TEXTURE, button
                 -> {
             recipeBook.toggleOpen();
