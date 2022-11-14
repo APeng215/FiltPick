@@ -23,6 +23,8 @@ public abstract class PlayerManagerMixin {
     private void synchronizeListModeWithClient(ServerPlayerEntity player, boolean alive, CallbackInfoReturnable<ServerPlayerEntity> cir, BlockPos blockPos, float f, boolean bl, ServerWorld serverWorld, Optional optional, ServerWorld serverWorld2, ServerPlayerEntity serverPlayerEntity){
         PacketByteBuf modeInfo = new PacketByteBuf(PacketByteBufs.create().writeBoolean(((ServerPlayerEntityDuck)player).getFiltPickIsWhiteListMode()));
         ServerPlayNetworking.send(player,new Identifier("syn_listmode"), modeInfo);
+        PacketByteBuf destructionModeInfo = new PacketByteBuf(PacketByteBufs.create().writeBoolean(((ServerPlayerEntityDuck) player).getFiltPickIsDestructionMode()));
+        ServerPlayNetworking.send(player,new Identifier("syn_destruction_mode"),destructionModeInfo);
     }
 
 }

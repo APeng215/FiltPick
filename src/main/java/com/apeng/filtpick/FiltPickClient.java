@@ -14,5 +14,6 @@ public class FiltPickClient implements ClientModInitializer {
     public void onInitializeClient() {
         HandledScreens.register(FiltPick.FilePick_SCREEN_HANDLER, FiltPickScreen::new);
         ClientPlayNetworking.registerGlobalReceiver(new Identifier("syn_listmode"),(client, handler, buf, responseSender) -> client.execute(()-> FiltPickScreen.filtPickIsWhiteListMode=buf.readBoolean()));
+        ClientPlayNetworking.registerGlobalReceiver(new Identifier("syn_destruction_mode"),(client, handler, buf, responseSender) -> client.execute(()-> FiltPickScreen.filtPickIsDestructionMode = buf.readBoolean()));
     }
 }

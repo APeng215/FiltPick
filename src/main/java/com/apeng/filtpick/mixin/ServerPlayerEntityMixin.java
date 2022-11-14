@@ -23,6 +23,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ServerPlayerEntity.class)
 public abstract class ServerPlayerEntityMixin extends PlayerEntity implements ImplementedInventory, ServerPlayerEntityDuck {
     public boolean filtPickIsWhiteListMode = false;
+    public boolean filtPickIsDestructionMode = false;
     public final DefaultedList<ItemStack> filtPickInventory = DefaultedList.ofSize(27, ItemStack.EMPTY);
 
     public ServerPlayerEntityMixin(World world, BlockPos pos, float yaw, GameProfile gameProfile, @Nullable PlayerPublicKey publicKey) {
@@ -33,6 +34,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Im
     public void readFiltPickInventoryInfoFromNbt(NbtCompound nbt, CallbackInfo callbackInfo){
         Inventories.readNbt(nbt, this.filtPickInventory);
         filtPickIsWhiteListMode = nbt.getBoolean("filtPickWhiteListMode");
+        filtPickIsDestructionMode = nbt.getBoolean("filtPickIsDestructionMode");
     }
 
 
@@ -41,6 +43,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Im
     public void writeFiltPickInventoryInfoToNbt(NbtCompound nbt, CallbackInfo callbackInfo){
         Inventories.writeNbt(nbt, this.filtPickInventory);
         nbt.putBoolean("filtPickWhiteListMode",filtPickIsWhiteListMode);
+        nbt.putBoolean("filtPickIsDestructionMode",filtPickIsDestructionMode);
     }
 
 
@@ -60,9 +63,12 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Im
     public boolean getFiltPickIsWhiteListMode() {
         return filtPickIsWhiteListMode;
     }
-
+    public boolean getFiltPickIsDestructionMode(){
+        return filtPickIsDestructionMode;
+    }
     @Override
     public void setFiltPickWhiteListMode(Boolean bool) {
         filtPickIsWhiteListMode=bool;
     }
+    public void setFiltPickDestructionMode(Boolean bool){filtPickIsDestructionMode = bool;}
 }

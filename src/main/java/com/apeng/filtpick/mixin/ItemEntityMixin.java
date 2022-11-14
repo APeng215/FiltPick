@@ -36,7 +36,7 @@ public abstract class ItemEntityMixin extends Entity {
 
     }
 
-    private static void filtPick(ServerPlayerEntityDuck player, CallbackInfo callbackInfo, Item item, DefaultedList<ItemStack> filtPickInventory) {
+    private void filtPick(ServerPlayerEntityDuck player, CallbackInfo callbackInfo, Item item, DefaultedList<ItemStack> filtPickInventory) {
         if(player.getFiltPickIsWhiteListMode()){
             boolean match = false;
             for(ItemStack it: filtPickInventory){
@@ -45,11 +45,21 @@ public abstract class ItemEntityMixin extends Entity {
                     break;
                 }
             }
-            if(!match) callbackInfo.cancel();
+            if(!match) {
+                if(player.getFiltPickIsDestructionMode()){
+                    this.discard();
+                }
+                callbackInfo.cancel();
+            }
         }
         else {
             for(ItemStack it: filtPickInventory){
-                if(it.getItem().equals(item)) callbackInfo.cancel();
+                if(it.getItem().equals(item)) {
+                    if(player.getFiltPickIsDestructionMode()){
+                        this.discard();
+                    }
+                    callbackInfo.cancel();
+                }
             }
         }
     }

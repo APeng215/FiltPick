@@ -17,7 +17,9 @@ import org.jetbrains.annotations.NotNull;
 
 public class FiltPickScreen extends HandledScreen<FiltPickScreenHandler> {
     static TexturedButtonWidget whiteModeButton,blackModeButton;
+    static TexturedButtonWidget destructionModeOnButton,destructionModeOffButton;
     public static boolean filtPickIsWhiteListMode = false;
+    public static boolean filtPickIsDestructionMode = false;
     private static final Identifier FILTPICK_RETURN_BUTTON_TEXTURE = new Identifier("filtpick","gui/filtpick_return_button.png");
     //A path to the gui texture. In this example we use the texture from the dispenser
     private static final Identifier FILTPICK_SCREEN_TEXTURE = new Identifier("filtpick", "gui/filtpick_screen.png");
@@ -55,14 +57,31 @@ public class FiltPickScreen extends HandledScreen<FiltPickScreenHandler> {
     }
 
     private void addChilds() {
-
         initModeButton();
-
+        initDestructionModeButton();
         this.addDrawableChild(createReturnButton());
-        //this.addDrawableChild(createModeSwitchWidget("mode"));
-
+        
     }
-
+    private void initDestructionModeButton() {
+        destructionModeOnButton = new TexturedButtonWidget(this.x + 10 + 2 + 12, this.y + 4, 12, 11, 0, 0, 12, WHITELIST_BUTTON_TEXTURE, 256, 256, button -> {
+            filtPickIsDestructionMode = !filtPickIsDestructionMode;//Switch
+            sendC2SPacketToSetDestructionMode(false);
+            this.remove(destructionModeOnButton);
+            this.addDrawableChild(destructionModeOffButton);
+        }, (button, matrices, mouseX, mouseY) -> FiltPickScreen.this.renderTooltip(matrices,Text.translatable("whitelist_mode_explanation"),destructionModeOnButton.x, destructionModeOnButton.y),Text.of("whitelist_mode_explanation"));
+        destructionModeOffButton = new TexturedButtonWidget(this.x + 10 + 2 + 12, this.y + 4, 12, 11, 0, 0, 12, BLACKLIST_BUTTON_TEXTURE,256,256,button -> {
+            filtPickIsDestructionMode = !filtPickIsDestructionMode;//Switch
+            sendC2SPacketToSetDestructionMode(true);
+            this.remove(destructionModeOffButton);
+            this.addDrawableChild(destructionModeOnButton);
+        }, (button, matrices, mouseX, mouseY) -> FiltPickScreen.this.renderTooltip(matrices,Text.translatable("blacklist_mode_explanation"),destructionModeOnButton.x, destructionModeOnButton.y),Text.of("blacklist_mode_explanation"));
+        if(filtPickIsDestructionMode){
+            this.addDrawableChild(destructionModeOnButton);
+        }
+        else {
+            this.addDrawableChild(destructionModeOffButton);
+        }
+    }
     private void initModeButton() {
         whiteModeButton = new TexturedButtonWidget(this.x + 10, this.y + 4, 12, 11, 0, 0, 12, WHITELIST_BUTTON_TEXTURE, 256, 256, button -> {
             filtPickIsWhiteListMode = !filtPickIsWhiteListMode;//Switch
@@ -105,7 +124,10 @@ public class FiltPickScreen extends HandledScreen<FiltPickScreenHandler> {
         PacketByteBuf filtUpdataBuf = new PacketByteBuf(PacketByteBufs.create().writeBoolean(bool));
         ClientPlayNetworking.send(new Identifier("update_filtpick_mode"),filtUpdataBuf);
     }
-
+    private static void sendC2SPacketToSetDestructionMode(boolean bool){
+        PacketByteBuf filtUpdataBuf = new PacketByteBuf(PacketByteBufs.create().writeBoolean(bool));
+        ClientPlayNetworking.send(new Identifier("update_filtpick_destruction_mode"),filtUpdataBuf);
+    }
 
 
 

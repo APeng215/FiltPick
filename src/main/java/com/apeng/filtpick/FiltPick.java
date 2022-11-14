@@ -46,5 +46,9 @@ public class FiltPick implements ModInitializer {
             boolean updataInfo = buf.readBoolean();
             server.execute(()-> ((ServerPlayerEntityDuck)player).setFiltPickWhiteListMode(updataInfo));
         });
+        ServerPlayNetworking.registerGlobalReceiver(new Identifier("update_filtpick_destruction_mode"),(server, player, handler, buf, responseSender) -> {
+            boolean updateInfo = buf.readBoolean();
+            server.execute(()-> ((ServerPlayerEntityDuck)player).setFiltPickDestructionMode(updateInfo));
+        });
     }
 }
