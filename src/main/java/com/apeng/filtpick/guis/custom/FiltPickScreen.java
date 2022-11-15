@@ -29,6 +29,8 @@ public class FiltPickScreen extends HandledScreen<FiltPickScreenHandler> {
     private static final Identifier FILTPICK_SCREEN_TEXTURE = new Identifier("filtpick", "gui/filtpick_screen.png");
     private static final Identifier WHITELIST_BUTTON_TEXTURE = new Identifier("filtpick", "gui/filtpick_whitelist_button.png");
     private static final Identifier BLACKLIST_BUTTON_TEXTURE = new Identifier("filtpick", "gui/filtpick_blacklist_button.png");
+    private static final Identifier DESTRUCTION_ON_BUTTON_TEXTURE = new Identifier("filtpick","gui/filtpick_destruction_on_button.png");
+    private static final Identifier DESTRUCTION_OFF_BUTTON_TEXTURE = new Identifier("filtpick","gui/filtpick_destruction_off_button.png");
     public FiltPickScreen(FiltPickScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
     }
