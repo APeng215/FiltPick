@@ -1,7 +1,11 @@
 {
-  "whitelist_mode_explanation": "拾取模式:白名单(你只会捡起以下物品)",
-  "blacklist_mode_explanation": "拾取模式:黑名单(你不会捡起以下物品)",
-  "destruction_mode_on_explanation": "销毁模式:开(无法捡起的物品将被销毁!)",
-  "destruction_mode_off_explanation": "销毁模式:关"
+  "whitelist_mode": "拾取模式:白名单",
+  "whitelist_mode_explanation": "效果:你只会捡起以下物品",
+  "blacklist_mode": "拾取模式:黑名单",
+  "blacklist_mode_explanation": "效果:你不会捡起以下物品",
+  "destruction_mode_on": "销毁模式:开",
+  "destruction_mode_on_explanation":"所有无法捡起的物品将被销毁!",
+  "destruction_mode_off": "销毁模式:关"
+
 
 }

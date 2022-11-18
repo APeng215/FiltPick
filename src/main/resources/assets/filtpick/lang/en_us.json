@@ -1,6 +1,9 @@
 {
-  "whitelist_mode_explanation": "Pick-mode:Whitelist(Only the items below will be picked up)",
-  "blacklist_mode_explanation": "Pick-mode:Blacklist(The items below won't be picked up)",
-  "destruction_mode_on_explanation": "Destruction-mode:ON(Items that cannot be picked will be destroyed!)",
-  "destruction_mode_off_explanation": "Destruction-mode:OFF"
+  "whitelist_mode": "Pick-mode:Whitelist",
+  "whitelist_mode_explanation": "Effect:Only the items below will be picked up",
+  "blacklist_mode": "Pick-mode:Blacklist",
+  "blacklist_mode_explanation": "Effect:The items below won't be picked up",
+  "destruction_mode_on": "Destruction-mode:ON",
+  "destruction_mode_on_explanation":"Items that cannot be picked will be destroyed!",
+  "destruction_mode_off": "Destruction-mode:OFF"
 }
