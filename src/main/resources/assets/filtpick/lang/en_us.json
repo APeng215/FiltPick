@@ -1,4 +1,6 @@
 {
-  "whitelist_mode_explanation": "Whitelist-mode(Only the items below will be picked up)",
-  "blacklist_mode_explanation": "Blacklist-mode(The items below won't be picked up)"
+  "whitelist_mode_explanation": "Pick-mode:Whitelist(Only the items below will be picked up)",
+  "blacklist_mode_explanation": "Pick-mode:Blacklist(The items below won't be picked up)",
+  "destruction_mode_on_explanation": "Destruction-mode:ON(Items that cannot be picked will be destroyed!)",
+  "destruction_mode_off_explanation": "Destruction-mode:OFF"
 }

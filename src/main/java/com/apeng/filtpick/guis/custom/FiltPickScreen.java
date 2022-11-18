@@ -27,6 +27,8 @@ public class FiltPickScreen extends HandledScreen<FiltPickScreenHandler> {
     private static final Identifier WHITELIST_BUTTON_TEXTURE = new Identifier("filtpick", "gui/filtpick_whitelist_button.png");
 
     private static final Identifier BLACKLIST_BUTTON_TEXTURE = new Identifier("filtpick", "gui/filtpick_blacklist_button.png");
+    private static final Identifier DESTRUCTION_ON_BUTTON_TEXTURE = new Identifier("filtpick","gui/filtpick_destruction_on_button.png");
+    private static final Identifier DESTRUCTION_OFF_BUTTON_TEXTURE = new Identifier("filtpick","gui/filtpick_destruction_off_button.png");
 
     public FiltPickScreen(FiltPickScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
@@ -63,18 +65,18 @@ public class FiltPickScreen extends HandledScreen<FiltPickScreenHandler> {
         
     }
     private void initDestructionModeButton() {
-        destructionModeOnButton = new TexturedButtonWidget(this.x + 10 + 2 + 12, this.y + 4, 12, 11, 0, 0, 12, WHITELIST_BUTTON_TEXTURE, 256, 256, button -> {
+        destructionModeOnButton = new TexturedButtonWidget(this.x + 10 + 2 + 12, this.y + 4, 12, 11, 0, 0, 12, DESTRUCTION_ON_BUTTON_TEXTURE, 256, 256, button -> {
             filtPickIsDestructionMode = !filtPickIsDestructionMode;//Switch
             sendC2SPacketToSetDestructionMode(false);
             this.remove(destructionModeOnButton);
             this.addDrawableChild(destructionModeOffButton);
-        }, (button, matrices, mouseX, mouseY) -> FiltPickScreen.this.renderTooltip(matrices,Text.translatable("whitelist_mode_explanation"),destructionModeOnButton.x, destructionModeOnButton.y),Text.of("whitelist_mode_explanation"));
-        destructionModeOffButton = new TexturedButtonWidget(this.x + 10 + 2 + 12, this.y + 4, 12, 11, 0, 0, 12, BLACKLIST_BUTTON_TEXTURE,256,256,button -> {
+        }, (button, matrices, mouseX, mouseY) -> FiltPickScreen.this.renderTooltip(matrices,Text.translatable("destruction_mode_on_explanation"),destructionModeOnButton.x-100, destructionModeOnButton.y),Text.of("destruction_mode_on_explanation"));
+        destructionModeOffButton = new TexturedButtonWidget(this.x + 10 + 2 + 12, this.y + 4, 12, 11, 0, 0, 12, DESTRUCTION_OFF_BUTTON_TEXTURE,256,256,button -> {
             filtPickIsDestructionMode = !filtPickIsDestructionMode;//Switch
             sendC2SPacketToSetDestructionMode(true);
             this.remove(destructionModeOffButton);
             this.addDrawableChild(destructionModeOnButton);
-        }, (button, matrices, mouseX, mouseY) -> FiltPickScreen.this.renderTooltip(matrices,Text.translatable("blacklist_mode_explanation"),destructionModeOnButton.x, destructionModeOnButton.y),Text.of("blacklist_mode_explanation"));
+        }, (button, matrices, mouseX, mouseY) -> FiltPickScreen.this.renderTooltip(matrices,Text.translatable("destruction_mode_off_explanation"),destructionModeOffButton.x-100, destructionModeOffButton.y),Text.of("destruction_mode_off_explanation"));
         if(filtPickIsDestructionMode){
             this.addDrawableChild(destructionModeOnButton);
         }
@@ -88,13 +90,13 @@ public class FiltPickScreen extends HandledScreen<FiltPickScreenHandler> {
             sendC2SPacketToSetWhiteMode(false);
             this.remove(whiteModeButton);
             this.addDrawableChild(blackModeButton);
-        }, (button, matrices, mouseX, mouseY) -> FiltPickScreen.this.renderTooltip(matrices,Text.translatable("whitelist_mode_explanation"),whiteModeButton.x, whiteModeButton.y),Text.of("whitelist_mode_explanation"));
+        }, (button, matrices, mouseX, mouseY) -> FiltPickScreen.this.renderTooltip(matrices,Text.translatable("whitelist_mode_explanation"),whiteModeButton.x-100, whiteModeButton.y),Text.of("whitelist_mode_explanation"));
         blackModeButton = new TexturedButtonWidget(this.x + 10, this.y + 4, 12, 11, 0, 0, 12, BLACKLIST_BUTTON_TEXTURE,256,256,button -> {
             filtPickIsWhiteListMode = !filtPickIsWhiteListMode;//Switch
             sendC2SPacketToSetWhiteMode(true);
             this.remove(blackModeButton);
             this.addDrawableChild(whiteModeButton);
-        }, (button, matrices, mouseX, mouseY) -> FiltPickScreen.this.renderTooltip(matrices,Text.translatable("blacklist_mode_explanation"),whiteModeButton.x, whiteModeButton.y),Text.of("blacklist_mode_explanation"));
+        }, (button, matrices, mouseX, mouseY) -> FiltPickScreen.this.renderTooltip(matrices,Text.translatable("blacklist_mode_explanation"),blackModeButton.x-100, blackModeButton.y),Text.of("blacklist_mode_explanation"));
         if(filtPickIsWhiteListMode){
             this.addDrawableChild(whiteModeButton);
         }
