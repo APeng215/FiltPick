@@ -12,7 +12,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
@@ -116,15 +115,15 @@ public class FiltPickScreen extends HandledScreen<FiltPickScreenHandler> {
         }
     }
     private void initTooltipsOfModeButton(){
-        tooltipOfWhiteMode.add(new TranslatableText("whitelist_mode").formatted(Formatting.GREEN));
-        tooltipOfWhiteMode.add(new TranslatableText("whitelist_mode_explanation").formatted(Formatting.DARK_GRAY,Formatting.ITALIC));
-        tooltipOfBlackMode.add(new TranslatableText("blacklist_mode").formatted(Formatting.RED));
-        tooltipOfBlackMode.add(new TranslatableText("blacklist_mode_explanation").formatted(Formatting.DARK_GRAY,Formatting.ITALIC));
+        tooltipOfWhiteMode.add(Text.translatable("whitelist_mode").formatted(Formatting.GREEN));
+        tooltipOfWhiteMode.add(Text.translatable("whitelist_mode_explanation").formatted(Formatting.DARK_GRAY,Formatting.ITALIC));
+        tooltipOfBlackMode.add(Text.translatable("blacklist_mode").formatted(Formatting.RED));
+        tooltipOfBlackMode.add(Text.translatable("blacklist_mode_explanation").formatted(Formatting.DARK_GRAY,Formatting.ITALIC));
     }
     private void initTooltipsOfDestructionButton(){
-        tooltipOfDestructionOff.add(new TranslatableText("destruction_mode_off").formatted(Formatting.GRAY));
-        tooltipOfDestructionOn.add(new TranslatableText("destruction_mode_on").formatted(Formatting.RED));
-        tooltipOfDestructionOn.add(new TranslatableText("destruction_mode_on_explanation").formatted(Formatting.DARK_GRAY,Formatting.ITALIC));
+        tooltipOfDestructionOff.add(Text.translatable("destruction_mode_off").formatted(Formatting.GRAY));
+        tooltipOfDestructionOn.add(Text.translatable("destruction_mode_on").formatted(Formatting.RED));
+        tooltipOfDestructionOn.add(Text.translatable("destruction_mode_on_explanation").formatted(Formatting.DARK_GRAY,Formatting.ITALIC));
     }
     @NotNull
     private TexturedButtonWidget createReturnButton() {

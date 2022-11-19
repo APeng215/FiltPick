@@ -25,10 +25,10 @@ public class FiltPick implements ModInitializer {
         Registry.register(Registry.SCREEN_HANDLER,new Identifier("filtpick","filtpick_screen"),FilePick_SCREEN_HANDLER);
         ServerPlayNetworking.registerGlobalReceiver(new Identifier("open_filtpick_screen"),((server, player, handler, buf, responseSender) -> server.execute(()->{
             NamedScreenHandlerFactory modScreenFactory = new NamedScreenHandlerFactory() {
-//                @Override
-//                public boolean shouldCloseCurrentScreen() {
-//                    return false;
-//                }
+                @Override
+                public boolean shouldCloseCurrentScreen() {
+                    return false;
+                }
 
                 @Override
                 public Text getDisplayName() {
