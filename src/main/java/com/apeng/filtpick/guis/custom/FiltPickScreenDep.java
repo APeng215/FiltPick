@@ -1,11 +1,16 @@
 package com.apeng.filtpick.guis.custom;
 
-import io.github.cottonmc.cotton.gui.client.CottonInventoryScreen;
+
+import com.apeng.filtpick.NetWorkingIDs;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -14,8 +19,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-
-public class FiltPickScreen extends CottonInventoryScreen<FiltPickGuiDescription> {
+@Deprecated
+public class FiltPickScreenDep extends HandledScreen<FiltPickScreenHandler> {
     static TexturedButtonWidget whiteModeButton,blackModeButton;
     static TexturedButtonWidget destructionModeOnButton,destructionModeOffButton;
     public static boolean filtPickIsWhiteListMode = false;
@@ -25,23 +30,48 @@ public class FiltPickScreen extends CottonInventoryScreen<FiltPickGuiDescription
     private final List<Text> tooltipOfDestructionOn = new ArrayList<>();
     private final List<Text> tooltipOfDestructionOff = new ArrayList<>();
     private static final Identifier FILTPICK_RETURN_BUTTON_TEXTURE = new Identifier("filtpick","gui/filtpick_return_button.png");
+    //A path to the gui texture. In this example we use the texture from the dispenser
+    private static final Identifier FILTPICK_SCREEN_TEXTURE = new Identifier("filtpick", "gui/filtpick_screen.png");
+
     private static final Identifier WHITELIST_BUTTON_TEXTURE = new Identifier("filtpick", "gui/filtpick_whitelist_button.png");
 
     private static final Identifier BLACKLIST_BUTTON_TEXTURE = new Identifier("filtpick", "gui/filtpick_blacklist_button.png");
     private static final Identifier DESTRUCTION_ON_BUTTON_TEXTURE = new Identifier("filtpick","gui/filtpick_destruction_on_button.png");
     private static final Identifier DESTRUCTION_OFF_BUTTON_TEXTURE = new Identifier("filtpick","gui/filtpick_destruction_off_button.png");
-    public FiltPickScreen(FiltPickGuiDescription description, PlayerEntity player, Text title) {
-        super(description, player, title);
+
+    public FiltPickScreenDep(FiltPickScreenHandler handler, PlayerInventory inventory, Text title) {
+        super(handler, inventory, title);
     }
-    public void init() {
+
+    @Override
+    protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, FILTPICK_SCREEN_TEXTURE);
+        int x = (width - backgroundWidth) / 2;
+        int y = (height - backgroundHeight) / 2;
+        drawTexture(matrices, x, y, 0, 0, backgroundWidth, backgroundHeight);
+    }
+
+    @Override
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        renderBackground(matrices);
+        super.render(matrices, mouseX, mouseY, delta);
+        drawMouseoverTooltip(matrices, mouseX, mouseY);
+    }
+
+    @Override
+    protected void init() {
         super.init();
+        setTitleCoordination();
         addChilds();
     }
+
     private void addChilds() {
         initModeButton();
         initDestructionModeButton();
         this.addDrawableChild(createReturnButton());
-
+        
     }
     private void initDestructionModeButton() {
         destructionModeOnButton = new TexturedButtonWidget(this.x + 10 + 2 + 12, this.y + 4, 12, 11, 0, 0, 12, DESTRUCTION_ON_BUTTON_TEXTURE, 256, 256, button -> {
@@ -49,13 +79,13 @@ public class FiltPickScreen extends CottonInventoryScreen<FiltPickGuiDescription
             sendC2SPacketToSetDestructionMode(false);
             this.remove(destructionModeOnButton);
             this.addDrawableChild(destructionModeOffButton);
-        }, (button, matrices, mouseX, mouseY) -> this.renderTooltip(matrices, tooltipOfDestructionOn, destructionModeOnButton.x, destructionModeOnButton.y),Text.of("destruction_mode_on_explanation"));
+        }, (button, matrices, mouseX, mouseY) -> FiltPickScreenDep.this.renderTooltip(matrices, tooltipOfDestructionOn, destructionModeOnButton.x, destructionModeOnButton.y),Text.of("destruction_mode_on_explanation"));
         destructionModeOffButton = new TexturedButtonWidget(this.x + 10 + 2 + 12, this.y + 4, 12, 11, 0, 0, 12, DESTRUCTION_OFF_BUTTON_TEXTURE,256,256,button -> {
             filtPickIsDestructionMode = !filtPickIsDestructionMode;//Switch
             sendC2SPacketToSetDestructionMode(true);
             this.remove(destructionModeOffButton);
             this.addDrawableChild(destructionModeOnButton);
-        }, (button, matrices, mouseX, mouseY) -> this.renderTooltip(matrices, tooltipOfDestructionOff, destructionModeOffButton.x, destructionModeOffButton.y),Text.of("destruction_mode_off_explanation"));
+        }, (button, matrices, mouseX, mouseY) -> FiltPickScreenDep.this.renderTooltip(matrices, tooltipOfDestructionOff, destructionModeOffButton.x, destructionModeOffButton.y),Text.of("destruction_mode_off_explanation"));
         if(filtPickIsDestructionMode){
             this.addDrawableChild(destructionModeOnButton);
         }
@@ -71,13 +101,13 @@ public class FiltPickScreen extends CottonInventoryScreen<FiltPickGuiDescription
             sendC2SPacketToSetWhiteMode(false);
             this.remove(whiteModeButton);
             this.addDrawableChild(blackModeButton);
-        }, (button, matrices, mouseX, mouseY) -> this.renderTooltip(matrices,tooltipOfWhiteMode,whiteModeButton.x, whiteModeButton.y),Text.of("whitelist_mode_explanation"));
+        }, (button, matrices, mouseX, mouseY) -> FiltPickScreenDep.this.renderTooltip(matrices,tooltipOfWhiteMode,whiteModeButton.x, whiteModeButton.y),Text.of("whitelist_mode_explanation"));
         blackModeButton = new TexturedButtonWidget(this.x + 10, this.y + 4, 12, 11, 0, 0, 12, BLACKLIST_BUTTON_TEXTURE,256,256,button -> {
             filtPickIsWhiteListMode = !filtPickIsWhiteListMode;//Switch
             sendC2SPacketToSetWhiteMode(true);
             this.remove(blackModeButton);
             this.addDrawableChild(whiteModeButton);
-        }, (button, matrices, mouseX, mouseY) -> this.renderTooltip(matrices,tooltipOfBlackMode,blackModeButton.x, blackModeButton.y),Text.of("blacklist_mode_explanation"));
+        }, (button, matrices, mouseX, mouseY) -> FiltPickScreenDep.this.renderTooltip(matrices,tooltipOfBlackMode,blackModeButton.x, blackModeButton.y),Text.of("blacklist_mode_explanation"));
         if(filtPickIsWhiteListMode){
             this.addDrawableChild(whiteModeButton);
         }
@@ -106,12 +136,22 @@ public class FiltPickScreen extends CottonInventoryScreen<FiltPickGuiDescription
         });
     }
 
+    private void setTitleCoordination() {
+        // Center the title
+        titleX = (backgroundWidth - textRenderer.getWidth(title)) / 2;
+    }
+
+
+
     private static void sendC2SPacketToSetWhiteMode(boolean bool) {
         PacketByteBuf filtUpdataBuf = new PacketByteBuf(PacketByteBufs.create().writeBoolean(bool));
-        ClientPlayNetworking.send(new Identifier("update_filtpick_mode"),filtUpdataBuf);
+        ClientPlayNetworking.send(NetWorkingIDs.UPDATE_FILTPICK_MODE_C2S,filtUpdataBuf);
     }
     private static void sendC2SPacketToSetDestructionMode(boolean bool){
         PacketByteBuf filtUpdataBuf = new PacketByteBuf(PacketByteBufs.create().writeBoolean(bool));
-        ClientPlayNetworking.send(new Identifier("update_filtpick_destruction_mode"),filtUpdataBuf);
+        ClientPlayNetworking.send(NetWorkingIDs.UPDATE_FILTPICK_DESTRUCTION_MODE_C2S,filtUpdataBuf);
     }
+
+
+
 }
