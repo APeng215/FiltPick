@@ -6,6 +6,6 @@
   "destruction_mode_on": "销毁模式:开",
   "destruction_mode_on_explanation":"所有无法捡起的物品将被销毁!",
   "destruction_mode_off": "销毁模式:关",
-  "filtpick_screen_name": "拾取筛"
-
+  "filtpick_screen_name": "拾取筛",
+  "reset_explanation": "重置列表"
 }

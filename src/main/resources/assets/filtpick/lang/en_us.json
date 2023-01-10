@@ -6,5 +6,6 @@
   "destruction_mode_on": "Destruction-mode:ON",
   "destruction_mode_on_explanation":"Items that cannot be picked will be destroyed!",
   "destruction_mode_off": "Destruction-mode:OFF",
-  "filtpick_screen_name": "Filtpick"
+  "filtpick_screen_name": "Filtpick",
+  "reset_explanation": "Reset the list"
 }

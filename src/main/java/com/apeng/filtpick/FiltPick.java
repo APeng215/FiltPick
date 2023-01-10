@@ -63,5 +63,6 @@ public class FiltPick implements ModInitializer {
                 }
             });
         }));
+        ServerPlayNetworking.registerGlobalReceiver(NetWorkingIDs.CLEAR_LIST_C2S,((server, player, handler, buf, responseSender) -> server.execute(()-> ((ServerPlayerEntityDuck)player).getFiltPickInventory().clear())));
     }
 }
