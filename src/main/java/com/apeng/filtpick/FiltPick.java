@@ -3,6 +3,7 @@ package com.apeng.filtpick;
 import com.apeng.filtpick.guis.custom.FiltPickGuiDescription;
 import com.apeng.filtpick.mixinduck.ServerPlayerEntityDuck;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -64,5 +65,9 @@ public class FiltPick implements ModInitializer {
             });
         }));
         ServerPlayNetworking.registerGlobalReceiver(NetWorkingIDs.CLEAR_LIST_C2S,((server, player, handler, buf, responseSender) -> server.execute(()-> ((ServerPlayerEntityDuck)player).getFiltPickInventory().clear())));
+        ServerPlayNetworking.registerGlobalReceiver(NetWorkingIDs.REQUIRE_SYN_C2S,((server, player, handler, buf, responseSender) -> server.execute(()->{
+            responseSender.sendPacket( NetWorkingIDs.SYN_PICKMODE_S2C, new PacketByteBuf(PacketByteBufs.create().writeBoolean(((ServerPlayerEntityDuck)player).getFiltPickIsWhiteListMode())));
+            responseSender.sendPacket(NetWorkingIDs.SYN_DESTRUCTION_MODE_S2C, new PacketByteBuf(PacketByteBufs.create().writeBoolean(((ServerPlayerEntityDuck) player).getFiltPickIsDestructionMode())));
+        })));
     }
 }

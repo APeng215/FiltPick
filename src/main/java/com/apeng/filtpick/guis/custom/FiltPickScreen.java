@@ -134,11 +134,11 @@ public class FiltPickScreen extends CottonInventoryScreen<FiltPickGuiDescription
         );
     }
 
-    private static void sendC2SPacketToSetWhiteMode(boolean bool) {
+    private void sendC2SPacketToSetWhiteMode(boolean bool) {
         PacketByteBuf filtUpdataBuf = new PacketByteBuf(PacketByteBufs.create().writeBoolean(bool));
         ClientPlayNetworking.send(new Identifier("update_filtpick_mode"),filtUpdataBuf);
     }
-    private static void sendC2SPacketToSetDestructionMode(boolean bool){
+    private void sendC2SPacketToSetDestructionMode(boolean bool){
         PacketByteBuf filtUpdataBuf = new PacketByteBuf(PacketByteBufs.create().writeBoolean(bool));
         ClientPlayNetworking.send(new Identifier("update_filtpick_destruction_mode"),filtUpdataBuf);
     }

@@ -34,6 +34,9 @@ public abstract class InventoryScreenMixin extends AbstractInventoryScreen<Playe
 
         @Inject(method = "init()V",at = @At(value = "INVOKE",target = "net/minecraft/client/gui/screen/ingame/InventoryScreen.addDrawableChild(Lnet/minecraft/client/gui/Element;)Lnet/minecraft/client/gui/Element;"),cancellable = true)
     private void addFiltPickAddEntryButton(CallbackInfo ci){
+
+        ClientPlayNetworking.send(NetWorkingIDs.REQUIRE_SYN_C2S,PacketByteBufs.empty());
+
         int deviationOfFiltPickButton = 25;
         RecipeBookWidget recipeBook = ((InventoryScreenAccessor)this).getRecipeBook();
         TexturedButtonWidget recipeBookButton;

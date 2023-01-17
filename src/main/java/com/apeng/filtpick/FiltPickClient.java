@@ -13,7 +13,13 @@ public class FiltPickClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         HandledScreens.<FiltPickGuiDescription, FiltPickScreen>register(FiltPick.FILTPICK_SCREEN_HANDLER_TYPE, (gui, inventory, title) -> new FiltPickScreen(gui, inventory.player, title));
-        ClientPlayNetworking.registerGlobalReceiver(NetWorkingIDs.SYN_LISTMODE_S2C,(client, handler, buf, responseSender) -> client.execute(()-> FiltPickScreen.filtPickIsWhiteListMode=buf.readBoolean()));
-        ClientPlayNetworking.registerGlobalReceiver(NetWorkingIDs.SYN_DESTRUCTION_MODE_S2C,(client, handler, buf, responseSender) -> client.execute(()-> FiltPickScreen.filtPickIsDestructionMode = buf.readBoolean()));
+        ClientPlayNetworking.registerGlobalReceiver(NetWorkingIDs.SYN_PICKMODE_S2C,(client, handler, buf, responseSender) -> {
+            boolean listMode = buf.readBoolean();
+            client.execute(()-> FiltPickScreen.filtPickIsWhiteListMode = listMode);
+        });
+        ClientPlayNetworking.registerGlobalReceiver(NetWorkingIDs.SYN_DESTRUCTION_MODE_S2C,(client, handler, buf, responseSender) -> {
+            boolean destructionMode = buf.readBoolean();
+            client.execute(()-> FiltPickScreen.filtPickIsDestructionMode = destructionMode);
+        });
     }
 }
