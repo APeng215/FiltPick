@@ -1,6 +1,7 @@
 package com.apeng.filtpick.mixin;
 
 
+import com.apeng.filtpick.NetWorkingIDs;
 import com.apeng.filtpick.guis.custom.FiltPickScreen;
 import com.apeng.filtpick.mixin.accessor.InventoryScreenAccessor;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -33,6 +34,9 @@ public abstract class InventoryScreenMixin extends AbstractInventoryScreen<Playe
 
         @Inject(method = "init()V",at = @At(value = "INVOKE",target = "net/minecraft/client/gui/screen/ingame/InventoryScreen.addDrawableChild(Lnet/minecraft/client/gui/Element;)Lnet/minecraft/client/gui/Element;"),cancellable = true)
     private void addFiltPickAddEntryButton(CallbackInfo ci){
+
+        ClientPlayNetworking.send(NetWorkingIDs.REQUIRE_SYN_C2S,PacketByteBufs.empty());
+
         int deviationOfFiltPickButton = 25;
         RecipeBookWidget recipeBook = ((InventoryScreenAccessor)this).getRecipeBook();
         TexturedButtonWidget recipeBookButton;
@@ -58,19 +62,19 @@ public abstract class InventoryScreenMixin extends AbstractInventoryScreen<Playe
         TexturedButtonWidget filtPickButton;
         if(FiltPickScreen.filtPickIsWhiteListMode && FiltPickScreen.filtPickIsDestructionMode){
             filtPickButton = new TexturedButtonWidget(this.x + 104 + deviationOfFiltPickButton, this.height / 2 - 22, 20, 18, 0, 0, 19, FILTPICK_ENTRY_WHITELIST_DES_ON, button
-                    -> ClientPlayNetworking.send(new Identifier("open_filtpick_screen"), PacketByteBufs.empty()));
+                    -> ClientPlayNetworking.send(NetWorkingIDs.OPEN_FILTPICK_SCREEN_C2S, PacketByteBufs.empty()));
         }
         else if(!FiltPickScreen.filtPickIsWhiteListMode && FiltPickScreen.filtPickIsDestructionMode){
             filtPickButton = new TexturedButtonWidget(this.x + 104 + deviationOfFiltPickButton, this.height / 2 - 22, 20, 18, 0, 0, 19, FILTPICK_ENTRY_BLACKLIST_DES_ON, button
-                    -> ClientPlayNetworking.send(new Identifier("open_filtpick_screen"), PacketByteBufs.empty()));
+                    -> ClientPlayNetworking.send(NetWorkingIDs.OPEN_FILTPICK_SCREEN_C2S, PacketByteBufs.empty()));
         }
         else if(FiltPickScreen.filtPickIsWhiteListMode) {
             filtPickButton = new TexturedButtonWidget(this.x + 104 + deviationOfFiltPickButton, this.height / 2 - 22, 20, 18, 0, 0, 19, FILTPICK_ENTRY_WHITELIST, button
-                    -> ClientPlayNetworking.send(new Identifier("open_filtpick_screen"), PacketByteBufs.empty()));
+                    -> ClientPlayNetworking.send(NetWorkingIDs.OPEN_FILTPICK_SCREEN_C2S, PacketByteBufs.empty()));
         }
         else{
             filtPickButton = new TexturedButtonWidget(this.x + 104 + deviationOfFiltPickButton, this.height / 2 - 22, 20, 18, 0, 0, 19, FILTPICK_ENTRY_BLACKLIST, button
-                    -> ClientPlayNetworking.send(new Identifier("open_filtpick_screen"), PacketByteBufs.empty()));
+                    -> ClientPlayNetworking.send(NetWorkingIDs.OPEN_FILTPICK_SCREEN_C2S, PacketByteBufs.empty()));
         }
         return filtPickButton;
     }

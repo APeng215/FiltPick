@@ -8,7 +8,9 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.world.GameMode;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -27,11 +29,16 @@ public abstract class ItemEntityMixin extends Entity {
 
     @Inject(method = "onPlayerCollision",at=@At("HEAD"),cancellable = true)
     public void filtPickFilter(PlayerEntity player, CallbackInfo callbackInfo){
+        //Check side
         if(!player.world.isClient){
-            Item item = this.getStack().getItem();
-            DefaultedList<ItemStack> filtPickInventory = ((ServerPlayerEntityDuck)player).getFiltPickInventory();
-            filtPick((ServerPlayerEntityDuck) player, callbackInfo, item, filtPickInventory);
+            //Check gamemode
+            if(((ServerPlayerEntity)player).interactionManager.getGameMode()==GameMode.SURVIVAL||((ServerPlayerEntity)player).interactionManager.getGameMode()==GameMode.ADVENTURE){
+                Item item = this.getStack().getItem();
+                DefaultedList<ItemStack> filtPickInventory = ((ServerPlayerEntityDuck)player).getFiltPickInventory();
+                filtPick((ServerPlayerEntityDuck) player, callbackInfo, item, filtPickInventory);
+            }
         }
+
 
 
     }
