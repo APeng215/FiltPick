@@ -5,6 +5,7 @@ import io.github.cottonmc.cotton.gui.client.CottonInventoryScreen;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
+import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
@@ -38,27 +39,36 @@ public class FiltPickScreen extends CottonInventoryScreen<FiltPickGuiDescription
     }
     public void init() {
         super.init();
-        addChilds();
+        addChildren();
     }
-    private void addChilds() {
+    private void addChildren() {
         initModeButton();
         initDestructionModeButton();
         this.addDrawableChild(createReturnButton());
         this.addDrawableChild(createResetButton());
     }
     private void initDestructionModeButton() {
+        //Create button
         destructionModeOnButton = new TexturedButtonWidget(this.x + 10 + 2 + 12, this.y + 4, 12, 11, 0, 0, 12, DESTRUCTION_ON_BUTTON_TEXTURE, 256, 256, button -> {
             filtPickIsDestructionMode = !filtPickIsDestructionMode;//Switch
             sendC2SPacketToSetDestructionMode(false);
             this.remove(destructionModeOnButton);
             this.addDrawableChild(destructionModeOffButton);
-        }, (button, matrices, mouseX, mouseY) -> this.renderTooltip(matrices, tooltipOfDestructionOn, destructionModeOnButton.x, destructionModeOnButton.y),Text.of("destruction_mode_on_explanation"));
+        },Text.of("destruction_mode_on_explanation"));
+        //Set tooltip
+        destructionModeOnButton.setTooltip(Tooltip.of(Text.translatable("destruction_mode_on").append("\n").formatted(Formatting.DARK_RED).append(Text.translatable("destruction_mode_on_explanation").formatted(Formatting.DARK_GRAY))));
+        destructionModeOnButton.setTooltipDelay(0);
+        //Create button
         destructionModeOffButton = new TexturedButtonWidget(this.x + 10 + 2 + 12, this.y + 4, 12, 11, 0, 0, 12, DESTRUCTION_OFF_BUTTON_TEXTURE,256,256,button -> {
             filtPickIsDestructionMode = !filtPickIsDestructionMode;//Switch
             sendC2SPacketToSetDestructionMode(true);
             this.remove(destructionModeOffButton);
             this.addDrawableChild(destructionModeOnButton);
-        }, (button, matrices, mouseX, mouseY) -> this.renderTooltip(matrices, tooltipOfDestructionOff, destructionModeOffButton.x, destructionModeOffButton.y),Text.of("destruction_mode_off_explanation"));
+        },Text.of("destruction_mode_off_explanation"));
+        //Set tooltip
+        destructionModeOffButton.setTooltip(Tooltip.of(Text.translatable("destruction_mode_off").formatted(Formatting.DARK_GRAY)));
+        destructionModeOffButton.setTooltipDelay(0);
+
         if(filtPickIsDestructionMode){
             this.addDrawableChild(destructionModeOnButton);
         }
@@ -69,18 +79,27 @@ public class FiltPickScreen extends CottonInventoryScreen<FiltPickGuiDescription
     private void initModeButton() {
         initTooltipsOfModeButton();
         initTooltipsOfDestructionButton();
+        //Create button
         whiteModeButton = new TexturedButtonWidget(this.x + 10, this.y + 4, 12, 11, 0, 0, 12, WHITELIST_BUTTON_TEXTURE, 256, 256, button -> {
             filtPickIsWhiteListMode = !filtPickIsWhiteListMode;//Switch
             sendC2SPacketToSetWhiteMode(false);
             this.remove(whiteModeButton);
             this.addDrawableChild(blackModeButton);
-        }, (button, matrices, mouseX, mouseY) -> this.renderTooltip(matrices,tooltipOfWhiteMode,whiteModeButton.x, whiteModeButton.y),Text.of("whitelist_mode_explanation"));
+        }, Text.of("whitelist_mode_explanation"));
+        //Set tooltip
+        whiteModeButton.setTooltip(Tooltip.of(Text.translatable("whitelist_mode").append("\n").formatted(Formatting.DARK_GREEN).append(Text.translatable("whitelist_mode_explanation").formatted(Formatting.DARK_GRAY))));
+        whiteModeButton.setTooltipDelay(0);
+        //Create button
         blackModeButton = new TexturedButtonWidget(this.x + 10, this.y + 4, 12, 11, 0, 0, 12, BLACKLIST_BUTTON_TEXTURE,256,256,button -> {
             filtPickIsWhiteListMode = !filtPickIsWhiteListMode;//Switch
             sendC2SPacketToSetWhiteMode(true);
             this.remove(blackModeButton);
             this.addDrawableChild(whiteModeButton);
-        }, (button, matrices, mouseX, mouseY) -> this.renderTooltip(matrices,tooltipOfBlackMode,blackModeButton.x, blackModeButton.y),Text.of("blacklist_mode_explanation"));
+        },Text.of("blacklist_mode_explanation"));
+        //Set tooltip
+        blackModeButton.setTooltip(Tooltip.of(Text.translatable("blacklist_mode").append("\n").formatted(Formatting.DARK_RED).append(Text.translatable("blacklist_mode_explanation").formatted(Formatting.DARK_GRAY))));
+        blackModeButton.setTooltipDelay(0);
+
         if(filtPickIsWhiteListMode){
             this.addDrawableChild(whiteModeButton);
         }
@@ -130,7 +149,7 @@ public class FiltPickScreen extends CottonInventoryScreen<FiltPickGuiDescription
             }
             //Clear filtpick inventory
             ClientPlayNetworking.send(NetWorkingIDs.CLEAR_LIST_C2S, PacketByteBufs.empty());
-        },(button, matrices, mouseX, mouseY) -> this.renderTooltip(matrices,tooltipOfReset,button.x, button.y),Text.of("reset_explanation")
+        },Text.of("reset_explanation")
         );
     }
 
