@@ -1,0 +1,11 @@
+{
+  "whitelist_mode": "拾取模式:白名單",
+  "whitelist_mode_explanation": "效果:你只會撿起以下物品",
+  "blacklist_mode": "拾取模式:黑名單",
+  "blacklist_mode_explanation": "效果:你不會撿起以下物品",
+  "destruction_mode_on": "銷燬模式:開",
+  "destruction_mode_on_explanation":"所有無法撿起的物品將被銷燬!",
+  "destruction_mode_off": "銷燬模式:關",
+  "filtpick_screen_name": "拾取篩",
+  "reset_explanation": "重置列表"
+}
