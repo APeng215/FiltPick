@@ -21,6 +21,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import static com.apeng.filtpick.Config.CONFIG;
+
 @Mixin(InventoryScreen.class)
 public abstract class InventoryScreenMixin extends AbstractInventoryScreen<PlayerScreenHandler> implements RecipeBookProvider {
     private static final Identifier RECIPE_BUTTON_TEXTURE = new Identifier("textures/gui/recipe_button.png");
@@ -47,7 +49,7 @@ public abstract class InventoryScreenMixin extends AbstractInventoryScreen<Playe
             recipeBook.toggleOpen();
             this.x = recipeBook.findLeftEdge(this.width, this.backgroundWidth);
             ((TexturedButtonWidget)button).setPos(this.x + 104, this.height / 2 - 22);
-            filtPickButton.setPos(this.x + 104 + deviationOfFiltPickButton, this.height / 2 - 22);
+            filtPickButton.setPos(this.x + 104 + deviationOfFiltPickButton + CONFIG.getxOffset(), this.height / 2 - 22 + CONFIG.getyOffset());
             ((InventoryScreenAccessor)this).setMouseDown(true);
         });
         this.addDrawableChild(filtPickButton);
@@ -76,6 +78,7 @@ public abstract class InventoryScreenMixin extends AbstractInventoryScreen<Playe
             filtPickButton = new TexturedButtonWidget(this.x + 104 + deviationOfFiltPickButton, this.height / 2 - 22, 20, 18, 0, 0, 19, FILTPICK_ENTRY_BLACKLIST, button
                     -> ClientPlayNetworking.send(NetWorkingIDs.OPEN_FILTPICK_SCREEN_C2S, PacketByteBufs.empty()));
         }
+        filtPickButton.setPos(this.x + 104 + deviationOfFiltPickButton + CONFIG.getxOffset(), this.height / 2 - 22 + CONFIG.getyOffset());
         return filtPickButton;
     }
 
