@@ -33,9 +33,7 @@ public class WFiltPickItemSlot extends WItemSlot {
     }
 
     @Override
-    public InputResult onKeyPressed(int ch, int key, int modifiers) {
-        return null;
-    }
+    public void onKeyPressed(int ch, int key, int modifiers) {}
 
 
 }

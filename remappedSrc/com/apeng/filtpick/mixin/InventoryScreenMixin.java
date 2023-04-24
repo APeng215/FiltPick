@@ -48,8 +48,8 @@ public abstract class InventoryScreenMixin extends AbstractInventoryScreen<Playe
                 -> {
             recipeBook.toggleOpen();
             this.x = recipeBook.findLeftEdge(this.width, this.backgroundWidth);
-            ((TexturedButtonWidget)button).setPosition(this.x + 104, this.height / 2 - 22);
-            filtPickButton.setPosition(this.x + 104 + deviationOfFiltPickButton + CONFIG.getxOffset(), this.height / 2 - 22 + CONFIG.getyOffset());
+            ((TexturedButtonWidget)button).setPos(this.x + 104, this.height / 2 - 22);
+            filtPickButton.setPos(this.x + 104 + deviationOfFiltPickButton + CONFIG.getxOffset(), this.height / 2 - 22 + CONFIG.getyOffset());
             ((InventoryScreenAccessor)this).setMouseDown(true);
         });
         this.addDrawableChild(filtPickButton);
@@ -78,7 +78,7 @@ public abstract class InventoryScreenMixin extends AbstractInventoryScreen<Playe
             filtPickButton = new TexturedButtonWidget(this.x + 104 + deviationOfFiltPickButton, this.height / 2 - 22, 20, 18, 0, 0, 19, FILTPICK_ENTRY_BLACKLIST, button
                     -> ClientPlayNetworking.send(NetWorkingIDs.OPEN_FILTPICK_SCREEN_C2S, PacketByteBufs.empty()));
         }
-        filtPickButton.setPosition(this.x + 104 + deviationOfFiltPickButton + CONFIG.getxOffset(), this.height / 2 - 22 + CONFIG.getyOffset());
+        filtPickButton.setPos(this.x + 104 + deviationOfFiltPickButton + CONFIG.getxOffset(), this.height / 2 - 22 + CONFIG.getyOffset());
         return filtPickButton;
     }
 

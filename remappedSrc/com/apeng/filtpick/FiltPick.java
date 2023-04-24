@@ -12,7 +12,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
-import net.minecraft.resource.featuretoggle.FeatureSet;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
@@ -22,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 
 public class FiltPick implements ModInitializer {
-    public static ScreenHandlerType<FiltPickGuiDescription> FILTPICK_SCREEN_HANDLER_TYPE=new ScreenHandlerType<>(FiltPickGuiDescription::new, FeatureSet.empty());
+    public static ScreenHandlerType<FiltPickGuiDescription> FILTPICK_SCREEN_HANDLER_TYPE=new ScreenHandlerType<>(FiltPickGuiDescription::new);
 
 
     public void onInitialize() {

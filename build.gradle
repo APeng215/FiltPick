@@ -28,7 +28,7 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     //Third party gui lib
-    modImplementation include("io.github.cottonmc:LibGui:6.5.3+1.19.3")
+    modImplementation include("io.github.cottonmc:LibGui:7.0.0-rc.1+1.19.4")
 }
 
 processResources {
