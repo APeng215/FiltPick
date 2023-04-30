@@ -22,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class ServerPlayerEntityMixin extends PlayerEntity implements ImplementedInventory, ServerPlayerEntityDuck {
     public boolean filtPickIsWhiteListMode = false;
     public boolean filtPickIsDestructionMode = false;
-    public final DefaultedList<ItemStack> filtPickInventory = DefaultedList.ofSize(27, ItemStack.EMPTY);
+    public DefaultedList<ItemStack> filtPickInventory = DefaultedList.ofSize(27, ItemStack.EMPTY);
 
     public ServerPlayerEntityMixin(World world, BlockPos pos, float yaw, GameProfile gameProfile) {
         super(world, pos, yaw, gameProfile);
@@ -43,6 +43,14 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Im
         Inventories.writeNbt(nbt, this.filtPickInventory);
         nbt.putBoolean("filtPickWhiteListMode",filtPickIsWhiteListMode);
         nbt.putBoolean("filtPickIsDestructionMode",filtPickIsDestructionMode);
+    }
+
+    //To keep list after death
+    @Inject(method = "copyFrom",at=@At("TAIL"))
+    public void copyFilePickInventory(ServerPlayerEntity oldPlayer, boolean alive, CallbackInfo ci){
+        this.filtPickInventory=((ServerPlayerEntityDuck)oldPlayer).getFiltPickInventory();
+        this.filtPickIsWhiteListMode=((ServerPlayerEntityDuck)oldPlayer).getFiltPickIsWhiteListMode();
+        this.filtPickIsDestructionMode=((ServerPlayerEntityDuck)oldPlayer).getFiltPickIsDestructionMode();
     }
 
 
