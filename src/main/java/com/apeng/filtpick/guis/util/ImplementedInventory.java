@@ -3,15 +3,18 @@ package com.apeng.filtpick.guis.util;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.math.Direction;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * A simple {@code Inventory} implementation with only default methods + an item list getter.
  * <p>
  * Originally by Juuz
  */
-public interface ImplementedInventory extends Inventory {
+public interface ImplementedInventory extends SidedInventory {
     default int getMaxCountPerStack() {
         return 1;
     }
@@ -69,7 +72,7 @@ public interface ImplementedInventory extends Inventory {
     /**
      * Removes items from an inventory slot.
      * @param slot  The slot to remove from.
-     * @param count How many items to remove. If there are less items in the slot than what are requested,
+     * @param count How many items to remove. If there are fewer items in the slot than what are requested,
      *              takes all items in that slot.
      */
     @Override
@@ -129,5 +132,19 @@ public interface ImplementedInventory extends Inventory {
     @Override
     default boolean canPlayerUse(PlayerEntity player) {
         return true;
+    }
+
+
+    @Override
+    default int[] getAvailableSlots(Direction side){return new int[0];}
+
+    @Override
+    default boolean canInsert(int slot, ItemStack stack, @Nullable Direction dir){
+        return false;
+    }
+
+    @Override
+    default boolean canExtract(int slot, ItemStack stack, Direction dir){
+        return false;
     }
 }
