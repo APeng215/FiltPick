@@ -1,3 +1,5 @@
+<img src="src/main/resources/assets/filtpick/icon.png" align="right" width="180px"/>
+
 # FiltPick
 This is a fabric minecraft mod which enables you to 
 pick up items selectively. It's a lightweight mod and has a easy-to-use gui.
@@ -8,13 +10,17 @@ pick up items selectively. It's a lightweight mod and has a easy-to-use gui.
 ## How to use
 ### Entry Button
 
-<img src="README_resources/inventory_screen_guide.png" width="400" >
+<img src="README_resources/inventory_screen_guide.png" width="320" >
 
 ### FiltPick Screen
-<img src="README_resources/mod_screen_guide.png" width="400" >
+<img src="README_resources/mod_screen_guide.png" width="320" >
 
 - Put the item into the list, the function will take effect automatically.
 - Whitelist-mode: Only the items below will be picked up
 - Blacklist-mode: The items below won't be picked up
-## Contact me
+## Contact me 
+CurseForge: https://www.curseforge.com/minecraft/mc-mods/filtpick  
+GitHub: https://github.com/APeng215/FiltPick  
+MCMOD: https://www.mcmod.cn/class/8081.html  
+bilibili: https://space.bilibili.com/3355720
 
