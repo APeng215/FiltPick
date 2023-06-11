@@ -30,8 +30,8 @@ public abstract class ItemEntityMixin extends Entity {
     @Inject(method = "onPlayerCollision",at=@At("HEAD"),cancellable = true)
     public void filtPickFilter(PlayerEntity player, CallbackInfo callbackInfo){
         //Check side
-        if(!player.world.isClient){
-            //Check gamemode
+        if(!player.getWorld().isClient){
+            //Check game mode
             if(((ServerPlayerEntity)player).interactionManager.getGameMode()==GameMode.SURVIVAL||((ServerPlayerEntity)player).interactionManager.getGameMode()==GameMode.ADVENTURE){
                 Item item = this.getStack().getItem();
                 DefaultedList<ItemStack> filtPickInventory = ((ServerPlayerEntityDuck)player).getFiltPickInventory();

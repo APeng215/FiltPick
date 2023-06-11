@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.1-SNAPSHOT'
+    id 'fabric-loom' version '1.2-SNAPSHOT'
     id 'maven-publish'
 }
 
@@ -28,7 +28,7 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     //Third party gui lib
-    modImplementation include("io.github.cottonmc:LibGui:7.0.0-rc.1+1.19.4")
+    modImplementation include("io.github.cottonmc:LibGui:8.0.0-beta.1+1.20-rc1")
 }
 
 processResources {
