@@ -19,9 +19,9 @@ import java.util.Optional;
 
 @Mixin(PlayerManager.class)
 public abstract class PlayerManagerMixin {
-    @Inject(method = "respawnPlayer", at = @At("TAIL"),locals = LocalCapture.CAPTURE_FAILEXCEPTION)
-    private void synchronizeListModeWithClient(ServerPlayerEntity player, boolean alive, CallbackInfoReturnable<ServerPlayerEntity> cir, BlockPos blockPos, float f, boolean bl, ServerWorld serverWorld, Optional optional, ServerWorld serverWorld2, ServerPlayerEntity serverPlayerEntity){
-        PacketByteBuf modeInfo = new PacketByteBuf(PacketByteBufs.create().writeBoolean(((ServerPlayerEntityDuck)player).getFiltPickIsWhiteListMode()));
+    @Inject(method = "respawnPlayer", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
+    private void synchronizeListModeWithClient(ServerPlayerEntity player, boolean alive, CallbackInfoReturnable<ServerPlayerEntity> cir, BlockPos blockPos, float f, boolean bl, ServerWorld serverWorld, Optional optional, ServerWorld serverWorld2, ServerPlayerEntity serverPlayerEntity) {
+        PacketByteBuf modeInfo = new PacketByteBuf(PacketByteBufs.create().writeBoolean(((ServerPlayerEntityDuck) player).getFiltPickIsWhiteListMode()));
         ServerPlayNetworking.send(player, NetWorkingIDs.SYN_PICKMODE_S2C, modeInfo);
         PacketByteBuf destructionModeInfo = new PacketByteBuf(PacketByteBufs.create().writeBoolean(((ServerPlayerEntityDuck) player).getFiltPickIsDestructionMode()));
         ServerPlayNetworking.send(player, NetWorkingIDs.SYN_DESTRUCTION_MODE_S2C, destructionModeInfo);

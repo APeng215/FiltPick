@@ -15,15 +15,6 @@ import org.jetbrains.annotations.Nullable;
  * Originally by Juuz
  */
 public interface ImplementedInventory extends SidedInventory {
-    default int getMaxCountPerStack() {
-        return 1;
-    }
-    /**
-     * Retrieves the item list of this inventory.
-     * Must return the same instance every time it's called.
-     */
-    DefaultedList<ItemStack> getItems();
-
     /**
      * Creates an inventory from the item list.
      */
@@ -38,6 +29,16 @@ public interface ImplementedInventory extends SidedInventory {
         return of(DefaultedList.ofSize(size, ItemStack.EMPTY));
     }
 
+    default int getMaxCountPerStack() {
+        return 1;
+    }
+
+    /**
+     * Retrieves the item list of this inventory.
+     * Must return the same instance every time it's called.
+     */
+    DefaultedList<ItemStack> getItems();
+
     /**
      * Returns the inventory size.
      */
@@ -48,6 +49,7 @@ public interface ImplementedInventory extends SidedInventory {
 
     /**
      * Checks if the inventory is empty.
+     *
      * @return true if this inventory has only empty stacks, false otherwise.
      */
     @Override
@@ -71,6 +73,7 @@ public interface ImplementedInventory extends SidedInventory {
 
     /**
      * Removes items from an inventory slot.
+     *
      * @param slot  The slot to remove from.
      * @param count How many items to remove. If there are fewer items in the slot than what are requested,
      *              takes all items in that slot.
@@ -86,6 +89,7 @@ public interface ImplementedInventory extends SidedInventory {
 
     /**
      * Removes all items from an inventory slot.
+     *
      * @param slot The slot to remove from.
      */
     @Override
@@ -95,6 +99,7 @@ public interface ImplementedInventory extends SidedInventory {
 
     /**
      * Replaces the current stack in an inventory slot with the provided stack.
+     *
      * @param slot  The inventory slot of which to replace the itemstack.
      * @param stack The replacing itemstack. If the stack is too big for
      *              this inventory ({@link Inventory#getMaxCountPerStack()}),
@@ -135,17 +140,17 @@ public interface ImplementedInventory extends SidedInventory {
     }
 
     @Override
-    default int[] getAvailableSlots(Direction side){
+    default int[] getAvailableSlots(Direction side) {
         return new int[0];
     }
 
     @Override
-    default boolean canInsert(int slot, ItemStack stack, @Nullable Direction dir){
+    default boolean canInsert(int slot, ItemStack stack, @Nullable Direction dir) {
         return false;
     }
 
     @Override
-    default boolean canExtract(int slot, ItemStack stack, Direction dir){
+    default boolean canExtract(int slot, ItemStack stack, Direction dir) {
         return false;
     }
 }

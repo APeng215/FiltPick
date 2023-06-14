@@ -29,28 +29,27 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Im
     }
 
 
-    @Inject(method = "readCustomDataFromNbt",at=@At("TAIL"))
-    public void readFiltPickInventoryInfoFromNbt(NbtCompound nbt, CallbackInfo callbackInfo){
+    @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
+    public void readFiltPickInventoryInfoFromNbt(NbtCompound nbt, CallbackInfo callbackInfo) {
         Inventories.readNbt(nbt, this.filtPickInventory);
         filtPickIsWhiteListMode = nbt.getBoolean("filtPickWhiteListMode");
         filtPickIsDestructionMode = nbt.getBoolean("filtPickIsDestructionMode");
     }
 
 
-
-    @Inject(method = "writeCustomDataToNbt",at=@At("TAIL"))
-    public void writeFiltPickInventoryInfoToNbt(NbtCompound nbt, CallbackInfo callbackInfo){
+    @Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
+    public void writeFiltPickInventoryInfoToNbt(NbtCompound nbt, CallbackInfo callbackInfo) {
         Inventories.writeNbt(nbt, this.filtPickInventory);
-        nbt.putBoolean("filtPickWhiteListMode",filtPickIsWhiteListMode);
-        nbt.putBoolean("filtPickIsDestructionMode",filtPickIsDestructionMode);
+        nbt.putBoolean("filtPickWhiteListMode", filtPickIsWhiteListMode);
+        nbt.putBoolean("filtPickIsDestructionMode", filtPickIsDestructionMode);
     }
 
     //To keep list after death
-    @Inject(method = "copyFrom",at=@At("TAIL"))
-    public void copyFilePickInventory(ServerPlayerEntity oldPlayer, boolean alive, CallbackInfo ci){
-        this.filtPickInventory=((ServerPlayerEntityDuck)oldPlayer).getFiltPickInventory();
-        this.filtPickIsWhiteListMode=((ServerPlayerEntityDuck)oldPlayer).getFiltPickIsWhiteListMode();
-        this.filtPickIsDestructionMode=((ServerPlayerEntityDuck)oldPlayer).getFiltPickIsDestructionMode();
+    @Inject(method = "copyFrom", at = @At("TAIL"))
+    public void copyFilePickInventory(ServerPlayerEntity oldPlayer, boolean alive, CallbackInfo ci) {
+        this.filtPickInventory = ((ServerPlayerEntityDuck) oldPlayer).getFiltPickInventory();
+        this.filtPickIsWhiteListMode = ((ServerPlayerEntityDuck) oldPlayer).getFiltPickIsWhiteListMode();
+        this.filtPickIsDestructionMode = ((ServerPlayerEntityDuck) oldPlayer).getFiltPickIsDestructionMode();
     }
 
 
@@ -70,12 +69,17 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Im
     public boolean getFiltPickIsWhiteListMode() {
         return filtPickIsWhiteListMode;
     }
-    public boolean getFiltPickIsDestructionMode(){
+
+    public boolean getFiltPickIsDestructionMode() {
         return filtPickIsDestructionMode;
     }
+
     @Override
     public void setFiltPickWhiteListMode(Boolean bool) {
-        filtPickIsWhiteListMode=bool;
+        filtPickIsWhiteListMode = bool;
     }
-    public void setFiltPickDestructionMode(Boolean bool){filtPickIsDestructionMode = bool;}
+
+    public void setFiltPickDestructionMode(Boolean bool) {
+        filtPickIsDestructionMode = bool;
+    }
 }

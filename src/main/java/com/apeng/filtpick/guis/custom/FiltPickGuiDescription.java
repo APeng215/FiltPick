@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class FiltPickGuiDescription extends SyncedGuiDescription {
     public FiltPickGuiDescription(int syncId, PlayerInventory playerInventory) {
-        this(syncId, playerInventory,new SimpleInventory(27),null);
+        this(syncId, playerInventory, new SimpleInventory(27), null);
     }
 
     public FiltPickGuiDescription(int syncId, PlayerInventory playerInventory, Inventory inventory, @Nullable PropertyDelegate propertyDelegate) {
@@ -31,13 +31,13 @@ public class FiltPickGuiDescription extends SyncedGuiDescription {
         //Set display title label
         WLabel displayName = new WLabel(Text.translatable("filtpick_screen_name"));
         displayName.setHorizontalAlignment(HorizontalAlignment.CENTER);
-        root.add(displayName,4,0);
+        root.add(displayName, 4, 0);
 
         //Set filtPickInventory slots
-        for(int i=0;i<3;i++){
-            for(int j=0;j<9;j++){
-                WItemSlot filtPickItemSlot = new WFiltPickItemSlot(inventory,i*9+j,1,1,false,this).setModifiable(false);
-                root.add(filtPickItemSlot,j,1+i);
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 9; j++) {
+                WItemSlot filtPickItemSlot = new WFiltPickItemSlot(inventory, i * 9 + j, 1, 1, false, this).setModifiable(false);
+                root.add(filtPickItemSlot, j, 1 + i);
             }
         }
 

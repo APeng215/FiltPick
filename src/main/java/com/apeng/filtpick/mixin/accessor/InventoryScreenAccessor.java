@@ -7,8 +7,10 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(InventoryScreen.class)
 public interface InventoryScreenAccessor {
-    @Accessor//RecipeBookWidget recipeBook = new RecipeBookWidget();
+    @Accessor
+//RecipeBookWidget recipeBook = new RecipeBookWidget();
     RecipeBookWidget getRecipeBook();
+
     @Accessor
     void setMouseDown(boolean b);
 

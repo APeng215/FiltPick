@@ -19,34 +19,17 @@ public class Config {
     private int xOffset = 0;
     private int yOffset = 0;
 
-    public Config(){}
-
-    public void setxOffset(int x){
-        xOffset = x;
+    public Config() {
     }
 
-    public void setyOffset(int yOffset) {
-        this.yOffset = yOffset;
-    }
-
-    public int getxOffset() {
-        return xOffset;
-    }
-
-    public int getyOffset() {
-        return yOffset;
-    }
-
-
-    public static void  tryLoadConfigFile(MinecraftClient client)  {
+    public static void tryLoadConfigFile(MinecraftClient client) {
         Path configDir = FabricLoader.getInstance().getConfigDir();
         Path configPath = configDir.resolve("filtpick.json");
         File configFile = configPath.toFile();
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
 
-
-        if(Files.exists(configPath)){
+        if (Files.exists(configPath)) {
             BufferedReader bufferedReader;
             try {
                 bufferedReader = new BufferedReader(new FileReader(configFile));
@@ -54,25 +37,23 @@ public class Config {
                 throw new RuntimeException(e);
             }
             try {
-                if(bufferedReader.readLine()!=null){
+                if (bufferedReader.readLine() != null) {
                     bufferedReader = new BufferedReader(new FileReader(configFile));
                     try {
                         CONFIG = gson.fromJson(bufferedReader, Config.class);
                     } catch (JsonSyntaxException | JsonIOException e) {
-                        LOGGER.warn("The config file of FILTPICK does not comply with JSON syntax rules!"+"(filepath:"+ configPath +")");
+                        LOGGER.warn("The config file of FILTPICK does not comply with JSON syntax rules!" + "(filepath:" + configPath + ")");
                         LOGGER.warn("Recreating the config file...");
                         recreateConfigFile();
                     }
 
-                }
-                else {
+                } else {
                     createConfigFile();
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-        }
-        else {
+        } else {
             try {
                 createConfigFile();
             } catch (IOException e) {
@@ -101,6 +82,22 @@ public class Config {
         File configFile = configPath.toFile();
         configFile.delete();
         createConfigFile();
+    }
+
+    public int getxOffset() {
+        return xOffset;
+    }
+
+    public void setxOffset(int x) {
+        xOffset = x;
+    }
+
+    public int getyOffset() {
+        return yOffset;
+    }
+
+    public void setyOffset(int yOffset) {
+        this.yOffset = yOffset;
     }
 
 }

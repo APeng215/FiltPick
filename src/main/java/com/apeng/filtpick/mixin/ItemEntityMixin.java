@@ -21,48 +21,47 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ItemEntity.class)
 public abstract class ItemEntityMixin extends Entity {
-    @Shadow public abstract ItemStack getStack();
-
     public ItemEntityMixin(EntityType<?> type, World world) {
         super(type, world);
     }
 
-    @Inject(method = "onPlayerCollision",at=@At("HEAD"),cancellable = true)
-    public void filtPickFilter(PlayerEntity player, CallbackInfo callbackInfo){
+    @Shadow
+    public abstract ItemStack getStack();
+
+    @Inject(method = "onPlayerCollision", at = @At("HEAD"), cancellable = true)
+    public void filtPickFilter(PlayerEntity player, CallbackInfo callbackInfo) {
         //Check side
-        if(!player.getWorld().isClient){
+        if (!player.getWorld().isClient) {
             //Check game mode
-            if(((ServerPlayerEntity)player).interactionManager.getGameMode()==GameMode.SURVIVAL||((ServerPlayerEntity)player).interactionManager.getGameMode()==GameMode.ADVENTURE){
+            if (((ServerPlayerEntity) player).interactionManager.getGameMode() == GameMode.SURVIVAL || ((ServerPlayerEntity) player).interactionManager.getGameMode() == GameMode.ADVENTURE) {
                 Item item = this.getStack().getItem();
-                DefaultedList<ItemStack> filtPickInventory = ((ServerPlayerEntityDuck)player).getFiltPickInventory();
+                DefaultedList<ItemStack> filtPickInventory = ((ServerPlayerEntityDuck) player).getFiltPickInventory();
                 filtPick((ServerPlayerEntityDuck) player, callbackInfo, item, filtPickInventory);
             }
         }
 
 
-
     }
 
     private void filtPick(ServerPlayerEntityDuck player, CallbackInfo callbackInfo, Item item, DefaultedList<ItemStack> filtPickInventory) {
-        if(player.getFiltPickIsWhiteListMode()){
+        if (player.getFiltPickIsWhiteListMode()) {
             boolean match = false;
-            for(ItemStack it: filtPickInventory){
-                if(it.getItem().equals(item)){
-                    match =true;
+            for (ItemStack it : filtPickInventory) {
+                if (it.getItem().equals(item)) {
+                    match = true;
                     break;
                 }
             }
-            if(!match) {
-                if(player.getFiltPickIsDestructionMode()){
+            if (!match) {
+                if (player.getFiltPickIsDestructionMode()) {
                     this.discard();
                 }
                 callbackInfo.cancel();
             }
-        }
-        else {
-            for(ItemStack it: filtPickInventory){
-                if(it.getItem().equals(item)) {
-                    if(player.getFiltPickIsDestructionMode()){
+        } else {
+            for (ItemStack it : filtPickInventory) {
+                if (it.getItem().equals(item)) {
+                    if (player.getFiltPickIsDestructionMode()) {
                         this.discard();
                     }
                     callbackInfo.cancel();
