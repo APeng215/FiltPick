@@ -31,7 +31,7 @@ public abstract class ItemEntityMixin extends Entity {
     @Inject(method = "onPlayerCollision", at = @At("HEAD"), cancellable = true)
     public void filtPickFilter(PlayerEntity player, CallbackInfo callbackInfo) {
         //Check side
-        if (!player.getWorld().isClient) {
+        if (!player.method_48926().isClient) {
             //Check game mode
             if (((ServerPlayerEntity) player).interactionManager.getGameMode() == GameMode.SURVIVAL || ((ServerPlayerEntity) player).interactionManager.getGameMode() == GameMode.ADVENTURE) {
                 Item item = this.getStack().getItem();
