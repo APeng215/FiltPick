@@ -22,7 +22,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 
 public class FiltPick implements ModInitializer {
-    public static final String NAME_SPACE = "filtpick";
     public void onInitialize() {
         Registry.register(Registries.SCREEN_HANDLER, "filtpickscreen", FILTPICK_SCREEN_HANDLER_TYPE);
         registerC2SReceiver();
