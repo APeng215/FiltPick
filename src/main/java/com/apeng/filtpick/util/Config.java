@@ -1,4 +1,4 @@
-package com.apeng.filtpick;
+package com.apeng.filtpick.util;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

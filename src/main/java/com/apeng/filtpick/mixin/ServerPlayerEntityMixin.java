@@ -1,7 +1,9 @@
 package com.apeng.filtpick.mixin;
 
 
-import com.apeng.filtpick.guis.util.ImplementedInventory;
+import com.apeng.filtpick.guis.screen.FiltPickScreen;
+import com.apeng.filtpick.util.FiltPickPropertyDelegate;
+import com.apeng.filtpick.util.ImplementedInventory;
 import com.apeng.filtpick.mixinduck.ServerPlayerEntityDuck;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,6 +15,7 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -20,66 +23,98 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ServerPlayerEntity.class)
 public abstract class ServerPlayerEntityMixin extends PlayerEntity implements ImplementedInventory, ServerPlayerEntityDuck {
-    public boolean filtPickIsWhiteListMode = false;
-    public boolean filtPickIsDestructionMode = false;
-    public DefaultedList<ItemStack> filtPickInventory = DefaultedList.ofSize(27, ItemStack.EMPTY);
+
+    @Shadow public abstract void requestTeleport(double destX, double destY, double destZ);
+
+    private FiltPickPropertyDelegate filtPickPropertyDelegate = new FiltPickPropertyDelegate();
+    private DefaultedList<ItemStack> filtList = DefaultedList.ofSize(27, ItemStack.EMPTY);
 
     public ServerPlayerEntityMixin(World world, BlockPos pos, float yaw, GameProfile gameProfile) {
         super(world, pos, yaw, gameProfile);
     }
 
-
     @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
     public void readFiltPickInventoryInfoFromNbt(NbtCompound nbt, CallbackInfo callbackInfo) {
-        Inventories.readNbt(nbt, this.filtPickInventory);
-        filtPickIsWhiteListMode = nbt.getBoolean("filtPickWhiteListMode");
-        filtPickIsDestructionMode = nbt.getBoolean("filtPickIsDestructionMode");
+        readFiltList(nbt);
+        readPropertyDelegate(nbt);
     }
-
 
     @Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
     public void writeFiltPickInventoryInfoToNbt(NbtCompound nbt, CallbackInfo callbackInfo) {
-        Inventories.writeNbt(nbt, this.filtPickInventory);
-        nbt.putBoolean("filtPickWhiteListMode", filtPickIsWhiteListMode);
-        nbt.putBoolean("filtPickIsDestructionMode", filtPickIsDestructionMode);
+        writeFiltList(nbt);
+        writePropertyDelegate(nbt);
     }
 
-    //To keep list after death
+    // To keep list after death
     @Inject(method = "copyFrom", at = @At("TAIL"))
     public void copyFilePickInventory(ServerPlayerEntity oldPlayer, boolean alive, CallbackInfo ci) {
-        this.filtPickInventory = ((ServerPlayerEntityDuck) oldPlayer).getFiltPickInventory();
-        this.filtPickIsWhiteListMode = ((ServerPlayerEntityDuck) oldPlayer).getFiltPickIsWhiteListMode();
-        this.filtPickIsDestructionMode = ((ServerPlayerEntityDuck) oldPlayer).getFiltPickIsDestructionMode();
+        copyFiltList((ServerPlayerEntityDuck) oldPlayer);
+        copyPropertyDelegate((ServerPlayerEntityDuck) oldPlayer);
     }
 
+    private void readFiltList(NbtCompound nbt) {
+        Inventories.readNbt(nbt, this.filtList);
+    }
+
+    private void readPropertyDelegate(NbtCompound nbt) {
+        filtPickPropertyDelegate.set(FiltPickScreen.WHITELIST_MODE_BUTTON_ID, nbt.getInt("isWhiteListModeOn"));
+        filtPickPropertyDelegate.set(FiltPickScreen.DESTRUCTION_MODE_BUTTON_ID, nbt.getInt("isDestructionModeOn"));
+    }
+
+    private void writeFiltList(NbtCompound nbt) {
+        Inventories.writeNbt(nbt, this.filtList);
+    }
+
+    private void writePropertyDelegate(NbtCompound nbt) {
+        nbt.putInt("isWhiteListModeOn", filtPickPropertyDelegate.get(FiltPickScreen.WHITELIST_MODE_BUTTON_ID));
+        nbt.putInt("isDestructionModeOn", filtPickPropertyDelegate.get(FiltPickScreen.DESTRUCTION_MODE_BUTTON_ID));
+    }
+
+    private void copyPropertyDelegate(ServerPlayerEntityDuck oldPlayer) {
+        this.filtPickPropertyDelegate = oldPlayer.getFiltPickPropertyDelegate();
+    }
+
+    private void copyFiltList(ServerPlayerEntityDuck oldPlayer) {
+        this.filtList = oldPlayer.getFiltList();
+    }
 
     @Override
     //ImplementedInventory Override
     public DefaultedList<ItemStack> getItems() {
-        return this.filtPickInventory;
+        return this.filtList;
     }
 
     @Override
     //Duck Override
-    public DefaultedList<ItemStack> getFiltPickInventory() {
-        return filtPickInventory;
+    public DefaultedList<ItemStack> getFiltList() {
+        return filtList;
     }
 
     @Override
-    public boolean getFiltPickIsWhiteListMode() {
-        return filtPickIsWhiteListMode;
-    }
-
-    public boolean getFiltPickIsDestructionMode() {
-        return filtPickIsDestructionMode;
+    public FiltPickPropertyDelegate getFiltPickPropertyDelegate() {
+        return filtPickPropertyDelegate;
     }
 
     @Override
-    public void setFiltPickWhiteListMode(Boolean bool) {
-        filtPickIsWhiteListMode = bool;
+    public int getProperty(int index) {
+        return filtPickPropertyDelegate.get(index);
     }
 
-    public void setFiltPickDestructionMode(Boolean bool) {
-        filtPickIsDestructionMode = bool;
+    @Override
+    public void setProperty(int index, int value) {
+        filtPickPropertyDelegate.set(index, value);
     }
+
+    @Override
+    public void switchProperty(int index) {
+        filtPickPropertyDelegate.switchState(index);
+    }
+
+    @Override
+    public void resetFiltList() {
+        filtPickPropertyDelegate.reset();
+        filtList.clear();
+    }
+
+
 }

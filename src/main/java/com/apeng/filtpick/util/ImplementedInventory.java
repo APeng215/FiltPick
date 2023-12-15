@@ -1,4 +1,4 @@
-package com.apeng.filtpick.guis.util;
+package com.apeng.filtpick.util;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventories;

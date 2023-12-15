@@ -1,6 +1,7 @@
 package com.apeng.filtpick.mixin;
 
 
+import com.apeng.filtpick.guis.screen.FiltPickScreen;
 import com.apeng.filtpick.mixinduck.ServerPlayerEntityDuck;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -21,52 +22,93 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ItemEntity.class)
 public abstract class ItemEntityMixin extends Entity {
+
     public ItemEntityMixin(EntityType<?> type, World world) {
         super(type, world);
+    }
+
+    @Inject(method = "onPlayerCollision", at = @At("HEAD"), cancellable = true)
+    public void filtPickLogic(PlayerEntity player, CallbackInfo callbackInfo) {
+
+        if (isClient() || !checkGameMode((ServerPlayerEntity) player)) {
+            return;
+        }
+
+        filtPick((ServerPlayerEntityDuck) player, callbackInfo, getCollisionItem(), getFiltList((ServerPlayerEntityDuck) player));
+
+    }
+
+    private static DefaultedList<ItemStack> getFiltList(ServerPlayerEntityDuck player) {
+        return player.getFiltList();
+    }
+
+    private boolean isClient() {
+        return this.getWorld().isClient;
+    }
+
+    private Item getCollisionItem() {
+        return this.getStack().getItem();
     }
 
     @Shadow
     public abstract ItemStack getStack();
 
-    @Inject(method = "onPlayerCollision", at = @At("HEAD"), cancellable = true)
-    public void filtPickFilter(PlayerEntity player, CallbackInfo callbackInfo) {
-        //Check side
-        if (!player.method_48926().isClient) {
-            //Check game mode
-            if (((ServerPlayerEntity) player).interactionManager.getGameMode() == GameMode.SURVIVAL || ((ServerPlayerEntity) player).interactionManager.getGameMode() == GameMode.ADVENTURE) {
-                Item item = this.getStack().getItem();
-                DefaultedList<ItemStack> filtPickInventory = ((ServerPlayerEntityDuck) player).getFiltPickInventory();
-                filtPick((ServerPlayerEntityDuck) player, callbackInfo, item, filtPickInventory);
-            }
-        }
-
-
+    private static boolean checkGameMode(ServerPlayerEntity player) {
+        return isSurvivalMode(player) || isAdventureMode(player);
     }
 
-    private void filtPick(ServerPlayerEntityDuck player, CallbackInfo callbackInfo, Item item, DefaultedList<ItemStack> filtPickInventory) {
-        if (player.getFiltPickIsWhiteListMode()) {
-            boolean match = false;
-            for (ItemStack it : filtPickInventory) {
-                if (it.getItem().equals(item)) {
-                    match = true;
-                    break;
-                }
-            }
-            if (!match) {
-                if (player.getFiltPickIsDestructionMode()) {
-                    this.discard();
-                }
-                callbackInfo.cancel();
-            }
+    private static boolean isAdventureMode(ServerPlayerEntity player) {
+        return player.interactionManager.getGameMode() == GameMode.ADVENTURE;
+    }
+
+    private static boolean isSurvivalMode(ServerPlayerEntity player) {
+        return player.interactionManager.getGameMode() == GameMode.SURVIVAL;
+    }
+
+    private void filtPick(ServerPlayerEntityDuck player, CallbackInfo callbackInfo, Item pickedItem, DefaultedList<ItemStack> filtList) {
+        if (isWhiteListMode(player)) {
+            applyWhiteListMode(player, callbackInfo, pickedItem, filtList);
         } else {
-            for (ItemStack it : filtPickInventory) {
-                if (it.getItem().equals(item)) {
-                    if (player.getFiltPickIsDestructionMode()) {
-                        this.discard();
-                    }
-                    callbackInfo.cancel();
-                }
+            applyBlackListMode(player, callbackInfo, pickedItem, filtList);
+        }
+    }
+
+    private void applyBlackListMode(ServerPlayerEntityDuck player, CallbackInfo callbackInfo, Item pickedItem, DefaultedList<ItemStack> filtList) {
+        if (listContainsItem(pickedItem, filtList)) {
+            dontPick(callbackInfo);
+            if (isDestructionMode(player)) {
+                this.discard();
             }
         }
+    }
+
+    private void applyWhiteListMode(ServerPlayerEntityDuck player, CallbackInfo callbackInfo, Item pickedItem, DefaultedList<ItemStack> filtList) {
+        if (listContainsItem(pickedItem, filtList)) {
+            return;
+        }
+        dontPick(callbackInfo);
+        checkDestruction(player);
+    }
+
+    private void checkDestruction(ServerPlayerEntityDuck player) {
+        if (isDestructionMode(player)) {
+            this.discard();
+        }
+    }
+
+    private static boolean isDestructionMode(ServerPlayerEntityDuck player) {
+        return player.getProperty(FiltPickScreen.DESTRUCTION_MODE_BUTTON_ID) == 1;
+    }
+
+    private static void dontPick(CallbackInfo callbackInfo) {
+        callbackInfo.cancel();
+    }
+
+    private static boolean listContainsItem(Item pickedItem, DefaultedList<ItemStack> filtList) {
+        return filtList.stream().anyMatch((itemStack -> itemStack.getItem().equals(pickedItem)));
+    }
+
+    private static boolean isWhiteListMode(ServerPlayerEntityDuck player) {
+        return player.getProperty(FiltPickScreen.WHITELIST_MODE_BUTTON_ID) == 1;
     }
 }

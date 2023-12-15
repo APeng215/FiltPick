@@ -28,5 +28,6 @@
     "fabricloader": "*",
     "fabric": "*",
     "minecraft": "1.20.*"
-  }
+  },
+  "accessWidener" : "filtpick.accesswidener"
 }

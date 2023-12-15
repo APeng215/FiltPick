@@ -3,6 +3,10 @@ plugins {
     id 'maven-publish'
 }
 
+loom {
+    accessWidenerPath = file("src/main/resources/filtpick.accesswidener")
+}
+
 version = project.mod_version
 group = project.maven_group
 
@@ -17,6 +21,7 @@ repositories {
         url = "https://server.bbkr.space/artifactory/libs-release"
     }
 }
+
 
 dependencies {
     // To change the versions see the gradle.properties file

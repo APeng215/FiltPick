@@ -1,16 +1,21 @@
 package com.apeng.filtpick.mixinduck;
 
+import com.apeng.filtpick.util.FiltPickPropertyDelegate;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.collection.DefaultedList;
 
 public interface ServerPlayerEntityDuck {
-    DefaultedList<ItemStack> getFiltPickInventory();
 
-    boolean getFiltPickIsWhiteListMode();
+    DefaultedList<ItemStack> getFiltList();
 
-    boolean getFiltPickIsDestructionMode();
+    public FiltPickPropertyDelegate getFiltPickPropertyDelegate();
 
-    void setFiltPickWhiteListMode(Boolean bool);
+    int getProperty(int index);
 
-    void setFiltPickDestructionMode(Boolean bool);
+    void setProperty(int index ,int bool);
+
+    void switchProperty(int index);
+
+    void resetFiltList();
+
 }
