@@ -1,11 +1,12 @@
 {
-  "whitelist_mode": "Pick-mode:Whitelist",
-  "whitelist_mode_explanation": "Effect:Only the items below will be picked up",
-  "blacklist_mode": "Pick-mode:Blacklist",
-  "blacklist_mode_explanation": "Effect:The items below won't be picked up",
-  "destruction_mode_on": "Destruction-mode:ON",
+  "whitelist_mode": "Pick mode: Whitelist",
+  "whitelist_mode_explanation": "Effect: Only the items below will be picked up",
+  "blacklist_mode": "Pick mode: Blacklist",
+  "blacklist_mode_explanation": "Effect: The items below won't be picked up",
+  "destruction_mode_on": "Destruction mode: ON",
   "destruction_mode_on_explanation":"Items that cannot be picked will be destroyed!",
-  "destruction_mode_off": "Destruction-mode:OFF",
-  "filtpick_screen_name": "Filtpick",
-  "reset_explanation": "Reset the list"
+  "destruction_mode_off": "Destruction mode: OFF",
+  "filtpick_screen_name": "FiltPick",
+  "reset_explanation": "Reset the list",
+  "entry_button_tooltip": "Customize which items you want to pick"
 }

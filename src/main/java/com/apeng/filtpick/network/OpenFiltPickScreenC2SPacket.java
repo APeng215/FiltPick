@@ -2,7 +2,6 @@ package com.apeng.filtpick.network;
 
 import com.apeng.filtpick.FiltPick;
 import com.apeng.filtpick.guis.screen.FiltPickScreenHandler;
-import com.apeng.filtpick.mixin.ServerPlayerEntityMixin;
 import com.apeng.filtpick.mixinduck.ServerPlayerEntityDuck;
 import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -14,12 +13,10 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.SimpleNamedScreenHandlerFactory;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public record OpenFiltPickScreenC2SPacket() implements FabricPacket, ServerPlayNetworking.PlayPacketHandler<OpenFiltPickScreenC2SPacket>  {
 
@@ -82,7 +79,7 @@ public record OpenFiltPickScreenC2SPacket() implements FabricPacket, ServerPlayN
 
             @Override
             public Text getDisplayName() {
-                return Text.of("FiltPick");
+                return Text.translatable("filtpick_screen_name");
             }
 
             @Override

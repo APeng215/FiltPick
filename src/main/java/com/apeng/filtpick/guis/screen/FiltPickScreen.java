@@ -1,4 +1,5 @@
 package com.apeng.filtpick.guis.screen;
+
 import com.apeng.filtpick.FiltPick;
 import com.apeng.filtpick.guis.widget.LegacyTexturedButtonWidget;
 import com.apeng.filtpick.util.IntBoolConvertor;
@@ -9,17 +10,19 @@ import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.tooltip.Tooltip;
-import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.packet.c2s.play.ButtonClickC2SPacket;
 import net.minecraft.screen.PropertyDelegate;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 
 public class FiltPickScreen extends HandledScreen<FiltPickScreenHandler> {
+
+    private static final Style EXPLANATION_STYLE = Style.EMPTY.withColor(Formatting.DARK_GRAY).withFormatting(Formatting.ITALIC);
 
     public static final int WHITELIST_MODE_BUTTON_ID = 0;
     public static final int DESTRUCTION_MODE_BUTTON_ID = 1;
@@ -54,27 +57,29 @@ public class FiltPickScreen extends HandledScreen<FiltPickScreenHandler> {
 
     private void addFiltModeButton() {
         filtModeButton = new FPToggleButton(this.x + 10, this.y + 4, 12, 11, FILT_MODE_BUTTON_TEXTURE, WHITELIST_MODE_BUTTON_ID);
-        filtModeButton.setTooltips(Text.translatable("whitelist_mode").append("\n").formatted(Formatting.DARK_GREEN).append(Text.translatable("whitelist_mode_explanation").formatted(Formatting.DARK_GRAY)), Text.translatable("blacklist_mode").append("\n").formatted(Formatting.DARK_RED).append(Text.translatable("blacklist_mode_explanation").formatted(Formatting.DARK_GRAY)));
+        filtModeButton.setTooltips(Text.translatable("whitelist_mode").append("\n").formatted(Formatting.DARK_GREEN).append(Text.translatable("whitelist_mode_explanation").fillStyle(EXPLANATION_STYLE)), Text.translatable("blacklist_mode").append("\n").formatted(Formatting.DARK_RED).append(Text.translatable("blacklist_mode_explanation").fillStyle(EXPLANATION_STYLE)));
         addDrawableChild(filtModeButton);
     }
 
     private void addDestructionButton() {
         destructionButton = new FPToggleButton(this.x + 10 + 2 + 12, this.y + 4, 12, 11, DESTRUCTION_BUTTON_TEXTURE, DESTRUCTION_MODE_BUTTON_ID);
-        destructionButton.setTooltips(Text.translatable("destruction_mode_on").formatted(Formatting.DARK_RED), Text.translatable("destruction_mode_off").formatted(Formatting.DARK_GRAY));
+        destructionButton.setTooltips(Text.translatable("destruction_mode_on").formatted(Formatting.DARK_RED).append("\n").append(Text.translatable("destruction_mode_on_explanation").fillStyle(EXPLANATION_STYLE)), Text.translatable("destruction_mode_off").formatted(Formatting.DARK_GRAY));
         addDrawableChild(destructionButton);
     }
 
     private void addClearButton() {
-        clearButton = new LegacyTexturedButtonWidget(this.x + 154 - 14, this.y + 4, 12, 11, 0, 0, 12, CLEAR_BUTTON_TEXTURE, button -> {
-            sendButtonClickC2SPacket(CLEAR_BUTTON_ID);
-        });
+        clearButton = new LegacyTexturedButtonWidget(this.x + 154 - 14, this.y + 4, 12, 11, 0, 0, 12, CLEAR_BUTTON_TEXTURE, button -> sendButtonClickC2SPacket(CLEAR_BUTTON_ID));
+        setTooltip2ClearButton();
         addDrawableChild(clearButton);
     }
 
+    private void setTooltip2ClearButton() {
+        clearButton.setTooltip(Tooltip.of(Text.translatable("reset_explanation").fillStyle(EXPLANATION_STYLE)));
+        clearButton.setTooltipDelay(500);
+    }
+
     private void addReturnButton() {
-        returnButton = new LegacyTexturedButtonWidget(this.x + 154, this.y + 4, 12, 11, 0, 0, 12, RETURN_BUTTON_TEXTURE, 12, 11 * 2 + 1,button -> {
-            client.setScreen(new InventoryScreen(client.player));
-        });
+        returnButton = new LegacyTexturedButtonWidget(this.x + 154, this.y + 4, 12, 11, 0, 0, 12, RETURN_BUTTON_TEXTURE, 12, 11 * 2 + 1,button -> client.setScreen(new InventoryScreen(client.player)));
         addDrawableChild(returnButton);
 
     }
@@ -86,6 +91,7 @@ public class FiltPickScreen extends HandledScreen<FiltPickScreenHandler> {
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
+        this.drawMouseoverTooltip(context, mouseX, mouseY);
     }
 
     @Override

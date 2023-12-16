@@ -10,10 +10,12 @@ import net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.gui.screen.recipebook.RecipeBookProvider;
 import net.minecraft.client.gui.screen.recipebook.RecipeBookWidget;
+import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -73,6 +75,12 @@ public abstract class InventoryScreenMixin extends AbstractInventoryScreen<Playe
         filtPickEntryButton = new LegacyTexturedButtonWidget(this.x + 104 + deviationOfFiltPickButton, this.height / 2 - 22, 20, 18, 0, 0, 19, FILTPICK_ENTRY_TEXTURE, button -> {
             ClientPlayNetworking.send(new OpenFiltPickScreenC2SPacket());
         });
+        setTooltip2EntryButton();
+    }
+
+    private void setTooltip2EntryButton() {
+        filtPickEntryButton.setTooltip(Tooltip.of(Text.translatable("filtpick_screen_name").formatted(Formatting.YELLOW).append(": ").append(Text.translatable("entry_button_tooltip"))));
+        filtPickEntryButton.setTooltipDelay(500);
     }
 
 }
