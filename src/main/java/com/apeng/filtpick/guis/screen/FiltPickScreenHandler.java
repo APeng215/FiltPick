@@ -93,7 +93,7 @@ public class FiltPickScreenHandler extends ScreenHandler {
 
     @Override
     public ItemStack quickMove(PlayerEntity playerIn, int index) {
-        if (index < 36) {
+        if (inventorySlotClicked(index)) {
             ItemStack stackToInsert = playerInventory.getStack(index);
             for (int i = 0; i < filtList.size(); i++) {
                 ItemStack stack = filtList.getStack(i);
@@ -103,13 +103,13 @@ public class FiltPickScreenHandler extends ScreenHandler {
                     ItemStack copy = stackToInsert.copy();
                     copy.setCount(1);
                     filtList.setStack(i, copy);
-                    getSlot(i + 36).markDirty();
+                    markSlotDirty(i + 36);
                     break;
                 }
             }
         } else {
-            filtList.setStack(index - 36, ItemStack.EMPTY);
-            getSlot(index).markDirty();
+            setFiltStackEmpty(index - 36);
+            markSlotDirty(index);
         }
         return ItemStack.EMPTY;
     }
@@ -124,38 +124,36 @@ public class FiltPickScreenHandler extends ScreenHandler {
      */
     @Override
     public void onSlotClick(int slotIndex, int button, SlotActionType actionType, PlayerEntity player) {
-        if (slotIndex == playerInventory.selectedSlot && actionType != SlotActionType.THROW)
-            return;
-
-        if (slotIndex < 36) {
+        if (inventorySlotClicked(slotIndex)) {
             super.onSlotClick(slotIndex, button, actionType, player);
-            return;
-        }
-        if (actionType == SlotActionType.THROW)
-            return;
-
-        ItemStack held = getCursorStack();
-        int slot = slotIndex - 36;
-        if (actionType == SlotActionType.CLONE) {
-            if (player.isCreative() && held.isEmpty()) {
-                ItemStack stackInSlot = filtList.getStack(slot)
-                        .copy();
-                stackInSlot.setCount(stackInSlot.getMaxCount());
-                setCursorStack(stackInSlot);
-                return;
-            }
-            return;
-        }
-
-        ItemStack insert;
-        if (held.isEmpty()) {
-            insert = ItemStack.EMPTY;
         } else {
-            insert = held.copy();
-            insert.setCount(1);
+            onFiltSlotClicked(slotIndex, actionType);
         }
-        filtList.setStack(slot, insert);
+    }
+
+    private void onFiltSlotClicked(int slotIndex, SlotActionType actionType) {
+        int filtSlotIndex = slotIndex - 36;
+        switch (actionType) {
+            case THROW -> setFiltStackEmpty(filtSlotIndex);
+            case PICKUP, QUICK_CRAFT -> setFiltStackCursorItem(filtSlotIndex);
+        }
+        markSlotDirty(slotIndex);
+    }
+
+    private void setFiltStackCursorItem(int filtSlotIndex) {
+        filtList.setStack(filtSlotIndex, getCursorStack().getItem().getDefaultStack());
+    }
+
+    private void setFiltStackEmpty(int filtSlotIndex) {
+        filtList.setStack(filtSlotIndex, ItemStack.EMPTY);
+    }
+
+    private void markSlotDirty(int slotIndex) {
         getSlot(slotIndex).markDirty();
+    }
+
+    private static boolean inventorySlotClicked(int slotIndex) {
+        return slotIndex < 36;
     }
 
     @Override
