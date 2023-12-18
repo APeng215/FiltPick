@@ -4,6 +4,7 @@ import com.apeng.filtpick.FiltPick;
 import com.apeng.filtpick.guis.widget.LegacyTexturedButtonWidget;
 import com.apeng.filtpick.util.IntBoolConvertor;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
@@ -14,11 +15,13 @@ import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.packet.c2s.play.ButtonClickC2SPacket;
 import net.minecraft.screen.PropertyDelegate;
+import net.minecraft.text.OrderedText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
+import net.minecraft.util.math.MathHelper;
 
 public class FiltPickScreen extends HandledScreen<FiltPickScreenHandler> {
 
@@ -91,7 +94,29 @@ public class FiltPickScreen extends HandledScreen<FiltPickScreenHandler> {
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
+        this.renderTitle(context, textRenderer, Text.translatable("filtpick_screen_name"), 72, y + 4, width - 72, y + 14, 0x404040);
         this.drawMouseoverTooltip(context, mouseX, mouseY);
+    }
+
+    protected void renderTitle(DrawContext context, TextRenderer textRenderer, Text text, int startX, int startY, int endX, int endY, int color) {
+        int centerX = (startX + endX) / 2;
+        int i = textRenderer.getWidth(text);
+        int j = (startY + endY - textRenderer.fontHeight) / 2 + 1;
+        int k = endX - startX;
+        if (i > k) {
+            int l = i - k;
+            double d = (double)Util.getMeasuringTimeMs() / 1000.0;
+            double e = Math.max((double)l * 0.5, 3.0);
+            double f = Math.sin(1.5707963267948966 * Math.cos(Math.PI * 2 * d / e)) / 2.0 + 0.5;
+            double g = MathHelper.lerp(f, 0.0, (double)l);
+            context.enableScissor(startX, startY, endX, endY);
+            context.drawText(textRenderer, text, startX - (int)g, j, color, false);
+            context.disableScissor();
+        } else {
+            int l = MathHelper.clamp(centerX, startX + i / 2, endX - i / 2);
+            OrderedText orderedText = text.asOrderedText();
+            context.drawText(textRenderer, orderedText, centerX - textRenderer.getWidth(orderedText) / 2, j, color, false);
+        }
     }
 
     @Override
@@ -203,6 +228,5 @@ public class FiltPickScreen extends HandledScreen<FiltPickScreenHandler> {
             this.falseTooltip = Tooltip.of(falseTooltip);
         }
     }
-
 
 }

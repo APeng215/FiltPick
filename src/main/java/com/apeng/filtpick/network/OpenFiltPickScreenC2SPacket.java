@@ -79,7 +79,7 @@ public record OpenFiltPickScreenC2SPacket() implements FabricPacket, ServerPlayN
 
             @Override
             public Text getDisplayName() {
-                return Text.translatable("filtpick_screen_name");
+                return Text.empty();
             }
 
             @Override
