@@ -1,0 +1,12 @@
+{
+  "whitelist_mode": "回収モード: ホワイトリスト",
+  "whitelist_mode_explanation": "効果: 以下のアイテムのみ回収できます",
+  "blacklist_mode": "回収モード: ブラックリスト",
+  "blacklist_mode_explanation": "効果: 以下のアイテムは回収できません",
+  "destruction_mode_on": "破壊モード: オン",
+  "destruction_mode_on_explanation": "回収できないアイテムはすべて破壊されます!",
+  "destruction_mode_off": "破壊モード: オフ",
+  "filtpick_screen_name": "回収フィルター",
+  "reset_explanation": "リストをリセットする",
+  "entry_button_tooltip": "回収したいアイテムをカスタマイズする"
+}
