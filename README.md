@@ -28,6 +28,12 @@ pick up items selectively. It's a lightweight mod and has a easy-to-use gui.
 - Whitelist-mode: Only the items below will be picked up
 - Blacklist-mode: The items below won't be picked up
 
+## Credits
+
+### Localization
+
+- 日本語 - [Dulroy](https://space.bilibili.com/313723598)
+
 ## Contact me
 
 - CurseForge: https://www.curseforge.com/minecraft/mc-mods/filtpick
