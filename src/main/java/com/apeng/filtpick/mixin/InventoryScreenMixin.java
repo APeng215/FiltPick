@@ -18,7 +18,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -30,13 +29,15 @@ import static com.apeng.filtpick.util.Config.CONFIG;
 @Mixin(InventoryScreen.class)
 public abstract class InventoryScreenMixin extends AbstractInventoryScreen<PlayerScreenHandler> implements RecipeBookProvider {
 
-    @Shadow public abstract RecipeBookWidget getRecipeBookWidget();
     @Unique
     private static final Identifier FILTPICK_ENTRY_TEXTURE = Identifier.of(FiltPick.ID, "gui/entry_button.png");
+
     @Unique
     private final static int deviationOfFiltPickButton = 23;
+
     @Unique
     private TexturedButtonWidget recipeBookButton;
+
     @Unique
     private TexturedButtonWidget filtPickEntryButton;
 

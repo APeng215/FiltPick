@@ -25,10 +25,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ServerPlayerEntity.class)
 public abstract class ServerPlayerEntityMixin extends PlayerEntity implements ImplementedInventory, ServerPlayerEntityDuck {
 
-    @Shadow public abstract void requestTeleport(double destX, double destY, double destZ);
-
     @Unique
     private FiltPickPropertyDelegate filtPickPropertyDelegate = new FiltPickPropertyDelegate();
+
     @Unique
     private DefaultedList<ItemStack> filtList = DefaultedList.ofSize(27, ItemStack.EMPTY);
 
