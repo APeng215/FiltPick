@@ -169,7 +169,7 @@ public class FiltPickScreen extends HandledScreen<FiltPickScreenHandler> {
                 this.wasHovered = bl;
             }
             if (bl && Util.getMeasuringTimeMs() - this.lastHoveredTime > (long)this.tooltipDelay && (screen = MinecraftClient.getInstance().currentScreen) != null) {
-                screen.setTooltip(correspondPropertyTrue() ? this.tureTooltip : this.falseTooltip, this.getTooltipPositioner(), this.isFocused());
+                screen.setTooltip(isCorrespondPropertyTrue() ? this.tureTooltip : this.falseTooltip, this.getTooltipPositioner(), this.isFocused());
             }
         }
 
@@ -182,7 +182,7 @@ public class FiltPickScreen extends HandledScreen<FiltPickScreenHandler> {
         }
 
         private int setHorizontalOffset(int u) {
-            if (!correspondPropertyTrue()) u += width + 1;
+            if (!isCorrespondPropertyTrue()) u += width + 1;
             return u;
         }
 
@@ -191,7 +191,7 @@ public class FiltPickScreen extends HandledScreen<FiltPickScreenHandler> {
             return v;
         }
 
-        private boolean correspondPropertyTrue() {
+        private boolean isCorrespondPropertyTrue() {
             return IntBoolConvertor.toBool(propertyDelegate.get(buttonId));
         }
 
