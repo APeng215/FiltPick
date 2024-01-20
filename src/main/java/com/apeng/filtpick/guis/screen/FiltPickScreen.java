@@ -47,7 +47,6 @@ public class FiltPickScreen extends HandledScreen<FiltPickScreenHandler> {
     @Override
     protected void init() {
         super.init();
-        setTitlePosition();
         addButtons();
     }
 
@@ -85,10 +84,6 @@ public class FiltPickScreen extends HandledScreen<FiltPickScreenHandler> {
         returnButton = new LegacyTexturedButtonWidget(this.x + 154, this.y + 4, 12, 11, 0, 0, 12, RETURN_BUTTON_TEXTURE, 12, 11 * 2 + 1,button -> client.setScreen(new InventoryScreen(client.player)));
         addDrawableChild(returnButton);
 
-    }
-
-    private void setTitlePosition() {
-        this.titleX = 72;
     }
 
     @Override
@@ -130,7 +125,7 @@ public class FiltPickScreen extends HandledScreen<FiltPickScreenHandler> {
         MinecraftClient.getInstance().getNetworkHandler().sendPacket(new ButtonClickC2SPacket(handler.syncId, buttonId));
     }
 
-    class FPToggleButton extends ClickableWidget {
+    private class FPToggleButton extends ClickableWidget {
         private final PropertyDelegate propertyDelegate = handler.getPropertyDelegate();
         private final int buttonId;
         private final Identifier texture;
