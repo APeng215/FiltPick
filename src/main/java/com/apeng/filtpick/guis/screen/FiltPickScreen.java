@@ -1,6 +1,8 @@
 package com.apeng.filtpick.guis.screen;
 
 import com.apeng.filtpick.FiltPick;
+import com.apeng.filtpick.FiltPickClient;
+import com.apeng.filtpick.config.FPConfigManager;
 import com.apeng.filtpick.guis.widget.LegacyTexturedButtonWidget;
 import com.apeng.filtpick.util.IntBoolConvertor;
 import net.minecraft.client.MinecraftClient;
@@ -24,6 +26,8 @@ import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
 
 public class FiltPickScreen extends HandledScreen<FiltPickScreenHandler> {
+
+    private static final FPConfigManager CONFIG_MANAGER = FiltPickClient.CONFIG_MANAGER;
 
     private static final Style EXPLANATION_STYLE = Style.EMPTY.withColor(Formatting.DARK_GRAY).withFormatting(Formatting.ITALIC);
 
@@ -58,19 +62,43 @@ public class FiltPickScreen extends HandledScreen<FiltPickScreenHandler> {
     }
 
     private void addFiltModeButton() {
-        filtModeButton = new FPToggleButton(this.x + 10, this.y + 4, 12, 11, FILT_MODE_BUTTON_TEXTURE, WHITELIST_MODE_BUTTON_ID);
+        filtModeButton = new FPToggleButton(
+                this.x + 10 + CONFIG_MANAGER.getWidgetPosOffset(FPConfigManager.WidgetOffsetConfig.Key.FILT_MODE_BUTTON).xOffset(),
+                this.y + 4 + CONFIG_MANAGER.getWidgetPosOffset(FPConfigManager.WidgetOffsetConfig.Key.FILT_MODE_BUTTON).yOffset(),
+                12,
+                11,
+                FILT_MODE_BUTTON_TEXTURE,
+                WHITELIST_MODE_BUTTON_ID
+        );
         filtModeButton.setTooltips(Text.translatable("whitelist_mode").append("\n").formatted(Formatting.DARK_GREEN).append(Text.translatable("whitelist_mode_explanation").fillStyle(EXPLANATION_STYLE)), Text.translatable("blacklist_mode").append("\n").formatted(Formatting.DARK_RED).append(Text.translatable("blacklist_mode_explanation").fillStyle(EXPLANATION_STYLE)));
         addDrawableChild(filtModeButton);
     }
 
     private void addDestructionButton() {
-        destructionButton = new FPToggleButton(this.x + 10 + 2 + 12, this.y + 4, 12, 11, DESTRUCTION_BUTTON_TEXTURE, DESTRUCTION_MODE_BUTTON_ID);
+        destructionButton = new FPToggleButton(
+                this.x + 10 + 2 + 12 + CONFIG_MANAGER.getWidgetPosOffset(FPConfigManager.WidgetOffsetConfig.Key.DESTRUCTION_MODE_BUTTON).xOffset(),
+                this.y + 4 + CONFIG_MANAGER.getWidgetPosOffset(FPConfigManager.WidgetOffsetConfig.Key.DESTRUCTION_MODE_BUTTON).yOffset(),
+                12,
+                11,
+                DESTRUCTION_BUTTON_TEXTURE,
+                DESTRUCTION_MODE_BUTTON_ID
+        );
         destructionButton.setTooltips(Text.translatable("destruction_mode_on").formatted(Formatting.DARK_RED).append("\n").append(Text.translatable("destruction_mode_on_explanation").fillStyle(EXPLANATION_STYLE)), Text.translatable("destruction_mode_off").formatted(Formatting.DARK_GRAY));
         addDrawableChild(destructionButton);
     }
 
     private void addClearButton() {
-        clearButton = new LegacyTexturedButtonWidget(this.x + 154 - 14, this.y + 4, 12, 11, 0, 0, 12, CLEAR_BUTTON_TEXTURE, button -> sendButtonClickC2SPacket(CLEAR_BUTTON_ID));
+        clearButton = new LegacyTexturedButtonWidget(
+                this.x + 154 - 14 + CONFIG_MANAGER.getWidgetPosOffset(FPConfigManager.WidgetOffsetConfig.Key.CLEAR_BUTTON).xOffset(),
+                this.y + 4 + CONFIG_MANAGER.getWidgetPosOffset(FPConfigManager.WidgetOffsetConfig.Key.CLEAR_BUTTON).yOffset(),
+                12,
+                11,
+                0,
+                0,
+                12,
+                CLEAR_BUTTON_TEXTURE,
+                button -> sendButtonClickC2SPacket(CLEAR_BUTTON_ID)
+        );
         setTooltip2ClearButton();
         addDrawableChild(clearButton);
     }
@@ -81,9 +109,20 @@ public class FiltPickScreen extends HandledScreen<FiltPickScreenHandler> {
     }
 
     private void addReturnButton() {
-        returnButton = new LegacyTexturedButtonWidget(this.x + 154, this.y + 4, 12, 11, 0, 0, 12, RETURN_BUTTON_TEXTURE, 12, 11 * 2 + 1,button -> client.setScreen(new InventoryScreen(client.player)));
+        returnButton = new LegacyTexturedButtonWidget(
+                this.x + 154 + CONFIG_MANAGER.getWidgetPosOffset(FPConfigManager.WidgetOffsetConfig.Key.RETURN_BUTTON).xOffset(),
+                this.y + 4 + CONFIG_MANAGER.getWidgetPosOffset(FPConfigManager.WidgetOffsetConfig.Key.RETURN_BUTTON).yOffset(),
+                12,
+                11,
+                0,
+                0,
+                12,
+                RETURN_BUTTON_TEXTURE,
+                12,
+                11 * 2 + 1,
+                button -> client.setScreen(new InventoryScreen(client.player))
+        );
         addDrawableChild(returnButton);
-
     }
 
     @Override

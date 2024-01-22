@@ -1,8 +1,9 @@
 package com.apeng.filtpick.mixin;
 
 import com.apeng.filtpick.FiltPick;
+import com.apeng.filtpick.FiltPickClient;
+import com.apeng.filtpick.config.FPConfigManager;
 import com.apeng.filtpick.guis.widget.LegacyTexturedButtonWidget;
-import com.apeng.filtpick.mixin.accessor.InventoryScreenAccessor;
 import com.apeng.filtpick.network.OpenFiltPickScreenC2SPacket;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gui.Element;
@@ -17,29 +18,29 @@ import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static com.apeng.filtpick.util.Config.CONFIG;
-
 @Mixin(InventoryScreen.class)
 public abstract class InventoryScreenMixin extends AbstractInventoryScreen<PlayerScreenHandler> implements RecipeBookProvider {
 
-    @Unique
-    private static final Identifier FILTPICK_ENTRY_TEXTURE = Identifier.of(FiltPick.ID, "gui/entry_button.png");
+    @Shadow private @Final RecipeBookWidget recipeBook;
+    @Shadow private boolean mouseDown;
 
-    @Unique
-    private final static int deviationOfFiltPickButton = 23;
-
-    @Unique
-    private TexturedButtonWidget recipeBookButton;
-
-    @Unique
-    private TexturedButtonWidget filtPickEntryButton;
+    @Unique private static final Identifier FILTPICK_ENTRY_TEXTURE = Identifier.of(FiltPick.ID, "gui/entry_button.png");
+    @Unique private static final int deviationOfFiltPickButton = 23;
+    @Unique private static int filtPickEntryButtonPosX;
+    @Unique private static int filtPickEntryButtonPosY;
+    @Unique private static int recipeButtonPosX;
+    @Unique private static int recipeButtonPosY;
+    @Unique private TexturedButtonWidget recipeBookButton;
+    @Unique private TexturedButtonWidget filtPickEntryButton;
 
     public InventoryScreenMixin(PlayerScreenHandler screenHandler, PlayerInventory playerInventory, Text text) {
         super(screenHandler, playerInventory, text);
@@ -47,7 +48,7 @@ public abstract class InventoryScreenMixin extends AbstractInventoryScreen<Playe
 
     @Redirect(method = "init()V", at = @At(value = "INVOKE", target = "net/minecraft/client/gui/screen/ingame/InventoryScreen.addDrawableChild(Lnet/minecraft/client/gui/Element;)Lnet/minecraft/client/gui/Element;"))
     private Element configureRecipeBookButton(InventoryScreen instance, Element element) {
-        initRecipeBookButton(((InventoryScreenAccessor)this).getRecipeBook());
+        initRecipeBookButton();
         addRecipeBookButton();
         return element;
     }
@@ -69,21 +70,53 @@ public abstract class InventoryScreenMixin extends AbstractInventoryScreen<Playe
     }
 
     @Unique
-    private void initRecipeBookButton(RecipeBookWidget recipeBook) {
-        recipeBookButton = new TexturedButtonWidget(this.x + 104, this.height / 2 - 22, 20, 18, RecipeBookWidget.BUTTON_TEXTURES, button -> {
+    private void initRecipeBookButton() {
+        calculateRecipeButtonPos();
+        recipeBookButton = new TexturedButtonWidget(recipeButtonPosX, recipeButtonPosY, 20, 18, RecipeBookWidget.BUTTON_TEXTURES, button -> {
             recipeBook.toggleOpen();
             this.x = recipeBook.findLeftEdge(this.width, this.backgroundWidth);
             button.setPosition(this.x + 104, this.height / 2 - 22);
-            recipeBookButton.setPosition(this.x + 104 + CONFIG.getxOffset(), this.height / 2 - 22 + CONFIG.getyOffset());
-            filtPickEntryButton.setPosition(this.x + 104 + deviationOfFiltPickButton, this.height / 2 - 22);
-            ((InventoryScreenAccessor) this).setMouseDown(true);
+            calculateRecipeButtonPos();
+            recipeBookButton.setPosition(recipeButtonPosX, recipeButtonPosY);
+            calculateEntryButtonPos();
+            filtPickEntryButton.setPosition(filtPickEntryButtonPosX, filtPickEntryButtonPosY);
+            this.mouseDown = true;
         });
+    }
+
+    /**
+     * Should be invoked every time before the positions are accessed.
+     */
+    @Unique
+    private void calculateRecipeButtonPos() {
+        recipeButtonPosX = this.x + 104 + FiltPickClient.CONFIG_MANAGER.getWidgetPosOffset(FPConfigManager.WidgetOffsetConfig.Key.RECIPE_BUTTON).xOffset();
+        recipeButtonPosY = this.height / 2 - 22 + FiltPickClient.CONFIG_MANAGER.getWidgetPosOffset(FPConfigManager.WidgetOffsetConfig.Key.RECIPE_BUTTON).yOffset();
     }
 
     @Unique
     private void initFiltPickEntryButton() {
-        filtPickEntryButton = new LegacyTexturedButtonWidget(this.x + 104 + deviationOfFiltPickButton, this.height / 2 - 22, 20, 18, 0, 0, 19, FILTPICK_ENTRY_TEXTURE, button -> ClientPlayNetworking.send(new OpenFiltPickScreenC2SPacket()));
+        calculateEntryButtonPos();
+        filtPickEntryButton = new LegacyTexturedButtonWidget(
+                filtPickEntryButtonPosX,
+                filtPickEntryButtonPosY,
+                20,
+                18,
+                0,
+                0,
+                19,
+                FILTPICK_ENTRY_TEXTURE,
+                button -> ClientPlayNetworking.send(new OpenFiltPickScreenC2SPacket())
+        );
         setTooltip2EntryButton();
+    }
+
+    /**
+     * Should be invoked every time before the positions are accessed.
+     */
+    @Unique
+    private void calculateEntryButtonPos() {
+        filtPickEntryButtonPosX = this.x + 104 + deviationOfFiltPickButton + FiltPickClient.CONFIG_MANAGER.getWidgetPosOffset(FPConfigManager.WidgetOffsetConfig.Key.ENTRY_BUTTON).xOffset();
+        filtPickEntryButtonPosY = this.height / 2 - 22 + FiltPickClient.CONFIG_MANAGER.getWidgetPosOffset(FPConfigManager.WidgetOffsetConfig.Key.ENTRY_BUTTON).yOffset();
     }
 
     @Unique

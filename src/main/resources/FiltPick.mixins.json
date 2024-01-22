@@ -8,8 +8,7 @@
     "ServerPlayerEntityMixin"
   ],
   "client": [
-    "InventoryScreenMixin",
-    "accessor.InventoryScreenAccessor"
+    "InventoryScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1
