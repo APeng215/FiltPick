@@ -134,7 +134,7 @@ public class FiltPickScreenHandler extends ScreenHandler {
     private void onFiltSlotClicked(int slotIndex, SlotActionType actionType) {
         int filtSlotIndex = slotIndex - 36;
         switch (actionType) {
-            case THROW -> setFiltStackEmpty(filtSlotIndex);
+            case THROW, QUICK_MOVE -> setFiltStackEmpty(filtSlotIndex);
             case PICKUP, QUICK_CRAFT -> setFiltStackCursorItem(filtSlotIndex);
         }
         markSlotDirty(slotIndex);
