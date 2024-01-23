@@ -165,6 +165,7 @@ public class FiltPickScreen extends HandledScreen<FiltPickScreenHandler> {
     }
 
     private class FPToggleButton extends ClickableWidget {
+
         private final PropertyDelegate propertyDelegate = handler.getPropertyDelegate();
         private final int buttonId;
         private final Identifier texture;
@@ -181,29 +182,20 @@ public class FiltPickScreen extends HandledScreen<FiltPickScreenHandler> {
         }
 
         @Override
-        protected void renderButton(DrawContext context, int mouseX, int mouseY, float delta) {
+        protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
             if (!visible) {
                 return;
             }
             renderTexture(context);
-            applyTooltip();
+            renderTooltip();
         }
 
-        private void applyTooltip() {
-            Screen screen;
-            boolean bl;
-            if (this.tureTooltip == null || this.falseTooltip == null) {
-                return;
+        private void renderTooltip() {
+            if(isCorrespondPropertyTrue() && tureTooltip != null) {
+                tureTooltip.render(isHovered(), isFocused(), getNavigationFocus());
             }
-            boolean bl2 = bl = this.hovered || this.isFocused() && MinecraftClient.getInstance().getNavigationType().isKeyboard();
-            if (bl != this.wasHovered) {
-                if (bl) {
-                    this.lastHoveredTime = Util.getMeasuringTimeMs();
-                }
-                this.wasHovered = bl;
-            }
-            if (bl && Util.getMeasuringTimeMs() - this.lastHoveredTime > (long)this.tooltipDelay && (screen = MinecraftClient.getInstance().currentScreen) != null) {
-                screen.setTooltip(isCorrespondPropertyTrue() ? this.tureTooltip : this.falseTooltip, this.getTooltipPositioner(), this.isFocused());
+            if (!isCorrespondPropertyTrue() && falseTooltip != null) {
+                falseTooltip.render(isHovered(), isFocused(), getNavigationFocus());
             }
         }
 
