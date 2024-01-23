@@ -22,8 +22,7 @@ Actually, the UI is too straightforward to require any guidance. I recommend try
 - Whitelist-mode: Only the items below will be picked up
 - Blacklist-mode: The items below won't be picked up
 
-<img src="README_resources/inventory_screen_guide.png" width="320" >
-<img src="README_resources/mod_screen_guide.png" width="320" >
+<img src="README_resources/inventory_screen_guide.png" width="320" ><img src="README_resources/mod_screen_guide.png" width="320" >
 
 ### Configure button position
 
