@@ -2,7 +2,8 @@
 
 # FiltPick
 
-[![CurseForge site](http://cf.way2muchnoise.eu/full_filtpick_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/filtpick)
+[![CurseForge site](https://img.shields.io/curseforge/dt/700141?style=flat&logo=curseforge&color=orange
+)](https://www.curseforge.com/minecraft/mc-mods/filtpick)
 [![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https://api.modrinth.com/v2/project/filtpick&query=$.downloads&suffix=%20downloads&logo=Modrinth&label)](https://modrinth.com/mod/filtpick)
 
 This is a fabric mod for Minecraft which enables you to pick up items selectively.
