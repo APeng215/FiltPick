@@ -18,7 +18,7 @@ If you need forge port, please click [here](https://github.com/APeng215/FiltPick
 
 ## How to use
 
-Actually, the UI is too straightforward to require any guidance. I recommend trying yourself __directly in game__.
+Actually, the UI is too straightforward to require any guidance. It's recommended to try yourself __directly in game__.
 - Put the item into the list, the function will take effect automatically.
 - Whitelist-mode: Only the items below will be picked up
 - Blacklist-mode: The items below won't be picked up
