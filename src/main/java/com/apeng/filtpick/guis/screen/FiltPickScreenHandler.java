@@ -1,21 +1,30 @@
 package com.apeng.filtpick.guis.screen;
 
+import com.apeng.filtpick.FiltPick;
 import com.apeng.filtpick.mixinduck.ServerPlayerEntityDuck;
-import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.c2s.play.ButtonClickC2SPacket;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+import net.minecraft.resource.featuretoggle.FeatureFlags;
 import net.minecraft.screen.*;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.util.Identifier;
+
+import java.util.Set;
 
 public class FiltPickScreenHandler extends ScreenHandler {
 
-    public static final ExtendedScreenHandlerType<FiltPickScreenHandler> FILTPICK_SCREEN_HANDLER_TYPE = new ExtendedScreenHandlerType<>(((syncId, playerInventory, buf) -> new FiltPickScreenHandler(syncId, playerInventory)));
+    public static final ScreenHandlerType<FiltPickScreenHandler> FILTPICK_SCREEN_HANDLER_TYPE = Registry.register(
+            Registries.SCREEN_HANDLER,
+            Identifier.of(FiltPick.ID, "filt_screen"),
+            new ScreenHandlerType(FiltPickScreenHandler::new, FeatureFlags.VANILLA_FEATURES)
+    );
     private final PropertyDelegate propertyDelegate;
     private PlayerInventory playerInventory;
     private Inventory filtList;
@@ -26,7 +35,7 @@ public class FiltPickScreenHandler extends ScreenHandler {
     }
             
     // For server side        
-    public FiltPickScreenHandler(int syncId, PlayerInventory playerInventory, Inventory filtList ,PropertyDelegate propertyDelegate) {
+    public FiltPickScreenHandler(int syncId, PlayerInventory playerInventory, Inventory filtList, PropertyDelegate propertyDelegate) {
         super(FiltPickScreenHandler.FILTPICK_SCREEN_HANDLER_TYPE, syncId);
         this.propertyDelegate = propertyDelegate;
         this.playerInventory = playerInventory;
@@ -39,7 +48,7 @@ public class FiltPickScreenHandler extends ScreenHandler {
     private void addSlots(Inventory playerInventory, Inventory filtList) {
         addHotbarSlots(playerInventory);
         addInventorySlots(playerInventory);
-        // FiltList must be added at last
+        // FiltList must be added at last. Index begins from 36
         addFiltList(filtList);
     }
 
@@ -91,27 +100,43 @@ public class FiltPickScreenHandler extends ScreenHandler {
         }
     }
 
+    // Shift click
     @Override
     public ItemStack quickMove(PlayerEntity playerIn, int index) {
-        if (inventorySlotClicked(index)) {
-            ItemStack stackToInsert = playerInventory.getStack(index);
-            for (int i = 0; i < filtList.size(); i++) {
-                ItemStack stack = filtList.getStack(i);
-                if (!allowRepeats() && canItemStacksStack(stack, stackToInsert))
-                    break;
-                if (stack.isEmpty()) {
-                    ItemStack copy = stackToInsert.copy();
-                    copy.setCount(1);
-                    filtList.setStack(i, copy);
-                    markSlotDirty(i + 36);
-                    break;
-                }
-            }
+        ItemStack stack2Move = playerInventory.getStack(index);
+        if (stack2Move.isEmpty()) return ItemStack.EMPTY;
+        if (isInventorySlotClicked(index)) {
+            tryAddItem2FiltList(stack2Move);
         } else {
-            setFiltStackEmpty(index - 36);
-            markSlotDirty(index);
+            deleteItemFromFiltList(index);
         }
-        return ItemStack.EMPTY;
+        return ItemStack.EMPTY; // To cancel infinite invoking
+    }
+
+    private void deleteItemFromFiltList(int index) {
+        setFiltStackEmpty(index - 36);
+        markSlotDirty(index);
+    }
+
+    private void tryAddItem2FiltList(ItemStack stack2Move) {
+        if (isFiltListAlreadyContainItem(stack2Move)) return;
+        addItem2FiltList(stack2Move);
+    }
+
+    private void addItem2FiltList(ItemStack stack2Move) {
+        ItemStack singleItemStack2Add = stack2Move.getItem().getDefaultStack();
+        for (int i = 0; i < filtList.size(); i++) {
+            ItemStack targetStack = filtList.getStack(i);
+            if (targetStack.isEmpty()) {
+                filtList.setStack(i, singleItemStack2Add);
+                markSlotDirty(i + 36);
+                return;
+            }
+        }
+    }
+
+    private boolean isFiltListAlreadyContainItem(ItemStack stack2Move) {
+        return filtList.containsAny(Set.of(stack2Move.getItem()));
     }
 
     /**
@@ -124,7 +149,7 @@ public class FiltPickScreenHandler extends ScreenHandler {
      */
     @Override
     public void onSlotClick(int slotIndex, int button, SlotActionType actionType, PlayerEntity player) {
-        if (inventorySlotClicked(slotIndex)) {
+        if (isInventorySlotClicked(slotIndex)) {
             super.onSlotClick(slotIndex, button, actionType, player);
         } else {
             onFiltSlotClicked(slotIndex, actionType);
@@ -152,17 +177,13 @@ public class FiltPickScreenHandler extends ScreenHandler {
         getSlot(slotIndex).markDirty();
     }
 
-    private static boolean inventorySlotClicked(int slotIndex) {
+    private static boolean isInventorySlotClicked(int slotIndex) {
         return slotIndex < 36;
     }
 
     @Override
     public boolean canUse(PlayerEntity player) {
         return true;
-    }
-
-    protected boolean allowRepeats() {
-        return false;
     }
 
     /**
@@ -173,14 +194,6 @@ public class FiltPickScreenHandler extends ScreenHandler {
     @Override
     public boolean canInsertIntoSlot(ItemStack cursorStack, Slot pickedSlot) {
         return pickedSlot.inventory == playerInventory;
-    }
-
-    public static boolean canItemStacksStack(@NotNull ItemStack a, @NotNull ItemStack b)
-    {
-        if (a.isEmpty() || !ItemStack.areItemsEqual(a, b) || a.hasNbt() != b.hasNbt())
-            return false;
-
-        return (!a.hasNbt() || a.getNbt().equals(b.getNbt()));
     }
 
 }

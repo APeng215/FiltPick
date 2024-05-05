@@ -17,7 +17,7 @@ public class FiltPick implements ModInitializer {
     }
 
     private static void registerServerReceiver() {
-        ServerPlayNetworking.registerGlobalReceiver(OpenFiltPickScreenC2SPacket.TYPE, new OpenFiltPickScreenC2SPacket());
+        ServerPlayNetworking.registerGlobalReceiver(OpenFiltPickScreenC2SPacket.PACKET_ID, new OpenFiltPickScreenC2SPacket());
     }
 
     private static void registerScreenHandler() {

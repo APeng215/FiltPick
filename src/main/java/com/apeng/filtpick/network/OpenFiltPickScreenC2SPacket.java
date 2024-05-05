@@ -3,50 +3,36 @@ package com.apeng.filtpick.network;
 import com.apeng.filtpick.FiltPick;
 import com.apeng.filtpick.guis.screen.FiltPickScreenHandler;
 import com.apeng.filtpick.mixinduck.ServerPlayerEntityDuck;
-import net.fabricmc.fabric.api.networking.v1.FabricPacket;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.fabricmc.fabric.api.networking.v1.PacketType;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.packet.CustomPayload;
+import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-public record OpenFiltPickScreenC2SPacket() implements FabricPacket, ServerPlayNetworking.PlayPacketHandler<OpenFiltPickScreenC2SPacket>  {
+public record OpenFiltPickScreenC2SPacket() implements CustomPayload, ServerPlayNetworking.PlayPayloadHandler<OpenFiltPickScreenC2SPacket>   {
 
-    public static final PacketType<OpenFiltPickScreenC2SPacket> TYPE = PacketType.create(Identifier.of(FiltPick.ID, "open_screen"), OpenFiltPickScreenC2SPacket::new);
+    public static final CustomPayload.Id<OpenFiltPickScreenC2SPacket> PACKET_ID = new CustomPayload.Id<>(Identifier.of(FiltPick.ID, "open_screen"));
+    public static final PacketCodec<PacketByteBuf, OpenFiltPickScreenC2SPacket> CODEC = PacketCodec.of(OpenFiltPickScreenC2SPacket::write, OpenFiltPickScreenC2SPacket::new);
+    public static final CustomPayload.Type PAYLOAD_TYPE = PayloadTypeRegistry.playC2S().register(PACKET_ID, CODEC);
 
     public OpenFiltPickScreenC2SPacket(PacketByteBuf buf) {
         this();
     }
 
-    /**
-     * Writes the contents of this packet to the buffer.
-     *
-     * @param buf the output buffer
-     */
-    @Override
-    public void write(PacketByteBuf buf) {
+    public void write(PacketByteBuf buf) {}
 
-    }
-
-    /**
-     * Returns the packet type of this packet.
-     *
-     * <p>Implementations should store the packet type instance in a {@code static final}
-     * field and return that here, instead of creating a new instance.
-     *
-     * @return the type of this packet
-     */
     @Override
-    public PacketType<?> getType() {
-        return TYPE;
+    public Id<? extends CustomPayload> getId() {
+        return PACKET_ID;
     }
 
     /**
@@ -55,27 +41,22 @@ public record OpenFiltPickScreenC2SPacket() implements FabricPacket, ServerPlayN
      *
      * <p>An example usage of this is to create an explosion where the player is looking:
      * <pre>{@code
-     * // See FabricPacket for creating the packet
-     * ServerPlayNetworking.registerReceiver(BOOM_PACKET_TYPE, (player, packet, responseSender) -> {
-     * 	ModPacketHandler.createExplosion(player, packet.fire());
+     * // use PayloadTypeRegistry for registering the payload
+     * ServerPlayNetworking.registerReceiver(BoomPayload.ID, (payload, player, responseSender) -> {
+     * 	ModPacketHandler.createExplosion(player, payload.fire());
      * });
      * }</pre>
      *
      * <p>The server and the network handler can be accessed via {@link ServerPlayerEntity#server}
      * and {@link ServerPlayerEntity#networkHandler}, respectively.
      *
-     * @param packet         the packet
-     * @param player         the player that received the packet
-     * @param responseSender the packet sender
-     * @see FabricPacket
+     * @param payload the packet payload
+     * @param context the play networking context
+     * @see CustomPayload
      */
     @Override
-    public void receive(OpenFiltPickScreenC2SPacket packet, ServerPlayerEntity player, PacketSender responseSender) {
-        player.openHandledScreen(new ExtendedScreenHandlerFactory() {
-
-            @Override
-            public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
-            }
+    public void receive(OpenFiltPickScreenC2SPacket payload, ServerPlayNetworking.Context context) {
+        context.player().openHandledScreen(new NamedScreenHandlerFactory() {
 
             @Override
             public Text getDisplayName() {
@@ -92,5 +73,7 @@ public record OpenFiltPickScreenC2SPacket() implements FabricPacket, ServerPlayN
                 return false;
             }
         });
+
     }
+
 }

@@ -122,7 +122,10 @@ public class FiltPickScreen extends HandledScreen<FiltPickScreenHandler> {
                 RETURN_BUTTON_TEXTURE,
                 12,
                 11 * 2 + 1,
-                button -> client.setScreen(new InventoryScreen(client.player))
+                button -> {
+                    this.close();
+                    client.setScreen(new InventoryScreen(client.player));
+                }
         );
         addDrawableChild(returnButton);
     }

@@ -11,6 +11,7 @@ import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -24,6 +25,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ServerPlayerEntity.class)
 public abstract class ServerPlayerEntityMixin extends PlayerEntity implements ImplementedInventory, ServerPlayerEntityDuck {
+
+    @Shadow public abstract ServerWorld getServerWorld();
 
     @Unique
     private FiltPickPropertyDelegate filtPickPropertyDelegate = new FiltPickPropertyDelegate();
@@ -56,7 +59,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Im
 
     @Unique
     private void readFiltList(NbtCompound nbt) {
-        Inventories.readNbt(nbt, this.filtList);
+        Inventories.readNbt(nbt, this.filtList, getServerWorld().getRegistryManager());
     }
 
     @Unique
@@ -67,7 +70,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Im
 
     @Unique
     private void writeFiltList(NbtCompound nbt) {
-        Inventories.writeNbt(nbt, this.filtList);
+        Inventories.writeNbt(nbt, this.filtList, getServerWorld().getRegistryManager());
     }
 
     @Unique

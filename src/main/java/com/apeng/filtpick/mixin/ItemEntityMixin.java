@@ -1,6 +1,5 @@
 package com.apeng.filtpick.mixin;
 
-
 import com.apeng.filtpick.guis.screen.FiltPickScreen;
 import com.apeng.filtpick.mixinduck.ServerPlayerEntityDuck;
 import net.minecraft.entity.Entity;
@@ -39,15 +38,15 @@ public abstract class ItemEntityMixin extends Entity {
 
     }
 
+    private boolean isClient() {
+        return getWorld().isClient;
+    }
+
     @Unique
     private static DefaultedList<ItemStack> getFiltList(ServerPlayerEntityDuck player) {
         return player.getFiltList();
     }
 
-    @Unique
-    private boolean isClient() {
-        return this.getWorld().isClient;
-    }
 
     @Unique
     private Item getCollisionItem() {

@@ -27,6 +27,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.time.Duration;
+
 @Mixin(InventoryScreen.class)
 public abstract class InventoryScreenMixin extends AbstractInventoryScreen<PlayerScreenHandler> implements RecipeBookProvider {
 
@@ -105,7 +107,9 @@ public abstract class InventoryScreenMixin extends AbstractInventoryScreen<Playe
                 0,
                 19,
                 FILTPICK_ENTRY_TEXTURE,
-                button -> ClientPlayNetworking.send(new OpenFiltPickScreenC2SPacket())
+                button -> {
+                    ClientPlayNetworking.send(new OpenFiltPickScreenC2SPacket());
+                }
         );
         setTooltip2EntryButton();
     }
@@ -122,7 +126,7 @@ public abstract class InventoryScreenMixin extends AbstractInventoryScreen<Playe
     @Unique
     private void setTooltip2EntryButton() {
         filtPickEntryButton.setTooltip(Tooltip.of(Text.translatable("filtpick_screen_name").formatted(Formatting.YELLOW).append(": ").append(Text.translatable("entry_button_tooltip"))));
-        filtPickEntryButton.setTooltipDelay(500);
+        filtPickEntryButton.setTooltipDelay(Duration.ofMillis(500));
     }
 
 }
