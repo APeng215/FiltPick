@@ -8,11 +8,11 @@ import com.apeng.filtpick.util.IntBoolConvertor;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.tooltip.Tooltip;
+import net.minecraft.client.gui.tooltip.TooltipState;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.packet.c2s.play.ButtonClickC2SPacket;
@@ -24,6 +24,8 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
+
+import java.time.Duration;
 
 public class FiltPickScreen extends HandledScreen<FiltPickScreenHandler> {
 
@@ -105,7 +107,7 @@ public class FiltPickScreen extends HandledScreen<FiltPickScreenHandler> {
 
     private void setTooltip2ClearButton() {
         clearButton.setTooltip(Tooltip.of(Text.translatable("reset_explanation").fillStyle(EXPLANATION_STYLE)));
-        clearButton.setTooltipDelay(500);
+        clearButton.setTooltipDelay(Duration.ofMillis(500));
     }
 
     private void addReturnButton() {
@@ -169,7 +171,8 @@ public class FiltPickScreen extends HandledScreen<FiltPickScreenHandler> {
         private final PropertyDelegate propertyDelegate = handler.getPropertyDelegate();
         private final int buttonId;
         private final Identifier texture;
-        private Tooltip tureTooltip, falseTooltip;
+        private final TooltipState tureTooltip = new TooltipState();
+        private final TooltipState falseTooltip = new TooltipState();
 
         public FPToggleButton(int x, int y, int width, int height, Identifier texture, int buttonId) {
             this(x, y, width, height, Text.empty(), texture, buttonId);
@@ -249,9 +252,9 @@ public class FiltPickScreen extends HandledScreen<FiltPickScreenHandler> {
             sendButtonClickC2SPacket(buttonId);
         }
 
-        public void setTooltips(Text tureTooltip, Text falseTooltip) {
-            this.tureTooltip = Tooltip.of(tureTooltip);
-            this.falseTooltip = Tooltip.of(falseTooltip);
+        public void setTooltips(Text tureTooltipText, Text falseTooltipText) {
+            tureTooltip.setTooltip(Tooltip.of(tureTooltipText));
+            falseTooltip.setTooltip(Tooltip.of(falseTooltipText));
         }
     }
 
