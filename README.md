@@ -54,5 +54,4 @@ systemProp.https.proxyPort=10809
 / [Modrinth](https://modrinth.com/mod/filtpick)
 / [GitHub](https://github.com/APeng215/FiltPick)
 / [MC百科](https://www.mcmod.cn/class/8081.html)
-/ [MCBBS](https://link.mcmod.cn/target/aHR0cHM6Ly93d3cubWNiYnMubmV0L3RocmVhZC0xNDcyMjE5LTEtMS5odG1s)
 
