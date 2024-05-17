@@ -36,7 +36,7 @@ public abstract class InventoryScreenMixin extends AbstractInventoryScreen<Playe
     @Shadow private boolean mouseDown;
 
     @Unique private static final Identifier FILTPICK_ENTRY_TEXTURE = Identifier.of(FiltPick.ID, "gui/entry_button.png");
-    @Unique private static final int deviationOfFiltPickButton = 23;
+    @Unique private static final int DEVIATION_OF_FILT_PICK_BUTTON = 23;
     @Unique private static int filtPickEntryButtonPosX;
     @Unique private static int filtPickEntryButtonPosY;
     @Unique private static int recipeButtonPosX;
@@ -119,7 +119,7 @@ public abstract class InventoryScreenMixin extends AbstractInventoryScreen<Playe
      */
     @Unique
     private void calculateEntryButtonPos() {
-        filtPickEntryButtonPosX = this.x + 104 + deviationOfFiltPickButton + FiltPickClient.CONFIG_MANAGER.getWidgetPosOffset(FPConfigManager.WidgetOffsetConfig.Key.ENTRY_BUTTON).xOffset();
+        filtPickEntryButtonPosX = this.x + 104 + DEVIATION_OF_FILT_PICK_BUTTON + FiltPickClient.CONFIG_MANAGER.getWidgetPosOffset(FPConfigManager.WidgetOffsetConfig.Key.ENTRY_BUTTON).xOffset();
         filtPickEntryButtonPosY = this.height / 2 - 22 + FiltPickClient.CONFIG_MANAGER.getWidgetPosOffset(FPConfigManager.WidgetOffsetConfig.Key.ENTRY_BUTTON).yOffset();
     }
 
