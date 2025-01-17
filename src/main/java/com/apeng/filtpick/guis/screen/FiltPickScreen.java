@@ -2,7 +2,7 @@ package com.apeng.filtpick.guis.screen;
 
 import com.apeng.filtpick.FiltPick;
 import com.apeng.filtpick.FiltPickClient;
-import com.apeng.filtpick.config.FPConfigManager;
+import com.apeng.filtpick.config.FiltPickClientConfig;
 import com.apeng.filtpick.guis.widget.LegacyTexturedButtonWidget;
 import com.apeng.filtpick.util.IntBoolConvertor;
 import net.minecraft.client.MinecraftClient;
@@ -28,8 +28,6 @@ import net.minecraft.util.math.MathHelper;
 import java.time.Duration;
 
 public class FiltPickScreen extends HandledScreen<FiltPickScreenHandler> {
-
-    private static final FPConfigManager CONFIG_MANAGER = FiltPickClient.CONFIG_MANAGER;
 
     private static final Style EXPLANATION_STYLE = Style.EMPTY.withColor(Formatting.DARK_GRAY).withFormatting(Formatting.ITALIC);
 
@@ -65,8 +63,8 @@ public class FiltPickScreen extends HandledScreen<FiltPickScreenHandler> {
 
     private void addFiltModeButton() {
         filtModeButton = new FPToggleButton(
-                this.x + 10 + CONFIG_MANAGER.getWidgetPosOffset(FPConfigManager.WidgetOffsetConfig.Key.FILT_MODE_BUTTON).xOffset(),
-                this.y + 4 + CONFIG_MANAGER.getWidgetPosOffset(FPConfigManager.WidgetOffsetConfig.Key.FILT_MODE_BUTTON).yOffset(),
+                this.x + 10 + FiltPickClient.CLIENT_CONFIG.buttonOffsets.get(FiltPickClientConfig.ButtonName.FILT_MODE_BUTTON).horizontalOffset().get(),
+                this.y + 4 + FiltPickClient.CLIENT_CONFIG.buttonOffsets.get(FiltPickClientConfig.ButtonName.FILT_MODE_BUTTON).verticalOffset().get(),
                 12,
                 11,
                 FILT_MODE_BUTTON_TEXTURE,
@@ -78,8 +76,8 @@ public class FiltPickScreen extends HandledScreen<FiltPickScreenHandler> {
 
     private void addDestructionButton() {
         destructionButton = new FPToggleButton(
-                this.x + 10 + 2 + 12 + CONFIG_MANAGER.getWidgetPosOffset(FPConfigManager.WidgetOffsetConfig.Key.DESTRUCTION_MODE_BUTTON).xOffset(),
-                this.y + 4 + CONFIG_MANAGER.getWidgetPosOffset(FPConfigManager.WidgetOffsetConfig.Key.DESTRUCTION_MODE_BUTTON).yOffset(),
+                this.x + 10 + 2 + 12 + FiltPickClient.CLIENT_CONFIG.buttonOffsets.get(FiltPickClientConfig.ButtonName.DESTRUCTION_MODE_BUTTON).horizontalOffset().get(),
+                this.y + 4 + FiltPickClient.CLIENT_CONFIG.buttonOffsets.get(FiltPickClientConfig.ButtonName.DESTRUCTION_MODE_BUTTON).verticalOffset().get(),
                 12,
                 11,
                 DESTRUCTION_BUTTON_TEXTURE,
@@ -91,8 +89,8 @@ public class FiltPickScreen extends HandledScreen<FiltPickScreenHandler> {
 
     private void addClearButton() {
         clearButton = new LegacyTexturedButtonWidget(
-                this.x + 154 - 14 + CONFIG_MANAGER.getWidgetPosOffset(FPConfigManager.WidgetOffsetConfig.Key.CLEAR_BUTTON).xOffset(),
-                this.y + 4 + CONFIG_MANAGER.getWidgetPosOffset(FPConfigManager.WidgetOffsetConfig.Key.CLEAR_BUTTON).yOffset(),
+                this.x + 154 - 14 + FiltPickClient.CLIENT_CONFIG.buttonOffsets.get(FiltPickClientConfig.ButtonName.CLEAR_BUTTON).horizontalOffset().get(),
+                this.y + 4 + FiltPickClient.CLIENT_CONFIG.buttonOffsets.get(FiltPickClientConfig.ButtonName.CLEAR_BUTTON).verticalOffset().get(),
                 12,
                 11,
                 0,
@@ -112,8 +110,8 @@ public class FiltPickScreen extends HandledScreen<FiltPickScreenHandler> {
 
     private void addReturnButton() {
         returnButton = new LegacyTexturedButtonWidget(
-                this.x + 154 + CONFIG_MANAGER.getWidgetPosOffset(FPConfigManager.WidgetOffsetConfig.Key.RETURN_BUTTON).xOffset(),
-                this.y + 4 + CONFIG_MANAGER.getWidgetPosOffset(FPConfigManager.WidgetOffsetConfig.Key.RETURN_BUTTON).yOffset(),
+                this.x + 154 + FiltPickClient.CLIENT_CONFIG.buttonOffsets.get(FiltPickClientConfig.ButtonName.RETURN_BUTTON).horizontalOffset().get(),
+                this.y + 4 + FiltPickClient.CLIENT_CONFIG.buttonOffsets.get(FiltPickClientConfig.ButtonName.RETURN_BUTTON).verticalOffset().get(),
                 12,
                 11,
                 0,

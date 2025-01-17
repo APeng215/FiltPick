@@ -2,7 +2,7 @@ package com.apeng.filtpick.mixin;
 
 import com.apeng.filtpick.FiltPick;
 import com.apeng.filtpick.FiltPickClient;
-import com.apeng.filtpick.config.FPConfigManager;
+import com.apeng.filtpick.config.FiltPickClientConfig;
 import com.apeng.filtpick.guis.widget.LegacyTexturedButtonWidget;
 import com.apeng.filtpick.network.OpenFiltPickScreenC2SPacket;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -91,8 +91,8 @@ public abstract class InventoryScreenMixin extends AbstractInventoryScreen<Playe
      */
     @Unique
     private void calculateRecipeButtonPos() {
-        recipeButtonPosX = this.x + 104 + FiltPickClient.CONFIG_MANAGER.getWidgetPosOffset(FPConfigManager.WidgetOffsetConfig.Key.RECIPE_BUTTON).xOffset();
-        recipeButtonPosY = this.height / 2 - 22 + FiltPickClient.CONFIG_MANAGER.getWidgetPosOffset(FPConfigManager.WidgetOffsetConfig.Key.RECIPE_BUTTON).yOffset();
+        recipeButtonPosX = this.x + 104 + FiltPickClient.CLIENT_CONFIG.buttonOffsets.get(FiltPickClientConfig.ButtonName.RECIPE_BUTTON).horizontalOffset().get();
+        recipeButtonPosY = this.height / 2 - 22 + FiltPickClient.CLIENT_CONFIG.buttonOffsets.get(FiltPickClientConfig.ButtonName.RECIPE_BUTTON).verticalOffset().get();
     }
 
     @Unique
@@ -119,8 +119,8 @@ public abstract class InventoryScreenMixin extends AbstractInventoryScreen<Playe
      */
     @Unique
     private void calculateEntryButtonPos() {
-        filtPickEntryButtonPosX = this.x + 104 + DEVIATION_OF_FILT_PICK_BUTTON + FiltPickClient.CONFIG_MANAGER.getWidgetPosOffset(FPConfigManager.WidgetOffsetConfig.Key.ENTRY_BUTTON).xOffset();
-        filtPickEntryButtonPosY = this.height / 2 - 22 + FiltPickClient.CONFIG_MANAGER.getWidgetPosOffset(FPConfigManager.WidgetOffsetConfig.Key.ENTRY_BUTTON).yOffset();
+        filtPickEntryButtonPosX = this.x + 104 + DEVIATION_OF_FILT_PICK_BUTTON + FiltPickClient.CLIENT_CONFIG.buttonOffsets.get(FiltPickClientConfig.ButtonName.ENTRY_BUTTON).horizontalOffset().get();
+        filtPickEntryButtonPosY = this.height / 2 - 22 + FiltPickClient.CLIENT_CONFIG.buttonOffsets.get(FiltPickClientConfig.ButtonName.ENTRY_BUTTON).verticalOffset().get();
     }
 
     @Unique
