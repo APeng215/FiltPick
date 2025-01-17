@@ -4,7 +4,6 @@ import com.apeng.filtpick.guis.screen.FiltPickScreenHandler;
 import com.apeng.filtpick.network.OpenFiltPickScreenC2SPacket;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 
