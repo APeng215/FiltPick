@@ -1,7 +1,11 @@
 package com.apeng.filtpick.guis.screen;
 
 import com.apeng.filtpick.FiltPick;
+import com.apeng.filtpick.FiltPickClient;
 import com.apeng.filtpick.mixinduck.ServerPlayerEntityDuck;
+import com.apeng.filtpick.network.OpenFiltPickScreenC2SPacket;
+import com.apeng.filtpick.network.SynMenuFieldC2SPacket;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -14,6 +18,7 @@ import net.minecraft.resource.featuretoggle.FeatureFlags;
 import net.minecraft.screen.*;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
 import java.util.Set;
@@ -28,10 +33,12 @@ public class FiltPickScreenHandler extends ScreenHandler {
     private final PropertyDelegate propertyDelegate;
     private PlayerInventory playerInventory;
     private Inventory filtList;
+    private int displayedRowOffset = 0;
+    private final int MAX_DISPLAYED_ROW_OFFSET;
 
     // For client side
     public FiltPickScreenHandler(int syncId, PlayerInventory playerInventory) {
-        this(syncId, playerInventory, new SimpleInventory(27), new ArrayPropertyDelegate(2));
+        this(syncId, playerInventory, new SimpleInventory(FiltPick.SERVER_CONFIG.CONTAINER_ROW_COUNT.get() * 9), new ArrayPropertyDelegate(2));
     }
             
     // For server side        
@@ -40,21 +47,13 @@ public class FiltPickScreenHandler extends ScreenHandler {
         this.propertyDelegate = propertyDelegate;
         this.playerInventory = playerInventory;
         this.filtList = filtList;
-        checkSize(filtList, propertyDelegate);
-        addSlots(playerInventory, filtList);
+        this.MAX_DISPLAYED_ROW_OFFSET = Math.max(0, getActualRowNum() - FiltPickClient.CLIENT_CONFIG.FILTLIST_DISPLAYED_ROW_COUNT.get());
+        addAllSlots(playerInventory, filtList);
         addProperties(propertyDelegate);
     }
 
-    private void addSlots(Inventory playerInventory, Inventory filtList) {
-        addHotbarSlots(playerInventory);
-        addInventorySlots(playerInventory);
-        // FiltList must be added at last. Index begins from 36
-        addFiltList(filtList);
-    }
-
-    private static void checkSize(Inventory filtList, PropertyDelegate propertyDelegate) {
-        checkSize(filtList, 27);
-        checkDataCount(propertyDelegate, 2);
+    private int getActualRowNum() {
+        return (int) Math.ceil(filtList.size() / 9.0);
     }
 
     /**
@@ -92,10 +91,13 @@ public class FiltPickScreenHandler extends ScreenHandler {
     }
 
     private void addFiltList(Inventory filtList) {
-        // Add slots for data inventory
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 9; j++) {
-                this.addSlot(new Slot(filtList, i * 9 + j, 8 + j * 18, 18 + i * 18));
+        for (int row = 0; row < FiltPickClient.CLIENT_CONFIG.FILTLIST_DISPLAYED_ROW_COUNT.get(); row++) {
+            for (int col = 0; col < 9; col++) {
+                int index = row * 9 + col + displayedRowOffset * 9;
+                if (index >= filtList.size()) {
+                    return;
+                }
+                this.addSlot(new Slot(filtList, index, 8 + col * 18, 18 + row * 18));
             }
         }
     }
@@ -196,4 +198,98 @@ public class FiltPickScreenHandler extends ScreenHandler {
         return pickedSlot.inventory == playerInventory;
     }
 
+    /**
+     * Safe means the row offset will never be out of the bound.
+     * @return whether displayedRowOffset has been changed
+     */
+    public boolean safeIncreaseDisplayedRowOffsetAndUpdate() {
+        int oldDisplayedRowOffset = displayedRowOffset;
+        safeIncreaseDisplayedRowOffset();
+        synDisplayedRowOffsetWithServer();
+        updateSlots();
+        return oldDisplayedRowOffset != displayedRowOffset;
+    }
+
+    private void updateSlots() {
+        clearAllSlots();
+        addAllSlots(playerInventory, filtList);
+    }
+
+    private void addAllSlots(Inventory playerInventory, Inventory filtList) {
+        int pixelOffset = (FiltPickClient.CLIENT_CONFIG.FILTLIST_DISPLAYED_ROW_COUNT.get() - 4) * 18;
+        addHotBarSlots(playerInventory, pixelOffset);
+        addInventorySlot(playerInventory, pixelOffset);
+        // FiltList must be added at last for #inventorySlotClicked working properly.
+        addFiltList(filtList);
+    }
+
+    private void addHotBarSlots(Inventory playerInventory, int pixelOffset) {
+        for(int i1 = 0; i1 < 9; ++i1) {
+            this.addSlot(new Slot(playerInventory, i1, 8 + i1 * 18, 161 + pixelOffset));
+        }
+    }
+
+    private void addInventorySlot(Inventory playerInventory, int pixelOffset) {
+        for(int l = 0; l < 3; ++l) {
+            for(int j1 = 0; j1 < 9; ++j1) {
+                this.addSlot(new Slot(playerInventory, j1 + l * 9 + 9, 8 + j1 * 18, 103 + l * 18 + pixelOffset));
+            }
+        }
+    }
+
+    private void clearAllSlots() {
+        this.slots.clear();
+        this.trackedStacks.clear();
+        this.previousTrackedStacks.clear();
+    }
+
+    private void safeIncreaseDisplayedRowOffset() {
+        displayedRowOffset = Math.min(displayedRowOffset + 1, MAX_DISPLAYED_ROW_OFFSET);
+    }
+
+    /**
+     * Will only be executed on the client side.
+     * @return SynMenuFieldC2SPacket has been sent
+     */
+    private boolean synDisplayedRowOffsetWithServer() {
+        if(isClientSide()) {
+            ClientPlayNetworking.send(new SynMenuFieldC2SPacket(displayedRowOffset));
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isClientSide() {
+        return !(this.playerInventory.player instanceof ServerPlayerEntity);
+    }
+
+    public int getDisplayedRowOffset() {
+        return displayedRowOffset;
+    }
+
+    /**
+     * Safe means the row offset will never be out of the bound.
+     * @return whether displayedRowOffset has been changed
+     */
+    public boolean safeDecreaseDisplayedRowOffsetAndUpdate() {
+        int oldDisplayedRowOffset = displayedRowOffset;
+        safeDecreaseDisplayedRowOffset();
+        synDisplayedRowOffsetWithServer();
+        updateSlots();
+        return oldDisplayedRowOffset != displayedRowOffset;
+    }
+
+    private void safeDecreaseDisplayedRowOffset() {
+        displayedRowOffset = Math.max(displayedRowOffset - 1, 0);
+    }
+
+    /**
+     * Be careful of that it is possible that the offset be out of the bound.
+     * @param displayedRowOffset
+     */
+    public void setDisplayedRowOffsetAndUpdate(int displayedRowOffset) {
+        this.displayedRowOffset = displayedRowOffset;
+        synDisplayedRowOffsetWithServer();
+        updateSlots();
+    }
 }

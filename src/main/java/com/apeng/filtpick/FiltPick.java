@@ -3,6 +3,7 @@ package com.apeng.filtpick;
 import com.apeng.filtpick.config.FiltPickServerConfig;
 import com.apeng.filtpick.guis.screen.FiltPickScreenHandler;
 import com.apeng.filtpick.network.OpenFiltPickScreenC2SPacket;
+import com.apeng.filtpick.network.SynMenuFieldC2SPacket;
 import fuzs.forgeconfigapiport.fabric.api.forge.v4.ForgeConfigRegistry;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -24,6 +25,7 @@ public class FiltPick implements ModInitializer {
 
     private static void registerServerReceiver() {
         ServerPlayNetworking.registerGlobalReceiver(OpenFiltPickScreenC2SPacket.PACKET_ID, new OpenFiltPickScreenC2SPacket());
+        ServerPlayNetworking.registerGlobalReceiver(SynMenuFieldC2SPacket.PACKET_ID, new SynMenuFieldC2SPacket(-1));
     }
 
     private static void registerScreenHandler() {

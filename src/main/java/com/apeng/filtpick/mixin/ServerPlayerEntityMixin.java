@@ -1,6 +1,7 @@
 package com.apeng.filtpick.mixin;
 
 
+import com.apeng.filtpick.FiltPick;
 import com.apeng.filtpick.guis.screen.FiltPickScreen;
 import com.apeng.filtpick.util.FiltPickPropertyDelegate;
 import com.apeng.filtpick.util.ImplementedInventory;
@@ -32,7 +33,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Im
     private FiltPickPropertyDelegate filtPickPropertyDelegate = new FiltPickPropertyDelegate();
 
     @Unique
-    private DefaultedList<ItemStack> filtList = DefaultedList.ofSize(27, ItemStack.EMPTY);
+    private DefaultedList<ItemStack> filtList = DefaultedList.ofSize(FiltPick.SERVER_CONFIG.CONTAINER_ROW_COUNT.get() * 9, ItemStack.EMPTY);
 
     public ServerPlayerEntityMixin(World world, BlockPos pos, float yaw, GameProfile gameProfile) {
         super(world, pos, yaw, gameProfile);

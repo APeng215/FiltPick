@@ -1,5 +1,4 @@
 accessWidener v2 named
-
 # accessible field net/minecraft/client/gui/widget/ClickableWidget tooltipDelay I
-# accessible field net/minecraft/client/gui/widget/ClickableWidget lastHoveredTime J
-# accessible field net/minecraft/client/gui/widget/ClickableWidget wasHovered Z
+accessible field net/minecraft/screen/ScreenHandler trackedStacks Lnet/minecraft/util/collection/DefaultedList;
+accessible field net/minecraft/screen/ScreenHandler previousTrackedStacks Lnet/minecraft/util/collection/DefaultedList;

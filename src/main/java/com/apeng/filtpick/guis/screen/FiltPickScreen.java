@@ -3,6 +3,7 @@ package com.apeng.filtpick.guis.screen;
 import com.apeng.filtpick.FiltPick;
 import com.apeng.filtpick.FiltPickClient;
 import com.apeng.filtpick.config.FiltPickClientConfig;
+import com.apeng.filtpick.guis.widget.ContainerScrollBlock;
 import com.apeng.filtpick.guis.widget.LegacyTexturedButtonWidget;
 import com.apeng.filtpick.util.IntBoolConvertor;
 import net.minecraft.client.MinecraftClient;
@@ -29,13 +30,11 @@ import java.time.Duration;
 
 public class FiltPickScreen extends HandledScreen<FiltPickScreenHandler> {
 
-    private static final Style EXPLANATION_STYLE = Style.EMPTY.withColor(Formatting.DARK_GRAY).withFormatting(Formatting.ITALIC);
-
     public static final int WHITELIST_MODE_BUTTON_ID = 0;
     public static final int DESTRUCTION_MODE_BUTTON_ID = 1;
     public static final int CLEAR_BUTTON_ID = 2;
-
-    private static final Identifier BACKGROUND_TEXTURE = new Identifier("textures/gui/container/shulker_box.png");
+    private static final Style EXPLANATION_STYLE = Style.EMPTY.withColor(Formatting.DARK_GRAY).withFormatting(Formatting.ITALIC);
+    private static final Identifier CONTAINER_BACKGROUND = new Identifier("textures/gui/container/generic_54.png"); //
     private static final Identifier FILT_MODE_BUTTON_TEXTURE = Identifier.of(FiltPick.ID, "gui/filtmode_button.png");
     private static final Identifier DESTRUCTION_BUTTON_TEXTURE = Identifier.of(FiltPick.ID, "gui/destruction_button.png");
     private static final Identifier CLEAR_BUTTON_TEXTURE = Identifier.of(FiltPick.ID, "gui/clearlist_button.png");
@@ -43,6 +42,7 @@ public class FiltPickScreen extends HandledScreen<FiltPickScreenHandler> {
 
     private FPToggleButton filtModeButton, destructionButton;
     private LegacyTexturedButtonWidget clearButton, returnButton;
+    private ContainerScrollBlock scrollBlock;
 
     public FiltPickScreen(FiltPickScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
@@ -51,7 +51,80 @@ public class FiltPickScreen extends HandledScreen<FiltPickScreenHandler> {
     @Override
     protected void init() {
         super.init();
+        initCoordinates();
         addButtons();
+        addScrollBlock();
+    }
+
+    @Override
+    public boolean mouseDragged(double pMouseX, double pMouseY, int pButton, double pDragX, double pDragY) {
+        if (this.getFocused() instanceof ContainerScrollBlock scrollBar && this.isDragging() && pButton == 0) {
+            return scrollBlockDragged(pMouseX, pMouseY, pButton, pDragX, pDragY, scrollBar);
+        } else {
+            return normalDragged(pMouseX, pMouseY, pButton, pDragX, pDragY);
+        }
+    }
+
+
+    /**
+     * @param pMouseX
+     * @param pMouseY
+     * @param pDeltaX
+     * @param pDeltaY >0 means scrolling up; <0 means scrolling down
+     * @return
+     */
+    @Override
+    public boolean mouseScrolled(double pMouseX, double pMouseY, double pDeltaX, double pDeltaY) {
+        if (!super.mouseScrolled(pMouseX, pMouseY, pDeltaX, pDeltaY)) {
+            scrollMenu(pDeltaY);
+        }
+        return true;
+    }
+
+    private void scrollMenu(double pDeltaY) {
+        if (pDeltaY > 0) {
+            scrollUpListAndSyn();
+        } else {
+            scrollDownListAndSyn();
+        }
+    }
+
+    private void scrollDownListAndSyn() {
+        if (handler.safeIncreaseDisplayedRowOffsetAndUpdate()) {
+            scrollBlock.setRowOffset(handler.getDisplayedRowOffset());
+        }
+    }
+
+    private void scrollUpListAndSyn() {
+        if (handler.safeDecreaseDisplayedRowOffsetAndUpdate()) {
+            scrollBlock.setRowOffset(handler.getDisplayedRowOffset());
+        }
+    }
+
+    private boolean normalDragged(double pMouseX, double pMouseY, int pButton, double pDragX, double pDragY) {
+        if (this.getFocused() != null && this.isDragging() && pButton == 0) {
+            return this.getFocused().mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY);
+        }
+        return super.mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY);
+    }
+
+    private boolean scrollBlockDragged(double pMouseX, double pMouseY, int pButton, double pDragX, double pDragY, ContainerScrollBlock scrollBlock) {
+        boolean flag = scrollBlock.mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY);
+        handler.setDisplayedRowOffsetAndUpdate(scrollBlock.getDisplayedRowOffset());
+        return flag;
+    }
+
+    private void addScrollBlock() {
+        scrollBlock = new ContainerScrollBlock(x + backgroundWidth + 1, y + 17, FiltPickClient.CLIENT_CONFIG.FILTLIST_DISPLAYED_ROW_COUNT.get() * 18, FiltPickClient.CLIENT_CONFIG.FILTLIST_DISPLAYED_ROW_COUNT.get(), FiltPick.SERVER_CONFIG.CONTAINER_ROW_COUNT.get());
+        this.addDrawableChild(scrollBlock);
+    }
+
+    private void initCoordinates() {
+        this.backgroundHeight = 114 + FiltPickClient.CLIENT_CONFIG.FILTLIST_DISPLAYED_ROW_COUNT.get() * 18;
+        this.playerInventoryTitleY = this.backgroundHeight - 94;
+        this.x = (this.width - this.backgroundWidth) / 2;
+        this.y = (this.height - this.backgroundHeight) / 2;
+        this.titleX = 72;
     }
 
     private void addButtons() {
@@ -135,6 +208,20 @@ public class FiltPickScreen extends HandledScreen<FiltPickScreenHandler> {
         this.drawMouseoverTooltip(context, mouseX, mouseY);
     }
 
+    @Override
+    protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
+        renderFiltPickContainer(context);
+        renderInventory(context);
+    }
+
+    private void renderFiltPickContainer(DrawContext context) {
+        context.drawTexture(CONTAINER_BACKGROUND, x, y, 0, 0, backgroundWidth, FiltPickClient.CLIENT_CONFIG.FILTLIST_DISPLAYED_ROW_COUNT.get() * 18 + 17);
+    }
+
+    private void renderInventory(DrawContext context) {
+        context.drawTexture(CONTAINER_BACKGROUND, x, y + FiltPickClient.CLIENT_CONFIG.FILTLIST_DISPLAYED_ROW_COUNT.get() * 18 + 17, 0, 126, backgroundWidth, 96);
+    }
+
     protected void renderTitle(DrawContext context, TextRenderer textRenderer, Text text, int startX, int startY, int endX, int endY, int color) {
         int centerX = (startX + endX) / 2;
         int i = textRenderer.getWidth(text);
@@ -142,25 +229,18 @@ public class FiltPickScreen extends HandledScreen<FiltPickScreenHandler> {
         int k = endX - startX;
         if (i > k) {
             int l = i - k;
-            double d = (double)Util.getMeasuringTimeMs() / 1000.0;
-            double e = Math.max((double)l * 0.5, 3.0);
+            double d = (double) Util.getMeasuringTimeMs() / 1000.0;
+            double e = Math.max((double) l * 0.5, 3.0);
             double f = Math.sin(1.5707963267948966 * Math.cos(Math.PI * 2 * d / e)) / 2.0 + 0.5;
-            double g = MathHelper.lerp(f, 0.0, (double)l);
+            double g = MathHelper.lerp(f, 0.0, l);
             context.enableScissor(startX, startY, endX, endY);
-            context.drawText(textRenderer, text, startX - (int)g, j, color, false);
+            context.drawText(textRenderer, text, startX - (int) g, j, color, false);
             context.disableScissor();
         } else {
             int l = MathHelper.clamp(centerX, startX + i / 2, endX - i / 2);
             OrderedText orderedText = text.asOrderedText();
             context.drawText(textRenderer, orderedText, centerX - textRenderer.getWidth(orderedText) / 2, j, color, false);
         }
-    }
-
-    @Override
-    protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
-        int i = (this.width - this.backgroundWidth) / 2;
-        int j = (this.height - this.backgroundHeight) / 2;
-        context.drawTexture(BACKGROUND_TEXTURE, i, j, 0, 0, this.backgroundWidth, this.backgroundHeight);
     }
 
     private void sendButtonClickC2SPacket(int buttonId) {
@@ -195,7 +275,7 @@ public class FiltPickScreen extends HandledScreen<FiltPickScreenHandler> {
         }
 
         private void renderTooltip() {
-            if(isCorrespondPropertyTrue() && tureTooltip != null) {
+            if (isCorrespondPropertyTrue() && tureTooltip != null) {
                 tureTooltip.render(isHovered(), isFocused(), getNavigationFocus());
             }
             if (!isCorrespondPropertyTrue() && falseTooltip != null) {
