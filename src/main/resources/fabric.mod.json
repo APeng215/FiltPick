@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "filtpick",
-  "version": "1.4.2",
+  "version": "1.5.0",
   "name": "FiltPick",
   "description": "A minecraft fabric mod which enables you to pick up items selectively.",
   "authors": [
