@@ -32,8 +32,21 @@ dependencies {
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
+    //Difference Between modApi And modImplementation
+    //modApi exposes the library to things depending on your build
+    //modImplementation does not
+    //so you modApi dependencies that mods depending on your mod need to know about also, you modImplementation everything else
+    //mod A depends on mod Z
+    //mod A's api uses classes from mod Z as return values
+    //mod B depends on mod A and uses those methods
+    //
+    //if modA uses modApi, then mod Z's classes are visible to mod B when depending on mod A without requiring depending on mod Z
+    //
+    //if mod A uses modImplementation, mod B will also need to depend on mod Z
+
     //Third party lib
-    modApi "fuzs.forgeconfigapiport:forgeconfigapiport-fabric:20.6.1"
+    modImplementation "fuzs.forgeconfigapiport:forgeconfigapiport-fabric:20.6.1"
+    include("fuzs.forgeconfigapiport:forgeconfigapiport-fabric:20.6.1")
 }
 
 processResources {
