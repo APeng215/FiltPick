@@ -75,21 +75,6 @@ public class FiltPickScreenHandler extends ScreenHandler {
         return propertyDelegate;
     }
 
-
-    private void addHotbarSlots(Inventory playerInventory) {
-        for (int i = 0; i < 9; ++i) {
-            this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 142));
-        }
-    }
-
-    private void addInventorySlots(Inventory playerInventory) {
-        for (int i = 0; i < 3; ++i) {
-            for (int j = 0; j < 9; ++j) {
-                this.addSlot(new Slot(playerInventory, j + (i + 1) * 9, 8 + j * 18, 84 + i * 18));
-            }
-        }
-    }
-
     private void addFiltList(Inventory filtList) {
         for (int row = 0; row < FiltPickClient.CLIENT_CONFIG.FILTLIST_DISPLAYED_ROW_COUNT.get(); row++) {
             for (int col = 0; col < 9; col++) {
@@ -159,7 +144,7 @@ public class FiltPickScreenHandler extends ScreenHandler {
     }
 
     private void onFiltSlotClicked(int slotIndex, SlotActionType actionType) {
-        int filtSlotIndex = slotIndex - 36;
+        int filtSlotIndex = slotIndex - 36 + 9 * displayedRowOffset;
         switch (actionType) {
             case THROW, QUICK_MOVE -> setFiltStackEmpty(filtSlotIndex);
             case PICKUP, QUICK_CRAFT -> setFiltStackCursorItem(filtSlotIndex);

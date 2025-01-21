@@ -77,8 +77,9 @@ public class FiltPickScreen extends HandledScreen<FiltPickScreenHandler> {
     public boolean mouseScrolled(double pMouseX, double pMouseY, double pDeltaX, double pDeltaY) {
         if (!super.mouseScrolled(pMouseX, pMouseY, pDeltaX, pDeltaY)) {
             scrollMenu(pDeltaY);
+            return true;
         }
-        return true;
+        return false;
     }
 
     private void scrollMenu(double pDeltaY) {
