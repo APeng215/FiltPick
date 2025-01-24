@@ -116,12 +116,12 @@ public class FiltPickScreen extends HandledScreen<FiltPickScreenHandler> {
     }
 
     private void addScrollBlock() {
-        scrollBlock = new ContainerScrollBlock(x + backgroundWidth + 1, y + 17, FiltPickClient.CLIENT_CONFIG.FILTLIST_DISPLAYED_ROW_COUNT.get() * 18, FiltPickClient.CLIENT_CONFIG.FILTLIST_DISPLAYED_ROW_COUNT.get(), FiltPick.SERVER_CONFIG.CONTAINER_ROW_COUNT.get());
+        scrollBlock = new ContainerScrollBlock(x + backgroundWidth + 1, y + 17, FiltPick.SERVER_CONFIG.FILTLIST_DISPLAYED_ROW_COUNT.get() * 18, FiltPick.SERVER_CONFIG.FILTLIST_DISPLAYED_ROW_COUNT.get(), FiltPick.SERVER_CONFIG.CONTAINER_ROW_COUNT.get());
         this.addDrawableChild(scrollBlock);
     }
 
     private void initCoordinates() {
-        this.backgroundHeight = 114 + FiltPickClient.CLIENT_CONFIG.FILTLIST_DISPLAYED_ROW_COUNT.get() * 18;
+        this.backgroundHeight = 114 + FiltPick.SERVER_CONFIG.FILTLIST_DISPLAYED_ROW_COUNT.get() * 18;
         this.playerInventoryTitleY = this.backgroundHeight - 94;
         this.x = (this.width - this.backgroundWidth) / 2;
         this.y = (this.height - this.backgroundHeight) / 2;
@@ -216,11 +216,11 @@ public class FiltPickScreen extends HandledScreen<FiltPickScreenHandler> {
     }
 
     private void renderFiltPickContainer(DrawContext context) {
-        context.drawTexture(CONTAINER_BACKGROUND, x, y, 0, 0, backgroundWidth, FiltPickClient.CLIENT_CONFIG.FILTLIST_DISPLAYED_ROW_COUNT.get() * 18 + 17);
+        context.drawTexture(CONTAINER_BACKGROUND, x, y, 0, 0, backgroundWidth, FiltPick.SERVER_CONFIG.FILTLIST_DISPLAYED_ROW_COUNT.get() * 18 + 17);
     }
 
     private void renderInventory(DrawContext context) {
-        context.drawTexture(CONTAINER_BACKGROUND, x, y + FiltPickClient.CLIENT_CONFIG.FILTLIST_DISPLAYED_ROW_COUNT.get() * 18 + 17, 0, 126, backgroundWidth, 96);
+        context.drawTexture(CONTAINER_BACKGROUND, x, y + FiltPick.SERVER_CONFIG.FILTLIST_DISPLAYED_ROW_COUNT.get() * 18 + 17, 0, 126, backgroundWidth, 96);
     }
 
     protected void renderTitle(DrawContext context, TextRenderer textRenderer, Text text, int startX, int startY, int endX, int endY, int color) {
@@ -340,4 +340,9 @@ public class FiltPickScreen extends HandledScreen<FiltPickScreenHandler> {
         }
     }
 
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        this.setDragging(false);
+        return super.mouseReleased(mouseX, mouseY, button);
+    }
 }

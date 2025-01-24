@@ -15,6 +15,7 @@ import net.minecraft.network.packet.c2s.play.ButtonClickC2SPacket;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.resource.featuretoggle.FeatureFlags;
+import net.minecraft.resource.featuretoggle.FeatureSet;
 import net.minecraft.screen.*;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
@@ -25,11 +26,6 @@ import java.util.Set;
 
 public class FiltPickScreenHandler extends ScreenHandler {
 
-    public static final ScreenHandlerType<FiltPickScreenHandler> FILTPICK_SCREEN_HANDLER_TYPE = Registry.register(
-            Registries.SCREEN_HANDLER,
-            Identifier.of(FiltPick.ID, "filt_screen"),
-            new ScreenHandlerType(FiltPickScreenHandler::new, FeatureFlags.VANILLA_FEATURES)
-    );
     private final PropertyDelegate propertyDelegate;
     private PlayerInventory playerInventory;
     private Inventory filtList;
@@ -43,11 +39,11 @@ public class FiltPickScreenHandler extends ScreenHandler {
             
     // For server side        
     public FiltPickScreenHandler(int syncId, PlayerInventory playerInventory, Inventory filtList, PropertyDelegate propertyDelegate) {
-        super(FiltPickScreenHandler.FILTPICK_SCREEN_HANDLER_TYPE, syncId);
+        super(FiltPick.FILTPICK_SCREEN_HANDLER_TYPE, syncId);
         this.propertyDelegate = propertyDelegate;
         this.playerInventory = playerInventory;
         this.filtList = filtList;
-        this.MAX_DISPLAYED_ROW_OFFSET = Math.max(0, getActualRowNum() - FiltPickClient.CLIENT_CONFIG.FILTLIST_DISPLAYED_ROW_COUNT.get());
+        this.MAX_DISPLAYED_ROW_OFFSET = Math.max(0, getActualRowNum() - FiltPick.SERVER_CONFIG.FILTLIST_DISPLAYED_ROW_COUNT.get());
         addAllSlots(playerInventory, filtList);
         addProperties(propertyDelegate);
     }
@@ -76,7 +72,7 @@ public class FiltPickScreenHandler extends ScreenHandler {
     }
 
     private void addFiltList(Inventory filtList) {
-        for (int row = 0; row < FiltPickClient.CLIENT_CONFIG.FILTLIST_DISPLAYED_ROW_COUNT.get(); row++) {
+        for (int row = 0; row < FiltPick.SERVER_CONFIG.FILTLIST_DISPLAYED_ROW_COUNT.get(); row++) {
             for (int col = 0; col < 9; col++) {
                 int index = row * 9 + col + displayedRowOffset * 9;
                 if (index >= filtList.size()) {
@@ -201,7 +197,7 @@ public class FiltPickScreenHandler extends ScreenHandler {
     }
 
     private void addAllSlots(Inventory playerInventory, Inventory filtList) {
-        int pixelOffset = (FiltPickClient.CLIENT_CONFIG.FILTLIST_DISPLAYED_ROW_COUNT.get() - 4) * 18;
+        int pixelOffset = (FiltPick.SERVER_CONFIG.FILTLIST_DISPLAYED_ROW_COUNT.get() - 4) * 18;
         addHotBarSlots(playerInventory, pixelOffset);
         addInventorySlot(playerInventory, pixelOffset);
         // FiltList must be added at last for #inventorySlotClicked working properly.

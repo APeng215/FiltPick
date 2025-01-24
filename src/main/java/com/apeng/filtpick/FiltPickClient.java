@@ -29,7 +29,7 @@ public class FiltPickClient implements ClientModInitializer {
     }
 
     private static void registerHandlerScreen() {
-        HandledScreens.register(FiltPickScreenHandler.FILTPICK_SCREEN_HANDLER_TYPE, FiltPickScreen::new);
+        HandledScreens.register(FiltPick.FILTPICK_SCREEN_HANDLER_TYPE, FiltPickScreen::new);
     }
 
 

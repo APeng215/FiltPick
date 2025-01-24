@@ -9,16 +9,25 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.resource.featuretoggle.FeatureSet;
+import net.minecraft.screen.ScreenHandlerType;
+import net.minecraft.util.Identifier;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.config.ModConfig;
 
 public class FiltPick implements ModInitializer {
 
     public static final String ID = "filtpick";
+    // SCREEN_HANDLER_TYPE MUST be put in mod main entry
+    public static final ScreenHandlerType<FiltPickScreenHandler> FILTPICK_SCREEN_HANDLER_TYPE = Registry.register(
+            Registries.SCREEN_HANDLER,
+            new Identifier(FiltPick.ID, "filtpick_screen"),
+            new ScreenHandlerType<>(FiltPickScreenHandler::new, FeatureSet.empty())
+    );
     public static FiltPickServerConfig SERVER_CONFIG;
 
+    @Override
     public void onInitialize() {
-        registerScreenHandler();
         registerServerReceiver();
         registerServerConfig();
     }
@@ -26,10 +35,6 @@ public class FiltPick implements ModInitializer {
     private static void registerServerReceiver() {
         ServerPlayNetworking.registerGlobalReceiver(OpenFiltPickScreenC2SPacket.PACKET_ID, new OpenFiltPickScreenC2SPacket());
         ServerPlayNetworking.registerGlobalReceiver(SynMenuFieldC2SPacket.PACKET_ID, new SynMenuFieldC2SPacket(-1));
-    }
-
-    private static void registerScreenHandler() {
-        Registry.register(Registries.SCREEN_HANDLER, ID, FiltPickScreenHandler.FILTPICK_SCREEN_HANDLER_TYPE);
     }
 
     private static void registerServerConfig() {

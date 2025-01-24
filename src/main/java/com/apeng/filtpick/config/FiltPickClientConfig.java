@@ -13,22 +13,10 @@ public class FiltPickClientConfig {
     private static FiltPickClientConfig instance;
 
     public final EnumMap<ButtonName, ButtonOffset> buttonOffsets = new EnumMap<>(ButtonName.class);
-    public ForgeConfigSpec.IntValue FILTLIST_DISPLAYED_ROW_COUNT;
 
     // Private constructor to prevent external instantiation
     private FiltPickClientConfig(ForgeConfigSpec.Builder builder) {
         buildButtonsSection(builder);
-        buildScreenSection(builder);
-    }
-
-    private void buildScreenSection(ForgeConfigSpec.Builder builder) {
-        builder.comment("FiltPick screen configuration").push("filtscreen");
-
-        FILTLIST_DISPLAYED_ROW_COUNT = builder.comment("The number of slot rows displayed in filtpick screen.",
-                "Smaller number means you need to scroll more to reach the bottom.")
-                .defineInRange("displayed row count", 6, 1, 6);
-
-        builder.pop();
     }
 
     private void buildButtonsSection(ForgeConfigSpec.Builder builder) {
