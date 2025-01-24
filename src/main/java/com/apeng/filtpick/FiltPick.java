@@ -18,7 +18,7 @@ import net.minecraftforge.fml.config.ModConfig;
 public class FiltPick implements ModInitializer {
 
     public static final String ID = "filtpick";
-    // SCREEN_HANDLER_TYPE MUST be put in mod main entry
+    // SCREEN_HANDLER_TYPE MUST be put in mod main entry (ModInitializer)
     public static final ScreenHandlerType<FiltPickScreenHandler> FILTPICK_SCREEN_HANDLER_TYPE = Registry.register(
             Registries.SCREEN_HANDLER,
             new Identifier(FiltPick.ID, "filtpick_screen"),
