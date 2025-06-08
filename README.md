@@ -44,8 +44,7 @@ You can reset whole filtlist by one click on the reset button.
 
 ## Gallery
 
-<img src="https://i.ibb.co/b3kCdtJ/Filt-Pick-Mod-Demo.gif"  width="320px"/>
-<img src="https://i.ibb.co/sQ8pPy5/Filt-Pick-Mod-Demo2.png" width="320px"/>
+<img src="README_resources/inventory_screen_guide.png" height="320px" > <img src="https://i.ibb.co/sQ8pPy5/Filt-Pick-Mod-Demo2.png" height="320px"/>
 
 ## Feedback
 
