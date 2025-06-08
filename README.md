@@ -32,7 +32,9 @@ _Normally, there is no necessity to make any configuration except for mods confl
 
 ## For developer
 
-If you want to build the source project,
+Since Minecraft 1.21, this repository now maintains both Fabric and Forge versions of the mod within the same codebase.
+
+If you want to build the source project in a very old version,
 remember to delete the proxy settings in file `gradle.properties`.
 ```
 # Used for proxy of the author, delete it if you are not the author.
