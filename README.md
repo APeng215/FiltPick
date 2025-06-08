@@ -1,4 +1,4 @@
-<img src="src/main/resources/assets/filtpick/icon.png" align="right" width="180px"/>
+<img src="README_resources/icon.png" align="right" width="180px"/>
 
 # FiltPick
 
