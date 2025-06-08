@@ -2,6 +2,7 @@ package com.apeng.filtpick.gui.widget;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -48,6 +49,17 @@ public class LegacyTexturedButton extends ImageButton {
             v += this.hoveredVOffset;
         }
 
-        context.blit(this.texture, this.getX(), this.getY(), this.u, v, this.width, this.height, this.textureWidth, this.textureHeight);
+        context.blit(
+                RenderType::guiTextured,
+                this.texture,
+                this.getX(),
+                this.getY(),
+                this.u,
+                v,
+                this.width,
+                this.height,
+                this.textureWidth,
+                this.textureHeight
+        );
     }
 }

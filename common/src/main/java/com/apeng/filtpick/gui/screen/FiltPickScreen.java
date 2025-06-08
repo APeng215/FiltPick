@@ -17,6 +17,7 @@ import net.minecraft.client.gui.components.WidgetTooltipHolder;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.protocol.game.ServerboundContainerButtonClickPacket;
@@ -262,11 +263,33 @@ public class FiltPickScreen extends AbstractContainerScreen<FiltPickMenu> {
     }
 
     private void renderInventory(GuiGraphics context) {
-        context.blit(CONTAINER_BACKGROUND, leftPos, topPos + Common.getServerConfig().FILTLIST_DISPLAYED_ROW_COUNT.get() * 18 + 17, 0, 126, imageWidth, 96);
+        context.blit(
+                RenderType::guiTextured,
+                CONTAINER_BACKGROUND,
+                leftPos,
+                topPos + Common.getServerConfig().FILTLIST_DISPLAYED_ROW_COUNT.get() * 18 + 17,
+                0,
+                126,
+                imageWidth,
+                96,
+                256,
+                256
+        );
     }
 
     private void renderFiltPickContainer(GuiGraphics context) {
-        context.blit(CONTAINER_BACKGROUND, leftPos, topPos, 0, 0, imageWidth, Common.getServerConfig().FILTLIST_DISPLAYED_ROW_COUNT.get() * 18 + 17);
+        context.blit(
+                RenderType::guiTextured,
+                CONTAINER_BACKGROUND,
+                leftPos,
+                topPos,
+                0,
+                0,
+                imageWidth,
+                Common.getServerConfig().FILTLIST_DISPLAYED_ROW_COUNT.get() * 18 + 17,
+                256,
+                256
+        );
     }
 
     private void sendButtonClickC2SPacket(int buttonId) {
@@ -313,7 +336,18 @@ public class FiltPickScreen extends AbstractContainerScreen<FiltPickMenu> {
             int u = 0, v = 0;
             v = setVerticalOffset(v);
             u = setHorizontalOffset(u);
-            context.blit(texture, this.getX(), this.getY(), u, v, width, height, 2 * width + 1, 2 * height + 1);
+            context.blit(
+                    RenderType::guiTextured,
+                    texture,
+                    this.getX(),
+                    this.getY(),
+                    u,
+                    v,
+                    width,
+                    height,
+                    2 * width + 1,
+                    2 * height + 1
+            );
         }
 
         private int setHorizontalOffset(int u) {

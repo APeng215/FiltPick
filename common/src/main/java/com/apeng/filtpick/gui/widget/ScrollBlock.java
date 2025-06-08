@@ -3,6 +3,7 @@ package com.apeng.filtpick.gui.widget;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -55,6 +56,7 @@ public class ScrollBlock extends AbstractWidget {
     protected void renderWidget(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         if (isActive()) {
             guiGraphics.blitSprite(
+                    RenderType::guiTextured,
                     ScrollBlockResource.SPRITE_LOCATION,
                     getX(),
                     getY(),

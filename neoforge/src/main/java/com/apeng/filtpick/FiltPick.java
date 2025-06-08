@@ -5,7 +5,7 @@ import com.apeng.filtpick.config.FiltPickServerConfig;
 import com.apeng.filtpick.gui.screen.FiltPickMenu;
 import com.apeng.filtpick.gui.screen.FiltPickScreen;
 import com.mojang.logging.LogUtils;
-import fuzs.forgeconfigapiport.neoforge.api.forge.v4.ForgeConfigRegistry;
+import fuzs.forgeconfigapiport.neoforge.api.v5.ForgeConfigRegistry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.MenuType;
@@ -58,11 +58,11 @@ public class FiltPick {
     }
 
     private static void registerServerConfigBuilder(ForgeConfigSpec.Builder serverBuilder) {
-        ForgeConfigRegistry.INSTANCE.register(ModConfig.Type.SERVER, serverBuilder.build());
+        ForgeConfigRegistry.INSTANCE.register(ID,ModConfig.Type.SERVER, serverBuilder.build());
     }
 
     private static void registerClientConfigBuilder(ForgeConfigSpec.Builder clientBuilder) {
-        ForgeConfigRegistry.INSTANCE.register(ModConfig.Type.CLIENT, clientBuilder.build());
+        ForgeConfigRegistry.INSTANCE.register(ID ,ModConfig.Type.CLIENT, clientBuilder.build());
     }
 
     private record ConfigBuilders(ForgeConfigSpec.Builder clientBuilder, ForgeConfigSpec.Builder serverBuilder) {

@@ -50,8 +50,8 @@ public class PlayerContainer extends SimpleContainer {
         }
 
         for (int k = 0; k < pTag.size(); k++) {
-            CompoundTag compoundtag = pTag.getCompound(k);
-            int j = compoundtag.getByte("Slot") & 255;
+            CompoundTag compoundtag = pTag.getCompound(k).orElseThrow();
+            int j = compoundtag.getByte("Slot").orElseThrow() & 255;
             if (j >= 0 && j < this.getContainerSize()) {
                 this.setItem(j, ItemStack.parse(pLevelRegistry, compoundtag).orElse(ItemStack.EMPTY));
             }

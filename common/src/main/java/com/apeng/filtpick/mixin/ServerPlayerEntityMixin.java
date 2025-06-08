@@ -79,13 +79,13 @@ public abstract class ServerPlayerEntityMixin extends Player implements FiltList
 
     @Unique
     private void readFiltList(CompoundTag nbt) {
-        this.filtList.fromTag(nbt.getList("FiltList", 10), this.registryAccess());
+        this.filtList.fromTag(nbt.getList("FiltList").orElseThrow(), this.registryAccess());
     }
 
     @Unique
     private void readPropertyDelegate(CompoundTag nbt) {
-        filtListPropertyDelegate.set(FiltPickScreen.WHITELIST_MODE_BUTTON_ID, nbt.getInt("isWhiteListModeOn"));
-        filtListPropertyDelegate.set(FiltPickScreen.DESTRUCTION_MODE_BUTTON_ID, nbt.getInt("isDestructionModeOn"));
+        filtListPropertyDelegate.set(FiltPickScreen.WHITELIST_MODE_BUTTON_ID, nbt.getInt("isWhiteListModeOn").orElseThrow());
+        filtListPropertyDelegate.set(FiltPickScreen.DESTRUCTION_MODE_BUTTON_ID, nbt.getInt("isDestructionModeOn").orElseThrow());
     }
 
     /**

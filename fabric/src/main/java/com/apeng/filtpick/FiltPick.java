@@ -4,7 +4,7 @@ import com.apeng.filtpick.config.FiltPickServerConfig;
 import com.apeng.filtpick.gui.screen.FiltPickMenu;
 import com.apeng.filtpick.network.OpenFiltPickScreenC2SPacket;
 import com.apeng.filtpick.network.SynMenuFieldC2SPacket;
-import fuzs.forgeconfigapiport.fabric.api.forge.v4.ForgeConfigRegistry;
+import fuzs.forgeconfigapiport.fabric.api.v5.ConfigRegistry;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -14,7 +14,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.config.ModConfig;
+import net.neoforged.fml.config.ModConfig;
 
 public class FiltPick implements ModInitializer {
 
@@ -54,7 +54,7 @@ public class FiltPick implements ModInitializer {
     private static void registerServerConfig() {
         ForgeConfigSpec.Builder serverBuilder = new ForgeConfigSpec.Builder();
         SERVER_CONFIG = FiltPickServerConfig.getInstance(serverBuilder); // Create singleton instance
-        ForgeConfigRegistry.INSTANCE.register(FiltPick.ID, ModConfig.Type.SERVER, serverBuilder.build());
+        ConfigRegistry.INSTANCE.register(FiltPick.ID, ModConfig.Type.SERVER, serverBuilder.build());
     }
 
 
