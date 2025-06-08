@@ -6,29 +6,49 @@
 )](https://www.curseforge.com/minecraft/mc-mods/filtpick)
 [![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https://api.modrinth.com/v2/project/filtpick&query=$.downloads&suffix=%20downloads&logo=Modrinth&label)](https://modrinth.com/mod/filtpick)
 
-This is a fabric mod for Minecraft which enables you to pick up items selectively.
+This is a Minecraft mod which enables you to pick up items selectively.
 It's a lightweight mod and has a user-friendly interface.
-If you need forge port, please click [here](https://github.com/APeng215/FiltPick-forge).
 
-## How to Install
+## Introduction
 
-1. [Download](https://modrinth.com/mod/filtpick/versions) the Jar File of proper version.
-2. Copy or cut the jar file you've just downloaded to your mod path (usually ".../.minecraft/mods" or ".../.minecraft/versions/\<versionName>/mods")
-3. Make sure you have installed fabric api for proper version.
+*"Only pick up what you need."*
 
-## How to use
+In vanilla, players automatically pick up any items on the ground if their inventory has enough space. However, there are times when you’d rather avoid picking up certain unwanted items—especially garbage.
 
-Actually, the UI is too straightforward to require any guidance. It's recommended to try yourself __directly in game__.
-- Put the item into the list, the function will take effect automatically.
-- Whitelist-mode: Only the items below will be picked up
-- Blacklist-mode: The items below won't be picked up
+This mod solves that problem by allowing you to pick up items selectively. It’s lightweight, intuitive, and features a user-friendly interface. With virtually zero learning curve, it’s ready to use straight out of the box.
 
-<img src="README_resources/inventory_screen_guide.png" width="320" ><img src="README_resources/mod_screen_guide.png" width="320" >
+## Usage
 
-### Configure button position
+### Pick modes
 
-You can configure button position in `/config/filtpick.json`.<br>
-_Normally, there is no necessity to make any configuration except for mods conflicts._
+You can switch between the two modes.
+
+- Black-list mode: The items in the list won't be picked up.
+- White-list mode: **Only** the items in the list will be picked up.
+
+### Destruction modes
+
+You can switch between the two modes.
+
+- Destruction-ON: All the items you can't pick will be destroyed.
+- Destruction-OFF: Do nothing.
+
+### Reset filt list
+
+You can reset whole filtlist by one click on the reset button.
+
+## Configurations (1.20.6 and above)
+
+- To adjust the filter list size, modify the `filtpick-server.toml` file in the `/config` directory for **Fabric** and **NeoForge**, or in the `/saves/<your_save_name>/serverconfig` directory for **Forge**. Simply edit the file to increase the filter list size as needed.
+- You can adjust the button positions in the `filtpick-client.toml` file located in the `/config` directory.
+
+## Gallery
+
+<img src="https://i.ibb.co/b3kCdtJ/Filt-Pick-Mod-Demo.gif"  width="320px"/><img src="https://i.ibb.co/sQ8pPy5/Filt-Pick-Mod-Demo2.png" width="320px"/>
+
+## Feedback
+
+Feel free to [create an issue](https://github.com/APeng215/FiltPick/issues/new) to report bugs, provide suggestions, or share feedback.
 
 ## For developer
 
