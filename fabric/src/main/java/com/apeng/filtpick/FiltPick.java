@@ -4,6 +4,8 @@ import com.apeng.filtpick.config.FiltPickServerConfig;
 import com.apeng.filtpick.gui.screen.FiltPickMenu;
 import com.apeng.filtpick.network.OpenFiltPickScreenC2SPacket;
 import com.apeng.filtpick.network.SynMenuFieldC2SPacket;
+import com.apeng.filtpick.test.TestFunctionCollector;
+import com.apeng.filtpick.test.TestFunctions;
 import fuzs.forgeconfigapiport.fabric.api.v5.ConfigRegistry;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
@@ -29,6 +31,7 @@ public class FiltPick implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        registerAllTestFunctions(TestFunctions.class);
         registerNetwork();
         registerServerConfig();
         Common.init(
@@ -37,6 +40,18 @@ public class FiltPick implements ModInitializer {
                 () -> FiltPickClient.CLIENT_CONFIG,
                 () -> SERVER_CONFIG
         );
+    }
+
+    private static void registerAllTestFunctions(Class<?> testClass) {
+        for (TestFunctionCollector.TestFunctionEntry entry :
+                TestFunctionCollector.collect(ID, testClass)) {
+
+            Registry.register(
+                    BuiltInRegistries.TEST_FUNCTION,
+                    entry.id(),
+                    entry.function()
+            );
+        }
     }
 
     private static void registerNetwork() {

@@ -4,6 +4,7 @@ import com.apeng.filtpick.config.FiltPickClientConfig;
 import com.apeng.filtpick.config.FiltPickServerConfig;
 import com.apeng.filtpick.gui.screen.FiltPickMenu;
 import com.apeng.filtpick.gui.screen.FiltPickScreen;
+import com.apeng.filtpick.test.TestFunctionCollector;
 import com.mojang.logging.LogUtils;
 import fuzs.forgeconfigapiport.neoforge.api.v5.ForgeConfigRegistry;
 import net.minecraft.core.registries.Registries;
@@ -13,8 +14,10 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
+import com.apeng.filtpick.test.TestFunctions;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.RegisterEvent;
 import org.slf4j.Logger;
 
 import java.util.function.Supplier;
@@ -26,11 +29,12 @@ public class FiltPick {
     public static final String ID = Common.MOD_ID;
     public static final Logger LOGGER = LogUtils.getLogger();
 
-    public static final DeferredRegister<MenuType<?>> MENU_TYPE_REGISTER = DeferredRegister.create(Registries.MENU, FiltPick.ID);
+    public static final DeferredRegister<MenuType<?>> MENU_TYPE_REGISTER = DeferredRegister.create(Registries.MENU, ID);
     public static final Supplier<MenuType<FiltPickMenu>> MENU_TYPE_SUPPLIER = MENU_TYPE_REGISTER.register("filtlist", () -> new MenuType<>(FiltPickMenu::new, FeatureFlags.DEFAULT_FLAGS));
 
     public FiltPick(IEventBus modBus) {
         registerMenuType(modBus);
+        modBus.addListener(FiltPick::registerTestFunctionsEvent);
         modBus.addListener(FiltPick::registerScreen);
         modBus.addListener(NetworkHandlerNeoImpl::registerAll);
         ForgeConfigSpec.Builder clientBuilder = new ForgeConfigSpec.Builder();
@@ -52,6 +56,23 @@ public class FiltPick {
         );
     }
 
+    private static void registerTestFunctionsEvent(RegisterEvent event) {
+        registerAllTestFunctions(event, TestFunctions.class);
+    }
+
+    private static void registerAllTestFunctions(RegisterEvent event, Class<?> testClass) {
+        for (TestFunctionCollector.TestFunctionEntry entry :
+                TestFunctionCollector.collect(ID, testClass)) {
+
+            event.register(
+                    Registries.TEST_FUNCTION,
+                    entry.id(),
+                    () -> entry.function()
+            );
+        }
+    }
+
+
     private static void registerConfigBuilders(ForgeConfigSpec.Builder clientBuilder, ForgeConfigSpec.Builder serverBuilder) {
         registerClientConfigBuilder(clientBuilder);
         registerServerConfigBuilder(serverBuilder);
@@ -63,9 +84,6 @@ public class FiltPick {
 
     private static void registerClientConfigBuilder(ForgeConfigSpec.Builder clientBuilder) {
         ForgeConfigRegistry.INSTANCE.register(ID ,ModConfig.Type.CLIENT, clientBuilder.build());
-    }
-
-    private record ConfigBuilders(ForgeConfigSpec.Builder clientBuilder, ForgeConfigSpec.Builder serverBuilder) {
     }
 
     private static void registerMenuType(IEventBus modBus) {
