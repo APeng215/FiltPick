@@ -15,11 +15,11 @@ public final class TestFunctionCollector {
 
     /**
      * TestFunctionEntry includes resource location and function
-     * @param id
+     * @param resourceLocation
      * @param function
      */
     public record TestFunctionEntry(
-            ResourceLocation id,
+            ResourceLocation resourceLocation,
             Consumer<GameTestHelper> function
     ) {}
 
@@ -28,6 +28,7 @@ public final class TestFunctionCollector {
 
         for (Method method : testClass.getDeclaredMethods()) {
 
+            if (method.isSynthetic()) continue;
             if (!Modifier.isStatic(method.getModifiers())) continue;
             if (method.getParameterCount() != 1) continue;
             if (method.getParameterTypes()[0] != GameTestHelper.class) continue;
@@ -42,10 +43,14 @@ public final class TestFunctionCollector {
             Consumer<GameTestHelper> consumer = helper -> {
                 try {
                     method.invoke(null, helper);
-                } catch (IllegalAccessException | InvocationTargetException e) {
-                    throw new RuntimeException(
-                            "Cannot invoke GameTest method: " + method, e
-                    );
+                } catch (InvocationTargetException e) {
+                    Throwable cause = e.getTargetException();
+                    if (cause instanceof RuntimeException runtime) {
+                        throw runtime;
+                    }
+                    throw new RuntimeException("GameTest method threw an exception: " + method, cause);
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException("Cannot access GameTest method: " + method, e);
                 }
             };
 

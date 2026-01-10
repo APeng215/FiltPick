@@ -1,0 +1,15 @@
+{
+  "environment": "filtpick:example_environment",
+  "structure": "filtpick:platform5x5x5",
+  "function": "filtpick:test_whitelist",
+  "type": "minecraft:function",
+
+  "max_ticks": 400,
+  "setup_ticks": 10,
+  "required": true,
+  "rotation": "none",
+  "manual_only": false,
+  "max_attempts": 1,
+  "required_successes": 1,
+  "sky_access": false
+}

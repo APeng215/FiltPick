@@ -48,7 +48,7 @@ public class FiltPick implements ModInitializer {
 
             Registry.register(
                     BuiltInRegistries.TEST_FUNCTION,
-                    entry.id(),
+                    entry.resourceLocation(),
                     entry.function()
             );
         }

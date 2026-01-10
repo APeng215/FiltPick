@@ -66,7 +66,7 @@ public class FiltPick {
 
             event.register(
                     Registries.TEST_FUNCTION,
-                    entry.id(),
+                    entry.resourceLocation(),
                     () -> entry.function()
             );
         }
