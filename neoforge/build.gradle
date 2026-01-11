@@ -27,6 +27,9 @@ neoForge {
         server {
             server()
         }
+        gameTestServer {
+            type = "gameTestServer"
+        }
     }
     mods {
         "${mod_id}" {
