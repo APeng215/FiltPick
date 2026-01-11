@@ -147,7 +147,7 @@ public class FiltPickMenu extends AbstractContainerMenu {
             ItemStack targetStack = filtList.getItem(i);
             if (targetStack.isEmpty()) {
                 filtList.setItem(i, singleItemStack2Add);
-                markSlotDirty(i + 36);
+//                markSlotDirty(i + 36); This causes crash bug. Workaround needed
                 return;
             }
         }
