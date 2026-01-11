@@ -113,7 +113,7 @@ public class FiltPickMenu extends AbstractContainerMenu {
 
     @Override
     public ItemStack quickMoveStack(Player playerIn, int index) {
-        ItemStack stack2Move = playerInventory.getItem(index);
+        ItemStack stack2Move = this.slots.get(index).getItem();
         if (stack2Move.isEmpty()) return ItemStack.EMPTY;
         if (isInventorySlotClicked(index)) {
             tryAddItem2FiltList(stack2Move);
@@ -147,7 +147,7 @@ public class FiltPickMenu extends AbstractContainerMenu {
             ItemStack targetStack = filtList.getItem(i);
             if (targetStack.isEmpty()) {
                 filtList.setItem(i, singleItemStack2Add);
-                markSlotDirty(i + 36);
+//                markSlotDirty(i + 36); <- This causes crash bug. Workaround needed
                 return;
             }
         }
