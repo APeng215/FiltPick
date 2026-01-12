@@ -175,7 +175,7 @@ public class FiltPickMenu extends AbstractContainerMenu {
         int filtSlotIndex = slotIndex - 36 + 9 * displayedRowOffset;
         switch (actionType) {
             case THROW, QUICK_MOVE -> setFiltStackEmpty(filtSlotIndex);
-            case PICKUP -> setFiltStackCursorItem(filtSlotIndex);
+            case PICKUP, QUICK_CRAFT -> setFiltStackCursorItem(filtSlotIndex);
         }
         markSlotDirty(slotIndex);
     }
