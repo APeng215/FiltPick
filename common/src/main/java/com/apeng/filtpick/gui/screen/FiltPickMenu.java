@@ -175,7 +175,7 @@ public class FiltPickMenu extends AbstractContainerMenu {
         int filtSlotIndex = slotIndex - 36 + 9 * displayedRowOffset;
         switch (actionType) {
             case THROW, QUICK_MOVE -> setFiltStackEmpty(filtSlotIndex);
-            case PICKUP, QUICK_CRAFT -> setFiltStackCursorItem(filtSlotIndex);
+            case PICKUP -> setFiltStackCursorItem(filtSlotIndex);
         }
         markSlotDirty(slotIndex);
     }
@@ -246,14 +246,15 @@ public class FiltPickMenu extends AbstractContainerMenu {
     }
 
     private void updateSlots() {
-        clearAllSlots();
-        addAllSlots(playerInventory, filtList);
+        clearFiltListSlots();
+        addFiltList(filtList);
     }
 
-    private void clearAllSlots() {
-        this.slots.clear();
-        this.lastSlots.clear();
-        this.remoteSlots.clear();
+    private void clearFiltListSlots() {
+        int inventorySlotCount = 36;
+        this.slots.subList(inventorySlotCount, this.slots.size()).clear();
+        this.lastSlots.subList(inventorySlotCount, this.lastSlots.size()).clear();
+        this.remoteSlots.subList(inventorySlotCount, this.remoteSlots.size()).clear();
     }
 
     /**
@@ -270,7 +271,7 @@ public class FiltPickMenu extends AbstractContainerMenu {
     /**
      * Will only be executed on the client side.
      *
-     * @return SynMenuFieldC2SPacket has been sent
+     * @return whether a SynMenuFieldC2SPacket has been sent
      */
     private boolean synDisplayedRowOffsetWithServer() {
         if (isClientSide()) {
