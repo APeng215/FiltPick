@@ -26,9 +26,11 @@ import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerData;
+import org.anti_ad.mc.ipn.api.IPNIgnore;
 
 import java.time.Duration;
 
+@IPNIgnore // IPNIgnore: To ignore this class in Inventory Profiles Next mod, check https://github.com/APeng215/FiltPick/issues/12 for more details.
 public class FiltPickScreen extends AbstractContainerScreen<FiltPickMenu> {
 
     public static final int WHITELIST_MODE_BUTTON_ID = 0;

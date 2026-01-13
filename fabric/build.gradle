@@ -5,12 +5,6 @@ plugins {
 tasks.withType(Javadoc) {
     failOnError false
 }
-repositories {
-    maven {
-        name = "Fuzs Mod Resources"
-        url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/"
-    }
-}
 dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"
     mappings loom.layered {
@@ -22,6 +16,8 @@ dependencies {
     // FCAP dependency
     modApi "fuzs.forgeconfigapiport:forgeconfigapiport-fabric:${forge_config_api_port_version}"
     include "fuzs.forgeconfigapiport:forgeconfigapiport-fabric:${forge_config_api_port_version}"
+    // Inventory Profiles Next. To fix https://github.com/APeng215/FiltPick/issues/12
+    compileOnly "maven.modrinth:inventory-profiles-next:${ipn_version}"
 }
 
 loom {
