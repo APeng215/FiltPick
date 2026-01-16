@@ -7,14 +7,12 @@ import com.apeng.filtpick.mixinduck.FiltListContainer;
 import com.apeng.filtpick.property.FiltListPropertyDelegate;
 import com.apeng.filtpick.util.PlayerContainer;
 import com.mojang.authlib.GameProfile;
-import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.ItemStackWithSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -26,82 +24,75 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ServerPlayer.class)
 public abstract class ServerPlayerEntityMixin extends Player implements FiltListContainer {
 
+    @Unique
+    private static final String TAG_FILT_LIST = "FiltList";
+
+    @Unique
+    private static final String TAG_IS_WHITELIST_MODE_ON = "isWhiteListModeOn";
+
+    @Unique
+    private static final String TAG_IS_DESTRUCTION_MODE_ON = "isDestructionModeOn";
+
     @Shadow
     public abstract void closeContainer();
 
     @Shadow
     public abstract void doCloseContainer();
 
-    @Shadow
-    public abstract ServerLevel serverLevel();
-
     @Unique
-    private SimpleContainer filtList = new PlayerContainer(Common.getServerConfig().CONTAINER_ROW_COUNT.get() * 9);
+    private PlayerContainer filtList = new PlayerContainer(Common.getServerConfig().CONTAINER_ROW_COUNT.get() * 9);
 
     @Unique
     private FiltListPropertyDelegate filtListPropertyDelegate = new FiltListPropertyDelegate();
 
-    public ServerPlayerEntityMixin(Level world, BlockPos pos, float yaw, GameProfile gameProfile) {
-        super(world, pos, yaw, gameProfile);
+    public ServerPlayerEntityMixin(Level world, GameProfile gameProfile) {
+        super(world, gameProfile);
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
-    public void readFiltPickInventoryInfoFromNbt(CompoundTag nbt, CallbackInfo callbackInfo) {
-        readFiltList(nbt);
-        readPropertyDelegate(nbt);
+    public void readFiltPickInventoryInfoFromNbt(ValueInput input, CallbackInfo callbackInfo) {
+        readFiltList(input);
+        readPropertyDelegate(input);
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
-    public void writeFiltPickInventoryInfoToNbt(CompoundTag nbt, CallbackInfo callbackInfo) {
-        writeFiltList(nbt);
-        writePropertyDelegate(nbt);
+    public void writeFiltPickInventoryInfoToNbt(ValueOutput output, CallbackInfo callbackInfo) {
+        writeFiltList(output);
+        writePropertyDelegate(output);
     }
 
     // To keep list after death
     @Inject(method = "restoreFrom", at = @At("TAIL"))
-    public void copyFilePickInventory(ServerPlayer oldPlayer, boolean alive, CallbackInfo ci) {
+    public void copyFilePickInventory(ServerPlayer oldPlayer, boolean keepEverything, CallbackInfo ci) {
         copyFiltList((FiltListContainer) oldPlayer);
         copyPropertyDelegate((FiltListContainer) oldPlayer);
     }
 
-//    @Redirect(method = "openMenu(Lnet/minecraft/world/MenuProvider;)Ljava/util/OptionalInt;", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;closeContainer()V"))
-//    public void shouldCloseCurrentScreenHook(ServerPlayer instance, MenuProvider menuProvider) {
-//        if (menuProvider instanceof ExtendedMenuProvider extendedMenuProvider) {
-//            if (extendedMenuProvider.shouldClose()) {
-//                this.closeContainer();
-//            } else {
-//                this.doCloseContainer();
-//            }
-//        } else {
-//            this.closeContainer();
-//        }
-//    }
-
     @Unique
-    private void readFiltList(CompoundTag nbt) {
-        this.filtList.fromTag(nbt.getList("FiltList").orElseThrow(), this.registryAccess());
-    }
-
-    @Unique
-    private void readPropertyDelegate(CompoundTag nbt) {
-        filtListPropertyDelegate.set(FiltPickScreen.WHITELIST_MODE_BUTTON_ID, nbt.getInt("isWhiteListModeOn").orElseThrow());
-        filtListPropertyDelegate.set(FiltPickScreen.DESTRUCTION_MODE_BUTTON_ID, nbt.getInt("isDestructionModeOn").orElseThrow());
+    private void readFiltList(ValueInput input) {
+        this.filtList.fromSlots(input.list(TAG_FILT_LIST, ItemStackWithSlot.CODEC).orElseThrow());
     }
 
     /**
-     * Check out {@link net.minecraft.world.entity.player.Inventory#save(ListTag)} for reference
+     * Check out {@link net.minecraft.world.entity.player.Inventory#save(ValueOutput.TypedOutputList)} for reference
      *
-     * @param nbt
+     * @param output
      */
     @Unique
-    private void writeFiltList(CompoundTag nbt) {
-        nbt.put("FiltList", this.filtList.createTag(this.registryAccess()));
+    private void writeFiltList(ValueOutput output) {
+        this.filtList.storeAsSlots(output.list(TAG_FILT_LIST, ItemStackWithSlot.CODEC));
     }
 
     @Unique
-    private void writePropertyDelegate(CompoundTag nbt) {
-        nbt.putInt("isWhiteListModeOn", filtListPropertyDelegate.get(FiltPickScreen.WHITELIST_MODE_BUTTON_ID));
-        nbt.putInt("isDestructionModeOn", filtListPropertyDelegate.get(FiltPickScreen.DESTRUCTION_MODE_BUTTON_ID));
+    private void readPropertyDelegate(ValueInput input) {
+        filtListPropertyDelegate.set(FiltPickScreen.WHITELIST_MODE_BUTTON_ID, input.getInt(TAG_IS_WHITELIST_MODE_ON).orElseThrow());
+        filtListPropertyDelegate.set(FiltPickScreen.DESTRUCTION_MODE_BUTTON_ID, input.getInt(TAG_IS_DESTRUCTION_MODE_ON).orElseThrow());
+    }
+
+    @Unique
+    private void writePropertyDelegate(ValueOutput output) {
+        output.putInt(TAG_IS_WHITELIST_MODE_ON, filtListPropertyDelegate.get(FiltPickScreen.WHITELIST_MODE_BUTTON_ID));
+        output.putInt(TAG_IS_DESTRUCTION_MODE_ON, filtListPropertyDelegate.get(FiltPickScreen.DESTRUCTION_MODE_BUTTON_ID));
     }
 
     @Unique
@@ -115,7 +106,7 @@ public abstract class ServerPlayerEntityMixin extends Player implements FiltList
     }
 
     @Override
-    public SimpleContainer getFiltList() {
+    public PlayerContainer getFiltList() {
         return this.filtList;
     }
 

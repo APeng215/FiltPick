@@ -6,6 +6,7 @@ import com.apeng.filtpick.config.FiltPickClientConfig;
 import com.apeng.filtpick.gui.widget.ContainerScrollBlock;
 import com.apeng.filtpick.gui.widget.LegacyTexturedButton;
 import com.apeng.filtpick.util.IntBoolConvertor;
+import com.mojang.blaze3d.pipeline.RenderPipeline;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
@@ -17,6 +18,7 @@ import net.minecraft.client.gui.components.WidgetTooltipHolder;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -266,7 +268,7 @@ public class FiltPickScreen extends AbstractContainerScreen<FiltPickMenu> {
 
     private void renderInventory(GuiGraphics context) {
         context.blit(
-                RenderType::guiTextured,
+                RenderPipelines.GUI_TEXTURED,
                 CONTAINER_BACKGROUND,
                 leftPos,
                 topPos + Common.getServerConfig().FILTLIST_DISPLAYED_ROW_COUNT.get() * 18 + 17,
@@ -281,7 +283,7 @@ public class FiltPickScreen extends AbstractContainerScreen<FiltPickMenu> {
 
     private void renderFiltPickContainer(GuiGraphics context) {
         context.blit(
-                RenderType::guiTextured,
+                RenderPipelines.GUI_TEXTURED,
                 CONTAINER_BACKGROUND,
                 leftPos,
                 topPos,
@@ -321,15 +323,15 @@ public class FiltPickScreen extends AbstractContainerScreen<FiltPickMenu> {
                 return;
             }
             renderTexture(context);
-            renderTooltip();
+            renderTooltip(context, mouseX, mouseY);
         }
 
-        private void renderTooltip() {
+        private void renderTooltip(GuiGraphics context, int mouseX, int mouseY) {
             if (correspondPropertyTrue() && tureTooltip != null) {
-                tureTooltip.refreshTooltipForNextRenderPass(isHovered(), isFocused(), getRectangle());
+                tureTooltip.refreshTooltipForNextRenderPass(context, mouseX, mouseY, isHovered(), isFocused(), getRectangle());
             }
             if (!correspondPropertyTrue() && falseTooltip != null) {
-                falseTooltip.refreshTooltipForNextRenderPass(isHovered(), isFocused(), getRectangle());
+                falseTooltip.refreshTooltipForNextRenderPass(context, mouseX, mouseY, isHovered(), isFocused(), getRectangle());
             }
         }
 
@@ -339,7 +341,7 @@ public class FiltPickScreen extends AbstractContainerScreen<FiltPickMenu> {
             v = setVerticalOffset(v);
             u = setHorizontalOffset(u);
             context.blit(
-                    RenderType::guiTextured,
+                    RenderPipelines.GUI_TEXTURED,
                     texture,
                     this.getX(),
                     this.getY(),

@@ -1,11 +1,12 @@
 package com.apeng.filtpick.mixinduck;
 
 import com.apeng.filtpick.property.FiltListPropertyDelegate;
+import com.apeng.filtpick.util.PlayerContainer;
 import net.minecraft.world.SimpleContainer;
 
 public interface FiltListContainer {
 
-    SimpleContainer getFiltList();
+    PlayerContainer getFiltList();
 
     FiltListPropertyDelegate getFiltListPropertyDelegate();
 
