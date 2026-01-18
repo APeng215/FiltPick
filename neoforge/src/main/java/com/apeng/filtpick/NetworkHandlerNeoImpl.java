@@ -5,6 +5,7 @@ import com.apeng.filtpick.network.OpenFiltPickScreenC2SPacket;
 import com.apeng.filtpick.network.SynMenuFieldC2SPacket;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
@@ -31,7 +32,7 @@ public class NetworkHandlerNeoImpl implements NetworkHandler {
 
     @Override
     public void sendToServer(CustomPacketPayload packetPayload) {
-        PacketDistributor.sendToServer(packetPayload);
+        ClientPacketDistributor.sendToServer(packetPayload);
     }
 
     @Override
