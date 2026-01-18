@@ -2,7 +2,7 @@ package com.apeng.filtpick.test;
 
 import com.google.common.base.CaseFormat;
 import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -19,7 +19,7 @@ public final class TestFunctionCollector {
      * @param function
      */
     public record TestFunctionEntry(
-            ResourceLocation resourceLocation,
+            Identifier resourceLocation,
             Consumer<GameTestHelper> function
     ) {}
 
@@ -38,7 +38,7 @@ public final class TestFunctionCollector {
                     method.getName()
             );
 
-            ResourceLocation id = ResourceLocation.fromNamespaceAndPath(modId, name);
+            Identifier id = Identifier.fromNamespaceAndPath(modId, name);
 
             Consumer<GameTestHelper> consumer = helper -> {
                 try {

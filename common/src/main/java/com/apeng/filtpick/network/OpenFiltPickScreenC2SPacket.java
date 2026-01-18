@@ -8,14 +8,14 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 
 public record OpenFiltPickScreenC2SPacket() implements CustomPacketPayload {
 
-    public static final Type<OpenFiltPickScreenC2SPacket> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(Common.MOD_ID, "open_filtpick_screen"));
+    public static final Type<OpenFiltPickScreenC2SPacket> TYPE = new Type<>(Identifier.fromNamespaceAndPath(Common.MOD_ID, "open_filtpick_screen"));
 
     public static final StreamCodec<ByteBuf, OpenFiltPickScreenC2SPacket> STREAM_CODEC = StreamCodec.unit(new OpenFiltPickScreenC2SPacket());
 

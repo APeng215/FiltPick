@@ -12,7 +12,7 @@ import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -24,7 +24,7 @@ public class FiltPick implements ModInitializer {
     // SCREEN_HANDLER_TYPE MUST be put in mod main entry (ModInitializer)
     public static final MenuType<FiltPickMenu> FILTPICK_SCREEN_HANDLER_TYPE = Registry.register(
             BuiltInRegistries.MENU,
-            ResourceLocation.fromNamespaceAndPath(FiltPick.ID, "filtpick_screen"),
+            Identifier.fromNamespaceAndPath(FiltPick.ID, "filtpick_screen"),
             new MenuType<>(FiltPickMenu::new, FeatureFlagSet.of())
     );
     public static FiltPickServerConfig SERVER_CONFIG;

@@ -1,5 +1,6 @@
 package com.apeng.filtpick.gui.widget;
 
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.util.Mth;
 
 /**
@@ -161,8 +162,8 @@ public class ContainerScrollBlock extends ScrollBlock {
     }
 
     @Override
-    protected void onDrag(double pMouseX, double pMouseY, double pDragX, double pDragY) {
-        super.onDrag(pMouseX, pMouseY, pDragX, pDragY);
+    protected void onDrag(MouseButtonEvent event, double mouseX, double mouseY) {
+        super.onDrag(event, mouseX, mouseY);
         displayedRowOffset = (int) (this.getPosRatio() * scrollSpaceInRow);
     }
 }

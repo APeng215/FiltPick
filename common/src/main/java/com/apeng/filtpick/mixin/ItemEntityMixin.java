@@ -41,7 +41,7 @@ public abstract class ItemEntityMixin extends Entity {
 
     @Unique
     private boolean isClient() {
-        return this.level().isClientSide;
+        return this.level().isClientSide();
     }
 
     @Unique

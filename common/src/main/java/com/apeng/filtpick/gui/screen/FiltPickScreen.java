@@ -6,9 +6,10 @@ import com.apeng.filtpick.config.FiltPickClientConfig;
 import com.apeng.filtpick.gui.widget.ContainerScrollBlock;
 import com.apeng.filtpick.gui.widget.LegacyTexturedButton;
 import com.apeng.filtpick.util.IntBoolConvertor;
-import com.mojang.blaze3d.pipeline.RenderPipeline;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.util.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -19,11 +20,10 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.protocol.game.ServerboundContainerButtonClickPacket;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
@@ -39,11 +39,11 @@ public class FiltPickScreen extends AbstractContainerScreen<FiltPickMenu> {
     public static final int DESTRUCTION_MODE_BUTTON_ID = 1;
     public static final int CLEAR_BUTTON_ID = 2;
     private static final Style EXPLANATION_STYLE = Style.EMPTY.withColor(ChatFormatting.DARK_GRAY).applyFormats(ChatFormatting.ITALIC);
-    private static final ResourceLocation CONTAINER_BACKGROUND = ResourceLocation.tryParse("textures/gui/container/generic_54.png"); // This image includes both container window and inventory window
-    private static final ResourceLocation FILT_MODE_BUTTON_TEXTURE = ResourceLocation.tryBuild(Common.MOD_ID, "gui/filtmode_button.png");
-    private static final ResourceLocation DESTRUCTION_BUTTON_TEXTURE = ResourceLocation.tryBuild(Common.MOD_ID, "gui/destruction_button.png");
-    private static final ResourceLocation CLEAR_BUTTON_TEXTURE = ResourceLocation.tryBuild(Common.MOD_ID, "gui/clearlist_button.png");
-    private static final ResourceLocation RETURN_BUTTON_TEXTURE = ResourceLocation.tryBuild(Common.MOD_ID, "gui/return_button.png");
+    private static final Identifier CONTAINER_BACKGROUND = Identifier.tryParse("textures/gui/container/generic_54.png"); // This image includes both container window and inventory window
+    private static final Identifier FILT_MODE_BUTTON_TEXTURE = Identifier.tryBuild(Common.MOD_ID, "gui/filtmode_button.png");
+    private static final Identifier DESTRUCTION_BUTTON_TEXTURE = Identifier.tryBuild(Common.MOD_ID, "gui/destruction_button.png");
+    private static final Identifier CLEAR_BUTTON_TEXTURE = Identifier.tryBuild(Common.MOD_ID, "gui/clearlist_button.png");
+    private static final Identifier RETURN_BUTTON_TEXTURE = Identifier.tryBuild(Common.MOD_ID, "gui/return_button.png");
 
     private FPToggleButton filtModeButton, destructionButton;
     private LegacyTexturedButton clearButton, returnButton;
@@ -108,32 +108,32 @@ public class FiltPickScreen extends AbstractContainerScreen<FiltPickMenu> {
     }
 
     @Override
-    public boolean mouseDragged(double pMouseX, double pMouseY, int pButton, double pDragX, double pDragY) {
-        if (this.getFocused() instanceof ContainerScrollBlock scrollBar && this.isDragging() && pButton == 0) {
-            return scrollBlockDragged(pMouseX, pMouseY, pButton, pDragX, pDragY, scrollBar);
+    public boolean mouseDragged(MouseButtonEvent buttonEvent, double mouseX, double mouseY) {
+        if (this.getFocused() instanceof ContainerScrollBlock scrollBar && this.isDragging() && buttonEvent.button() == InputConstants.MOUSE_BUTTON_LEFT) {
+            return scrollBlockDragged(buttonEvent, mouseX, mouseY, scrollBar);
         } else {
-            return normalDragged(pMouseX, pMouseY, pButton, pDragX, pDragY);
+            return normalDragged(buttonEvent, mouseX, mouseY);
         }
     }
 
     @Override
-    public boolean mouseReleased(double $$0, double $$1, int $$2) {
+    public boolean mouseReleased(MouseButtonEvent buttonEvent) {
         this.setFocused(null);
         this.setFocused(false);
-        return super.mouseReleased($$0, $$1, $$2);
+        return super.mouseReleased(buttonEvent);
     }
 
-    private boolean scrollBlockDragged(double pMouseX, double pMouseY, int pButton, double pDragX, double pDragY, ContainerScrollBlock scrollBlock) {
-        boolean flag = scrollBlock.mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY);
+    private boolean scrollBlockDragged(MouseButtonEvent buttonEvent, double pMouseX, double pMouseY, ContainerScrollBlock scrollBlock) {
+        boolean flag = scrollBlock.mouseDragged(buttonEvent, pMouseX, pMouseY);
         menu.setDisplayedRowOffsetAndUpdate(scrollBlock.getDisplayedRowOffset());
         return flag;
     }
 
-    private boolean normalDragged(double pMouseX, double pMouseY, int pButton, double pDragX, double pDragY) {
-        if (this.getFocused() != null && this.isDragging() && pButton == 0) {
-            return this.getFocused().mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY);
+    private boolean normalDragged(MouseButtonEvent buttonEvent, double pMouseX, double pMouseY) {
+        if (this.getFocused() != null && this.isDragging() && buttonEvent.button() == InputConstants.MOUSE_BUTTON_LEFT) {
+            return this.getFocused().mouseDragged(buttonEvent, pMouseX, pMouseY);
         }
-        return super.mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY);
+        return super.mouseDragged(buttonEvent, pMouseX, pMouseY);
     }
 
 
@@ -303,15 +303,15 @@ public class FiltPickScreen extends AbstractContainerScreen<FiltPickMenu> {
     class FPToggleButton extends AbstractWidget {
         private final ContainerData propertyDelegate = menu.getPropertyDelegate();
         private final int buttonId;
-        private final ResourceLocation texture;
+        private final Identifier texture;
         private final WidgetTooltipHolder tureTooltip = new WidgetTooltipHolder();
         private final WidgetTooltipHolder falseTooltip = new WidgetTooltipHolder();
 
-        public FPToggleButton(int x, int y, int width, int height, ResourceLocation texture, int buttonId) {
+        public FPToggleButton(int x, int y, int width, int height, Identifier texture, int buttonId) {
             this(x, y, width, height, Component.empty(), texture, buttonId);
         }
 
-        public FPToggleButton(int x, int y, int width, int height, Component message, ResourceLocation texture, int buttonId) {
+        public FPToggleButton(int x, int y, int width, int height, Component message, Identifier texture, int buttonId) {
             super(x, y, width, height, message);
             this.texture = texture;
             this.buttonId = buttonId;
@@ -392,7 +392,7 @@ public class FiltPickScreen extends AbstractContainerScreen<FiltPickMenu> {
         }
 
         @Override
-        public void onClick(double mouseX, double mouseY) {
+        public void onClick(MouseButtonEvent event, boolean isDoubleClick) {
             sendButtonClickC2SPacket(buttonId);
         }
 

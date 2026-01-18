@@ -1,15 +1,5 @@
 {
   "type": "minecraft:game_rules",
-  "bool_rules": [
-    {
-      "rule": "doFireTick",
-      "value": false
-    }
-  ],
-  "int_rules": [
-    {
-      "rule": "playersSleepingPercentage",
-      "value": 50
-    }
-  ]
+  "rules": {
+  }
 }

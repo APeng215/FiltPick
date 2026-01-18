@@ -3,13 +3,13 @@ package com.apeng.filtpick.gui.widget;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 
-import java.awt.event.KeyEvent;
 
 public class ScrollBlock extends AbstractWidget {
 
@@ -98,23 +98,29 @@ public class ScrollBlock extends AbstractWidget {
      * @return {@code true} if the event is consumed, {@code false} otherwise.
      */
     @Override
-    public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
-        if (isActive()) {
-            pKeyCode = KeyEvent.VK_UP;
-            switch (pKeyCode) {
-                case KeyEvent.VK_UP -> {
-                    // TODO
-                }
-                case KeyEvent.VK_DOWN -> {
-                    // TODO
-                }
-            }
-        }
-        return super.keyPressed(pKeyCode, pScanCode, pModifiers);
+    public boolean keyPressed(KeyEvent event) {
+//        if (isActive()) {
+//            pKeyCode = KeyEvent.VK_UP;
+//            switch (pKeyCode) {
+//                case KeyEvent.VK_UP -> {
+//                    // TODO
+//                }
+//                case KeyEvent.VK_DOWN -> {
+//                    // TODO
+//                }
+//            }
+//        }
+        return super.keyPressed(event);
     }
 
-    protected void onDrag(double pMouseX, double pMouseY, double pDragX, double pDragY) {
-        setY(Mth.clamp((int) pMouseY - ScrollBlockResource.HEIGHT / 2, upBoundY, upBoundY + scrollSpaceY));
+    @Override
+    protected void onDrag(MouseButtonEvent event, double mouseX, double mouseY) {
+        setY(Mth.clamp(
+                (int) event.y() - ScrollBlockResource.HEIGHT / 2,
+                upBoundY,
+                upBoundY + scrollSpaceY
+                )
+        );
     }
 
     /**
@@ -158,8 +164,8 @@ public class ScrollBlock extends AbstractWidget {
 
     public static class ScrollBlockResource {
         // Use guiGraphics#blitSprite to render the block instead of #blit
-        public static final ResourceLocation SPRITE_LOCATION = ResourceLocation.tryParse("container/creative_inventory/scroller");
-        public static final ResourceLocation SPRITE_LOCATION_DISABLED = ResourceLocation.tryParse("container/creative_inventory/scroller_disabled");
+        public static final Identifier SPRITE_LOCATION = Identifier.tryParse("container/creative_inventory/scroller");
+        public static final Identifier SPRITE_LOCATION_DISABLED = Identifier.tryParse("container/creative_inventory/scroller_disabled");
         public static final int U = 0;
         public static final int V = 0;
         public static final int WIDTH = 12;

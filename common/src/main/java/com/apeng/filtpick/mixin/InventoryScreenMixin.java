@@ -12,7 +12,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.InventoryMenu;
 import org.spongepowered.asm.mixin.Mixin;
@@ -27,7 +27,7 @@ import java.time.Duration;
 public abstract class InventoryScreenMixin extends AbstractRecipeBookScreen<InventoryMenu> {
 
     @Shadow protected abstract ScreenPosition getRecipeBookButtonPosition();
-    private static final ResourceLocation FILTPICK_ENTRY_TEXTURE = ResourceLocation.tryBuild(Common.MOD_ID, "gui/entry_button.png");
+    private static final Identifier FILTPICK_ENTRY_TEXTURE = Identifier.tryBuild(Common.MOD_ID, "gui/entry_button.png");
     private ImageButton filtPickEntryButton;
 
     public InventoryScreenMixin(InventoryMenu menu, RecipeBookComponent<?> recipeBookComponent, Inventory playerInventory, Component title) {

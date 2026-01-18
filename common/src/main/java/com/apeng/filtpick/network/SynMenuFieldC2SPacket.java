@@ -6,12 +6,12 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 
 public record SynMenuFieldC2SPacket(int displayedRowStartIndex) implements CustomPacketPayload {
 
-    public static final Type<SynMenuFieldC2SPacket> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(Common.MOD_ID, "syn_menu_field"));
+    public static final Type<SynMenuFieldC2SPacket> TYPE = new Type<>(Identifier.fromNamespaceAndPath(Common.MOD_ID, "syn_menu_field"));
 
     public static final StreamCodec<ByteBuf, SynMenuFieldC2SPacket> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_INT,

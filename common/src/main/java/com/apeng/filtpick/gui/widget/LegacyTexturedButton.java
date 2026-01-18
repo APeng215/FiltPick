@@ -1,34 +1,32 @@
 package com.apeng.filtpick.gui.widget;
 
-import com.mojang.blaze3d.pipeline.RenderPipeline;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class LegacyTexturedButton extends ImageButton {
     private final int u;
     private final int v;
     private final int hoveredVOffset;
 
-    private final ResourceLocation texture;
+    private final Identifier texture;
 
     private final int textureWidth;
     private final int textureHeight;
 
-    public LegacyTexturedButton(int x, int y, int width, int height, int u, int v, int hoveredVOffset, ResourceLocation texture, int textureWidth, int textureHeight, OnPress pressAction) {
+    public LegacyTexturedButton(int x, int y, int width, int height, int u, int v, int hoveredVOffset, Identifier texture, int textureWidth, int textureHeight, OnPress pressAction) {
         this(x, y, width, height, u, v, hoveredVOffset, texture, textureWidth, textureHeight, pressAction, CommonComponents.EMPTY);
     }
 
-    public LegacyTexturedButton(int x, int y, int width, int height, int u, int v, int hoveredVOffset, ResourceLocation texture, OnPress pressAction) {
+    public LegacyTexturedButton(int x, int y, int width, int height, int u, int v, int hoveredVOffset, Identifier texture, OnPress pressAction) {
         this(x, y, width, height, u, v, hoveredVOffset, texture, 256, 256, pressAction, CommonComponents.EMPTY);
     }
 
 
-    public LegacyTexturedButton(int x, int y, int width, int height, int u, int v, int hoveredVOffset, ResourceLocation texture, int textureWidth, int textureHeight, OnPress pressAction, Component message) {
+    public LegacyTexturedButton(int x, int y, int width, int height, int u, int v, int hoveredVOffset, Identifier texture, int textureWidth, int textureHeight, OnPress pressAction, Component message) {
         super(x, y, width, height, null, pressAction, message);
 
         this.u = u;
@@ -42,7 +40,7 @@ public class LegacyTexturedButton extends ImageButton {
     }
 
     @Override
-    public void renderWidget(GuiGraphics context, int mouseX, int mouseY, float delta) {
+    public void renderContents(GuiGraphics context, int mouseX, int mouseY, float delta) {
         int v = this.v;
 
         if (!this.isActive()) {
