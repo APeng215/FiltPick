@@ -70,7 +70,7 @@ public abstract class ServerPlayerEntityMixin extends Player implements FiltList
 
     @Unique
     private void readFiltList(ValueInput input) {
-        this.filtList.fromSlots(input.list(TAG_FILT_LIST, ItemStackWithSlot.CODEC).orElseThrow());
+        this.filtList.fromSlots(input.listOrEmpty(TAG_FILT_LIST, ItemStackWithSlot.CODEC));
     }
 
     /**
@@ -85,8 +85,8 @@ public abstract class ServerPlayerEntityMixin extends Player implements FiltList
 
     @Unique
     private void readPropertyDelegate(ValueInput input) {
-        filtListPropertyDelegate.set(FiltPickScreen.WHITELIST_MODE_BUTTON_ID, input.getInt(TAG_IS_WHITELIST_MODE_ON).orElseThrow());
-        filtListPropertyDelegate.set(FiltPickScreen.DESTRUCTION_MODE_BUTTON_ID, input.getInt(TAG_IS_DESTRUCTION_MODE_ON).orElseThrow());
+        filtListPropertyDelegate.set(FiltPickScreen.WHITELIST_MODE_BUTTON_ID, input.getIntOr(TAG_IS_WHITELIST_MODE_ON, 0));
+        filtListPropertyDelegate.set(FiltPickScreen.DESTRUCTION_MODE_BUTTON_ID, input.getIntOr(TAG_IS_DESTRUCTION_MODE_ON, 0));
     }
 
     @Unique
