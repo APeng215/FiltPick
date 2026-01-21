@@ -3,6 +3,7 @@ package com.apeng.filtpick;
 import com.apeng.filtpick.network.NetworkHandler;
 import com.apeng.filtpick.network.OpenFiltPickScreenC2SPacket;
 import com.apeng.filtpick.network.SynMenuFieldC2SPacket;
+import com.apeng.filtpick.network.SyncBlockedItemsS2CPacket;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
@@ -12,7 +13,7 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 public class NetworkHandlerNeoImpl implements NetworkHandler {
 
-    private static final String PROTOCOL_VERSION = "1";
+    private static final String PROTOCOL_VERSION = "2";
 
     public static void registerAll(final RegisterPayloadHandlersEvent event) {
         final PayloadRegistrar registrar = event.registrar(PROTOCOL_VERSION);
@@ -26,6 +27,11 @@ public class NetworkHandlerNeoImpl implements NetworkHandler {
                 OpenFiltPickScreenC2SPacket.STREAM_CODEC,
                 (payload, context) -> context.enqueueWork(
                         () -> OpenFiltPickScreenC2SPacket.handle(payload, context.player())
+                )).playToClient(
+                SyncBlockedItemsS2CPacket.TYPE,
+                SyncBlockedItemsS2CPacket.STREAM_CODEC,
+                (payload, context) -> context.enqueueWork(
+                        () -> SyncBlockedItemsS2CPacket.handle(payload)
                 )
         );
     }

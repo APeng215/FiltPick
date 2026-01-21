@@ -4,11 +4,13 @@ import com.apeng.filtpick.config.FiltPickServerConfig;
 import com.apeng.filtpick.gui.screen.FiltPickMenu;
 import com.apeng.filtpick.network.OpenFiltPickScreenC2SPacket;
 import com.apeng.filtpick.network.SynMenuFieldC2SPacket;
+import com.apeng.filtpick.network.SyncBlockedItemsS2CPacket;
 import com.apeng.filtpick.test.TestFunctionCollector;
 import com.apeng.filtpick.test.TestFunctions;
 import fuzs.forgeconfigapiport.fabric.api.v5.ConfigRegistry;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -34,12 +36,19 @@ public class FiltPick implements ModInitializer {
         registerAllTestFunctions(TestFunctions.class);
         registerNetwork();
         registerServerConfig();
+        registerEvents();
         Common.init(
                 new NetworkHandlerFabricImpl(),
                 () -> FILTPICK_SCREEN_HANDLER_TYPE,
                 () -> FiltPickClient.CLIENT_CONFIG,
                 () -> SERVER_CONFIG
         );
+    }
+
+    private static void registerEvents() {
+        ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
+            com.apeng.filtpick.tracker.BlockedItemsTracker.onPlayerLogout(handler.player);
+        });
     }
 
     private static void registerAllTestFunctions(Class<?> testClass) {
@@ -64,6 +73,8 @@ public class FiltPick implements ModInitializer {
         ServerPlayNetworking.registerGlobalReceiver(SynMenuFieldC2SPacket.TYPE, (payload, context) -> {
             SynMenuFieldC2SPacket.handle(payload, context.player());
         });
+
+        PayloadTypeRegistry.playS2C().register(SyncBlockedItemsS2CPacket.TYPE, SyncBlockedItemsS2CPacket.STREAM_CODEC);
     }
 
     private static void registerServerConfig() {

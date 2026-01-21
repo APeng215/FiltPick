@@ -6,7 +6,8 @@
   "refmap": "${mod_id}.refmap.json",
   "mixins": [
     "ItemEntityMixin",
-    "ServerPlayerEntityMixin"
+    "ServerPlayerEntityMixin",
+    "PlayerListMixin"
   ],
   "client": [
     "InventoryScreenMixin"

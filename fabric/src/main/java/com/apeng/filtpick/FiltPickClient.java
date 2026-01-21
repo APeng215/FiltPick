@@ -2,11 +2,18 @@ package com.apeng.filtpick;
 
 import com.apeng.filtpick.config.FiltPickClientConfig;
 import com.apeng.filtpick.gui.screen.FiltPickScreen;
+import com.apeng.filtpick.hud.BlockedItemsHud;
+import com.apeng.filtpick.network.SyncBlockedItemsS2CPacket;
 import fuzs.forgeconfigapiport.fabric.api.v5.ConfigRegistry;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.resources.Identifier;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.neoforged.fml.config.ModConfig;
 
@@ -17,17 +24,38 @@ public class FiltPickClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        registerHandlerScreen();
-        registerClientConfig();
+        registerConfigs();
+        registerScreens();
+        registerHudElements();
+        registerNetworkHandlers();
+        registerClientEvents();
     }
 
-    private static void registerClientConfig() {
+    private static void registerHudElements() {
+        HudElementRegistry.attachElementBefore(
+                VanillaHudElements.CHAT,
+                Identifier.fromNamespaceAndPath(Common.MOD_ID, "blocked_items_hud"),
+                BlockedItemsHud::render
+        );
+    }
+
+    private static void registerNetworkHandlers() {
+        ClientPlayNetworking.registerGlobalReceiver(SyncBlockedItemsS2CPacket.TYPE, (payload, context) -> {
+            context.client().execute(() -> SyncBlockedItemsS2CPacket.handle(payload));
+        });
+    }
+
+    private static void registerClientEvents() {
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> BlockedItemsHud.clear());
+    }
+
+    private static void registerConfigs() {
         ForgeConfigSpec.Builder clientBuilder = new ForgeConfigSpec.Builder();
-        CLIENT_CONFIG = FiltPickClientConfig.getInstance(clientBuilder); // Create singleton instance
+        CLIENT_CONFIG = FiltPickClientConfig.getInstance(clientBuilder);
         ConfigRegistry.INSTANCE.register(FiltPick.ID, ModConfig.Type.CLIENT, clientBuilder.build());
     }
 
-    private static void registerHandlerScreen() {
+    private static void registerScreens() {
         MenuScreens.register(FiltPick.FILTPICK_SCREEN_HANDLER_TYPE, FiltPickScreen::new);
     }
 

@@ -3,13 +3,16 @@ package com.apeng.filtpick.mixin;
 
 import com.apeng.filtpick.Common;
 import com.apeng.filtpick.gui.screen.FiltPickScreen;
+import com.apeng.filtpick.mixinduck.BlockedItemsContainer;
 import com.apeng.filtpick.mixinduck.FiltListContainer;
 import com.apeng.filtpick.property.FiltListPropertyDelegate;
+import com.apeng.filtpick.tracker.BlockedItemsTracker;
 import com.apeng.filtpick.util.PlayerContainer;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.ItemStackWithSlot;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -20,9 +23,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.HashSet;
+import java.util.Set;
+
 
 @Mixin(ServerPlayer.class)
-public abstract class ServerPlayerEntityMixin extends Player implements FiltListContainer {
+public abstract class ServerPlayerEntityMixin extends Player implements FiltListContainer, BlockedItemsContainer {
 
     @Unique
     private static final String TAG_FILT_LIST = "FiltList";
@@ -44,6 +50,9 @@ public abstract class ServerPlayerEntityMixin extends Player implements FiltList
 
     @Unique
     private FiltListPropertyDelegate filtListPropertyDelegate = new FiltListPropertyDelegate();
+
+    @Unique
+    private final Set<Item> currentlyBlockedItems = new HashSet<>();
 
     public ServerPlayerEntityMixin(Level world, GameProfile gameProfile) {
         super(world, gameProfile);
@@ -74,9 +83,7 @@ public abstract class ServerPlayerEntityMixin extends Player implements FiltList
     }
 
     /**
-     * Check out {@link net.minecraft.world.entity.player.Inventory#save(ValueOutput.TypedOutputList)} for reference
-     *
-     * @param output
+     * @param output The output to write data to.
      */
     @Unique
     private void writeFiltList(ValueOutput output) {
@@ -117,9 +124,31 @@ public abstract class ServerPlayerEntityMixin extends Player implements FiltList
 
     @Override
     public void resetFiltListWithProperties() {
-        getFiltList().clearContent();
-        getFiltListPropertyDelegate().reset();
+        this.getFiltList().clearContent();
+        this.getFiltListPropertyDelegate().reset();
     }
 
+    @Override
+    public void markItemAsBlocked(Item item) {
+        currentlyBlockedItems.add(item);
+    }
 
+    @Override
+    public Set<Item> getCurrentlyBlockedItems() {
+        return currentlyBlockedItems;
+    }
+
+    @Override
+    public void clearCurrentlyBlockedItems() {
+        currentlyBlockedItems.clear();
+    }
+
+    /**
+     * Every tick, we process items that were blocked during this tick and sync to client if needed.
+     */
+    @Inject(method = "tick", at = @At("TAIL"))
+    private void onPlayerTick(CallbackInfo ci) {
+        BlockedItemsTracker.onPlayerTick((ServerPlayer) (Object) this);
+    }
 }
+

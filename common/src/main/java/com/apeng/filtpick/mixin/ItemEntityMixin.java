@@ -2,6 +2,7 @@ package com.apeng.filtpick.mixin;
 
 
 import com.apeng.filtpick.gui.screen.FiltPickScreen;
+import com.apeng.filtpick.mixinduck.BlockedItemsContainer;
 import com.apeng.filtpick.mixinduck.FiltListContainer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
@@ -32,12 +33,11 @@ public abstract class ItemEntityMixin extends Entity {
 
     @Inject(method = "playerTouch", at = @At("HEAD"), cancellable = true)
     public void filtPickLogic(Player player, CallbackInfo callbackInfo) {
-        if (isClient() || !checkGameMode((ServerPlayer) player)) {
+        if (isClient() || !isSurvivalOrAdventure((ServerPlayer) player)) {
             return;
         }
-        filtPick((FiltListContainer) player, callbackInfo, getCollisionItem());
+        processFilterPickup((FiltListContainer) player, callbackInfo, getCollisionItem());
     }
-
 
     @Unique
     private boolean isClient() {
@@ -53,22 +53,13 @@ public abstract class ItemEntityMixin extends Entity {
     public abstract ItemStack getItem();
 
     @Unique
-    private static boolean checkGameMode(ServerPlayer player) {
-        return isSurvivalMode(player) || isAdventureMode(player);
+    private static boolean isSurvivalOrAdventure(ServerPlayer player) {
+        GameType gt = player.gameMode.getGameModeForPlayer();
+        return gt == GameType.SURVIVAL || gt == GameType.ADVENTURE;
     }
 
     @Unique
-    private static boolean isAdventureMode(ServerPlayer player) {
-        return player.gameMode.getGameModeForPlayer() == GameType.ADVENTURE;
-    }
-
-    @Unique
-    private static boolean isSurvivalMode(ServerPlayer player) {
-        return player.gameMode.getGameModeForPlayer() == GameType.SURVIVAL;
-    }
-
-    @Unique
-    private void filtPick(FiltListContainer player, CallbackInfo callbackInfo, Item pickedItem) {
+    private void processFilterPickup(FiltListContainer player, CallbackInfo callbackInfo, Item pickedItem) {
         Container filtList = player.getFiltList();
         if (isWhiteListMode(player)) {
             applyWhiteListMode(player, callbackInfo, pickedItem, filtList);
@@ -80,7 +71,7 @@ public abstract class ItemEntityMixin extends Entity {
     @Unique
     private void applyBlackListMode(FiltListContainer player, CallbackInfo callbackInfo, Item pickedItem, Container filtList) {
         if (listContainsItem(pickedItem, filtList)) {
-            dontPick(callbackInfo);
+            preventPickupAndRecord(player, pickedItem, callbackInfo);
             if (isDestructionMode(player)) {
                 this.discard();
             }
@@ -92,7 +83,7 @@ public abstract class ItemEntityMixin extends Entity {
         if (listContainsItem(pickedItem, filtList)) {
             return;
         }
-        dontPick(callbackInfo);
+        preventPickupAndRecord(player, pickedItem, callbackInfo);
         checkDestruction(player);
     }
 
@@ -109,7 +100,8 @@ public abstract class ItemEntityMixin extends Entity {
     }
 
     @Unique
-    private static void dontPick(CallbackInfo callbackInfo) {
+    private static void preventPickupAndRecord(FiltListContainer player, Item pickedItem, CallbackInfo callbackInfo) {
+        ((BlockedItemsContainer) player).markItemAsBlocked(pickedItem);
         callbackInfo.cancel();
     }
 
