@@ -22,6 +22,7 @@ import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.RegisterEvent;
 
@@ -45,6 +46,7 @@ public class FiltPick {
 
         NeoForge.EVENT_BUS.addListener(FiltPick::onPlayerLoggedOut);
         NeoForge.EVENT_BUS.addListener(FiltPick::onClientLogout);
+        NeoForge.EVENT_BUS.addListener(FiltPick::onServerStopping);
 
         ForgeConfigSpec.Builder clientBuilder = new ForgeConfigSpec.Builder();
         ForgeConfigSpec.Builder serverBuilder = new ForgeConfigSpec.Builder();
@@ -62,6 +64,10 @@ public class FiltPick {
         if (event.getEntity() instanceof ServerPlayer serverPlayer) {
             BlockedItemsTracker.onPlayerLogout(serverPlayer);
         }
+    }
+
+    private static void onServerStopping(ServerStoppingEvent event) {
+        BlockedItemsTracker.clear();
     }
 
     private static void initCommon(ForgeConfigSpec.Builder clientBuilder, ForgeConfigSpec.Builder serverBuilder) {

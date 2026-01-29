@@ -9,6 +9,7 @@ import com.apeng.filtpick.test.TestFunctionCollector;
 import com.apeng.filtpick.test.TestFunctions;
 import fuzs.forgeconfigapiport.fabric.api.v5.ConfigRegistry;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -48,6 +49,9 @@ public class FiltPick implements ModInitializer {
     private static void registerEvents() {
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
             com.apeng.filtpick.tracker.BlockedItemsTracker.onPlayerLogout(handler.player);
+        });
+        ServerLifecycleEvents.SERVER_STOPPING.register(server -> {
+            com.apeng.filtpick.tracker.BlockedItemsTracker.clear();
         });
     }
 
