@@ -53,9 +53,8 @@ public abstract class InventoryScreenMixin extends AbstractRecipeBookScreen<Inve
         }
     }
 
-    @Override
-    public void onRecipeBookButtonClick() {
-        super.onRecipeBookButtonClick();
+    @Inject(method = "onRecipeBookButtonClick", at = @At("TAIL"))
+    private void onRecipeBookButtonClickInject(CallbackInfo ci) {
         updateFiltPickEntryButtonPosition();
     }
 
