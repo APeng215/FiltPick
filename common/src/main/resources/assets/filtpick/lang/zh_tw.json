@@ -8,5 +8,7 @@
   "destruction_mode_off": "銷燬模式: 關",
   "filtpick_screen_name": "拾取篩",
   "reset_explanation": "重置列表",
-  "entry_button_tooltip": "自定義你想要拾取的物品"
+  "entry_button_tooltip": "自定義你想要拾取的物品",
+  "key.category.filtpick.filtpick": "拾取篩",
+  "key.filtpick.add_filtered_item": "將滑鼠指向的物品加入列表"
 }

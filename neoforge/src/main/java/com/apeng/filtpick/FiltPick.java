@@ -5,9 +5,12 @@ import com.apeng.filtpick.config.FiltPickServerConfig;
 import com.apeng.filtpick.gui.screen.FiltPickMenu;
 import com.apeng.filtpick.gui.screen.FiltPickScreen;
 import com.apeng.filtpick.hud.BlockedItemsHud;
+import com.apeng.filtpick.keybinding.KeyBindManager;
+import com.apeng.filtpick.keybinding.ScreenKeyBindings;
 import com.apeng.filtpick.test.TestFunctionCollector;
 import com.apeng.filtpick.test.TestFunctions;
 import com.apeng.filtpick.tracker.BlockedItemsTracker;
+import com.mojang.blaze3d.platform.InputConstants;
 import fuzs.forgeconfigapiport.neoforge.api.v5.ForgeConfigRegistry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
@@ -19,7 +22,9 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
+import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
+import net.neoforged.neoforge.client.event.ScreenEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
@@ -43,15 +48,32 @@ public class FiltPick {
         modBus.addListener(FiltPick::registerScreen);
         modBus.addListener(NetworkHandlerNeoImpl::registerAll);
         modBus.addListener(FiltPick::registerRenderGuiLayerEvent);
-
+        modBus.addListener(FiltPick::registerKeyBindings);
+        NeoForge.EVENT_BUS.addListener(FiltPick::onScreenKeyPressed);
         NeoForge.EVENT_BUS.addListener(FiltPick::onPlayerLoggedOut);
         NeoForge.EVENT_BUS.addListener(FiltPick::onClientLogout);
         NeoForge.EVENT_BUS.addListener(FiltPick::onServerStopping);
-
         ForgeConfigSpec.Builder clientBuilder = new ForgeConfigSpec.Builder();
         ForgeConfigSpec.Builder serverBuilder = new ForgeConfigSpec.Builder();
         initCommon(clientBuilder, serverBuilder);
         registerConfigBuilders(clientBuilder, serverBuilder);
+    }
+
+    private static void registerKeyBindings(RegisterKeyMappingsEvent event) {
+        event.registerCategory(KeyBindManager.CATEGORY);
+        for (ScreenKeyBindings keyBinding : ScreenKeyBindings.values()) {
+            event.register(keyBinding.keyMapping);
+        }
+    }
+
+    private static void onScreenKeyPressed(ScreenEvent.KeyPressed.Post event) {
+        for (ScreenKeyBindings keyBinding : ScreenKeyBindings.values()) {
+            if (keyBinding.targetScreenClass.isInstance(event.getScreen())) {
+                if (keyBinding.keyMapping.isActiveAndMatches(InputConstants.Type.KEYSYM.getOrCreate(event.getKeyCode()))) {
+                    keyBinding.action.accept(event.getScreen());
+                }
+            }
+        }
     }
 
     private static void onClientLogout(PlayerEvent.PlayerLoggedOutEvent event) {

@@ -8,5 +8,7 @@
   "destruction_mode_off": "Destruction mode: OFF",
   "filtpick_screen_name": "FiltPick",
   "reset_explanation": "Reset the list",
-  "entry_button_tooltip": "Customize which items you want to pick"
+  "entry_button_tooltip": "Customize which items you want to pick",
+  "key.category.filtpick.filtpick": "FiltPick",
+  "key.filtpick.add_filtered_item": "Add Hovered Item to Filter List"
 }

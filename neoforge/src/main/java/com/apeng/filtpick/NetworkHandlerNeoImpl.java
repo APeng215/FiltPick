@@ -1,5 +1,6 @@
 package com.apeng.filtpick;
 
+import com.apeng.filtpick.network.AddFilteredItemC2SPacket;
 import com.apeng.filtpick.network.NetworkHandler;
 import com.apeng.filtpick.network.OpenFiltPickScreenC2SPacket;
 import com.apeng.filtpick.network.SynMenuFieldC2SPacket;
@@ -27,6 +28,11 @@ public class NetworkHandlerNeoImpl implements NetworkHandler {
                 OpenFiltPickScreenC2SPacket.STREAM_CODEC,
                 (payload, context) -> context.enqueueWork(
                         () -> OpenFiltPickScreenC2SPacket.handle(payload, context.player())
+                )).playToServer(
+                AddFilteredItemC2SPacket.TYPE,
+                AddFilteredItemC2SPacket.STREAM_CODEC,
+                (payload, context) -> context.enqueueWork(
+                        () -> AddFilteredItemC2SPacket.handle(payload, context.player())
                 )).playToClient(
                 SyncBlockedItemsS2CPacket.TYPE,
                 SyncBlockedItemsS2CPacket.STREAM_CODEC,

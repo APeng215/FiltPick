@@ -2,6 +2,7 @@ package com.apeng.filtpick;
 
 import com.apeng.filtpick.config.FiltPickServerConfig;
 import com.apeng.filtpick.gui.screen.FiltPickMenu;
+import com.apeng.filtpick.network.AddFilteredItemC2SPacket;
 import com.apeng.filtpick.network.OpenFiltPickScreenC2SPacket;
 import com.apeng.filtpick.network.SynMenuFieldC2SPacket;
 import com.apeng.filtpick.network.SyncBlockedItemsS2CPacket;
@@ -76,6 +77,11 @@ public class FiltPick implements ModInitializer {
         PayloadTypeRegistry.playC2S().register(SynMenuFieldC2SPacket.TYPE, SynMenuFieldC2SPacket.STREAM_CODEC);
         ServerPlayNetworking.registerGlobalReceiver(SynMenuFieldC2SPacket.TYPE, (payload, context) -> {
             SynMenuFieldC2SPacket.handle(payload, context.player());
+        });
+
+        PayloadTypeRegistry.playC2S().register(AddFilteredItemC2SPacket.TYPE, AddFilteredItemC2SPacket.STREAM_CODEC);
+        ServerPlayNetworking.registerGlobalReceiver(AddFilteredItemC2SPacket.TYPE, (payload, context) -> {
+            AddFilteredItemC2SPacket.handle(payload, context.player());
         });
 
         PayloadTypeRegistry.playS2C().register(SyncBlockedItemsS2CPacket.TYPE, SyncBlockedItemsS2CPacket.STREAM_CODEC);

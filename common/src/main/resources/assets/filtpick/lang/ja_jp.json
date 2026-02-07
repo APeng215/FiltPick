@@ -8,5 +8,7 @@
   "destruction_mode_off": "破壊モード: オフ",
   "filtpick_screen_name": "回収フィルター",
   "reset_explanation": "リストをリセットする",
-  "entry_button_tooltip": "回収したいアイテムをカスタマイズする"
+  "entry_button_tooltip": "回収したいアイテムをカスタマイズする",
+  "key.category.filtpick.filtpick": "回収フィルター",
+  "key.filtpick.add_filtered_item": "ホバーしたアイテムをリストに追加"
 }
